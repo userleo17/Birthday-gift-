@@ -4,9 +4,19 @@
 <meta charset="UTF-8">
 <style>
     body { background-color: #fdfbf7; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
-    #leo-container { position: absolute; bottom: -260px; transition: bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; }
-    #speech { background: white; border: 2px solid #78a890; padding: 15px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: center; max-width: 250px; }
-    button { padding: 15px 30px; border-radius: 20px; border: none; background: #78a890; color: white; cursor: pointer; font-size: 18px; }
+    
+    /* تكبير القط - أضفنا scale لتكبيره */
+    #leo-container { position: absolute; bottom: -400px; transition: bottom 0.8s; z-index: 10; transform: scale(1.8); }
+    
+    /* تكبير فقاعة الكلام والخط */
+    #speech { 
+        background: white; border: 4px solid #78a890; padding: 30px; border-radius: 30px; 
+        margin-bottom: 50px; display: none; text-align: center; max-width: 500px; 
+        font-size: 28px; font-weight: bold; color: #444; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    /* تكبير الزر */
+    button { padding: 25px 60px; border-radius: 40px; border: none; background: #78a890; color: white; cursor: pointer; font-size: 30px; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -15,6 +25,7 @@
 
 <div id="leo-container">
 <svg id="leo" width="260" height="260" viewBox="0 0 260 260">
+    <!-- الرسم الخاص بك كما هو -->
     <circle cx="130" cy="135" r="85" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <ellipse id="l-eye" cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
     <circle cx="96" cy="119" r="4" fill="white"/>
@@ -52,7 +63,7 @@
 
 <script>
     function startLeo() {
-        document.getElementById('leo-container').style.bottom = "0px";
+        document.getElementById('leo-container').style.bottom = "50px";
         document.getElementById('main-btn').style.display = 'none';
         const speech = document.getElementById('speech');
         speech.style.display = 'block';
@@ -68,6 +79,5 @@
         type();
     }
 </script>
-
 </body>
 </html>
