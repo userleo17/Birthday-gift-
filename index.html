@@ -5,27 +5,32 @@
 <style>
     body { background-color: #fdfbf7; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
     
-    /* فقاعة الكلام: قريبة من رأس القط */
+    /* فقاعة الكلام */
     #speech { 
-        background: white; border: 4px solid #78a890; padding: 30px; border-radius: 30px; 
-        margin-bottom: 20px; display: none; text-align: center; max-width: 500px; 
-        font-size: 28px; font-weight: bold; color: #444; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        z-index: 5;
+        background: white; border: 4px solid #78a890; padding: 25px; border-radius: 30px; 
+        margin-bottom: 20px; text-align: center; max-width: 500px; 
+        font-size: 26px; font-weight: bold; color: #444; 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 5; display: none;
     }
 
-    /* القط في المنتصف */
-    #leo-container { 
-        position: relative; 
-        transform: scale(1.8); 
-        z-index: 10; 
-        margin-bottom: 50px;
-    }
+    #leo-container { transform: scale(1.8); z-index: 10; margin-bottom: 40px; display: none; }
     
-    /* الزر مرفوع للأعلى تحت القط مباشرة */
-    button { 
+    /* الزر المهتز */
+    #start-btn { 
         padding: 20px 50px; border-radius: 40px; border: none; background: #78a890; 
-        color: white; cursor: pointer; font-size: 26px; font-weight: bold; 
-        margin-top: 20px; z-index: 10;
+        color: white; cursor: pointer; font-size: 30px; font-weight: bold;
+        animation: shake 2s infinite; /* حركة الاهتزاز */
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: rotate(0); }
+        25% { transform: rotate(-5deg); }
+        75% { transform: rotate(5deg); }
+    }
+
+    #hello-btn { 
+        padding: 20px 40px; border-radius: 40px; border: none; background: #78a890; 
+        color: white; cursor: pointer; font-size: 24px; font-weight: bold; display: none;
     }
 </style>
 </head>
@@ -35,37 +40,38 @@
 
 <div id="leo-container">
 <svg id="leo" width="260" height="260" viewBox="0 0 260 260">
-    <!-- الرأس والجسم -->
+    <!-- الرسم الكامل -->
     <circle cx="130" cy="135" r="85" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M82 66 Q130 38 178 66 Q166 83 150 90 Q130 74 110 90 Q94 84 82 66 Z" fill="#c8c8c8"/>
-    <!-- الآذان -->
     <path d="M68 72 L96 28 L118 82 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M81 70 L96 42 L110 73 Z" fill="#ffb8c8"/>
     <path d="M142 82 L164 28 L192 72 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M150 73 L164 42 L179 70 Z" fill="#ffb8c8"/>
-    <!-- العيون -->
     <ellipse id="l-eye" cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
     <circle cx="96" cy="119" r="4" fill="white"/><circle cx="102" cy="128" r="1.8" fill="white"/>
     <ellipse id="r-eye" cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
     <circle cx="156" cy="119" r="4" fill="white"/><circle cx="162" cy="128" r="1.8" fill="white"/>
-    <!-- الملامح -->
     <ellipse cx="78" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
     <ellipse cx="182" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
     <path d="M130 145 L122 154 L138 154 Z" fill="#ff8ca8"/>
     <path id="mouth" d="M130 154 Q124 162 118 162 M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-    <!-- اليدين -->
     <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
     <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
 </svg>
 </div>
 
-<button id="main-btn" onclick="startLeo()">حسنًا</button>
+<!-- زر البداية -->
+<button id="start-btn" onclick="showLeo()">اضغطني !</button>
+<!-- زر الترحيب -->
+<button id="hello-btn" onclick="nextScene()">Hello Leo 👋🏻!</button>
 
 <script>
-    function startLeo() {
-        document.getElementById('main-btn').style.display = 'none';
+    function showLeo() {
+        document.getElementById('start-btn').style.display = 'none'; // إخفاء زر البداية
+        document.getElementById('leo-container').style.display = 'block'; // إظهار ليو
         const speech = document.getElementById('speech');
         speech.style.display = 'block';
+        
         let text = "Hello! I am Leo, Lama's cat.";
         let i = 0;
         function type() {
@@ -73,9 +79,15 @@
                 speech.innerHTML += text.charAt(i);
                 i++;
                 setTimeout(type, 50);
+            } else {
+                document.getElementById('hello-btn').style.display = 'block'; // إظهار زر الترحيب
             }
         }
         type();
+    }
+
+    function nextScene() {
+        alert("انتقلنا للخطوة التالية!");
     }
 </script>
 </body>
