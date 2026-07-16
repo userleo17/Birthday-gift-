@@ -9,129 +9,131 @@
 
     body, html {
         margin: 0; padding: 0; width: 100%; height: 100%;
-        background-color: #fdfbf7; font-family: 'Fredoka', sans-serif;
+        background-color: #0b132b; /* Dark Blue Night Background */
+        font-family: 'Fredoka', sans-serif;
         overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: white;
     }
 
     /* Colors */
     :root {
-        --green-btn: #78a890;
-        --green-hover: #5d8a74;
-        --red-btn: #d97373;
-        --tear-color: #85C1E9;
+        --green-btn: #4caf50;
+        --green-hover: #43a047;
+        --red-btn: #e53935;
+        --red-hover: #d32f2f;
+        --tear-color: rgba(66, 165, 245, 0.9);
     }
 
     /* Generic UI */
     .btn {
         padding: 15px 35px; border-radius: 30px; border: none; color: white;
         cursor: pointer; font-size: 20px; font-weight: 600; transition: transform 0.2s, background 0.2s;
-        margin: 10px; z-index: 100;
+        margin: 10px; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     .btn:active { transform: scale(0.95); }
     .btn-green { background: var(--green-btn); }
     .btn-green:hover { background: var(--green-hover); }
     .btn-red { background: var(--red-btn); }
+    .btn-red:hover { background: var(--red-hover); }
 
     /* Speech Bubble */
     #speech-bubble {
-        position: absolute; top: 15%; background: white; border: 4px solid var(--green-btn);
-        padding: 20px 30px; border-radius: 25px; font-size: 22px; font-weight: bold; color: #444;
-        max-width: 80%; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        z-index: 50; display: none; opacity: 0; transition: opacity 0.3s;
+        position: absolute; top: 20%; background: rgba(255, 255, 255, 0.95); 
+        border: 4px solid var(--green-btn); color: #1a1a2e;
+        padding: 20px 30px; border-radius: 25px; font-size: 22px; font-weight: bold;
+        max-width: 80%; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        z-index: 50; display: none; opacity: 0; transition: opacity 0.5s ease-in-out;
     }
     #speech-bubble::after {
         content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%);
-        border-width: 15px 15px 0; border-style: solid; border-color: var(--green-btn) transparent transparent transparent;
+        border-width: 15px 15px 0; border-style: solid; border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
     }
 
     /* Leo Container & Animations */
     #leo-wrapper {
-        position: absolute; bottom: -300px;
-        transition: bottom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.5s, left 1s, right 1s;
+        position: absolute; bottom: -350px; 
+        transition: bottom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s, left 0.8s, right 0.8s;
         z-index: 10; display: flex; flex-direction: column; align-items: center;
     }
-    .leo-slide-up { bottom: 20% !important; }
-    .leo-step-back { transform: scale(0.7) translateY(-50px); }
-    .leo-peek { bottom: 20% !important; left: -100px; transform: scale(1); }
-    .leo-run-away { transform: translateX(200vw); transition: transform 2s; }
+    .leo-slide-up { bottom: 15% !important; }
+    .leo-step-back { transform: scale(0.6) translateY(-100px); z-index: 5; }
+    .leo-hide { bottom: -350px !important; transition: bottom 0.5s; }
+    .leo-push-right { left: auto; right: -200px; bottom: 15%; transform: scale(0.8); }
+    .leo-push-in { right: 50px !important; }
+    .leo-peek-left { left: -140px; bottom: 15% !important; transform: scale(0.9); }
+    .leo-run-away { transform: translateX(150vw); transition: transform 1.5s; }
+    .leo-return-center { bottom: 15% !important; left: 50%; transform: translateX(-50%) scale(1.1); transition: transform 1s; }
     
-    .foot-tap { animation: tap 0.4s infinite alternate; }
-    @keyframes tap { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+    .foot-tap { animation: tap 0.3s infinite alternate; }
+    @keyframes tap { from { transform: translateY(0); } to { transform: translateY(15px); } }
     
-    .shake { animation: shake 0.5s infinite; }
+    .shake-btn { animation: shake 0.5s infinite; }
     @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px) rotate(-5deg);} 75% {transform: translateX(5px) rotate(5deg);} }
 
+    .peek-shake { animation: peekShake 2s ease-in-out; }
+    @keyframes peekShake { 0% {transform: scale(0.6) translateY(-50px);} 20% {transform: scale(0.6) translateY(-120px) rotate(-10deg);} 80% {transform: scale(0.6) translateY(-120px) rotate(10deg);} 100% {transform: scale(0.6) translateY(-100px);} }
+
     /* Scene Elements */
-    #notebook-scene, #canvas-scene, #choice-scene, #cake-scene { display: none; z-index: 20; position: absolute; }
-    
-    /* Notebook Scene */
-    #notebook-scene { top: 40%; display: flex; flex-direction: column; align-items: center; display: none;}
+    #notebook-scene { position: absolute; top: 45%; display: none; flex-direction: column; align-items: center; z-index: 20; }
     input[type="text"] {
         padding: 15px; border-radius: 15px; border: 3px solid #ccc; font-size: 20px; text-align: center;
-        outline: none; font-family: 'Fredoka', sans-serif; width: 250px;
+        outline: none; font-family: 'Fredoka', sans-serif; width: 280px; background: rgba(255,255,255,0.9);
     }
-    #arabic-warning { color: var(--red-btn); font-size: 14px; margin-top: 5px; opacity: 0; transition: opacity 0.3s; }
+    #arabic-warning { color: var(--red-btn); font-size: 16px; margin-top: 8px; opacity: 0; transition: opacity 0.3s; font-weight: bold;}
     
-    /* Meow Floating Texts */
+    /* Meow Text */
     .meow-text {
-        position: absolute; font-size: 20px; font-weight: bold; color: #666;
-        opacity: 0; animation: floatUpFade 2s forwards; z-index: 5;
+        position: absolute; font-size: 24px; font-weight: bold; color: #fff;
+        opacity: 0; z-index: 30; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        animation: fadeOutUp 2s forwards;
     }
-    @keyframes floatUpFade { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px); } }
+    @keyframes fadeOutUp { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px); } }
 
-    /* Canvas Scene (Hearts, Fireworks, Neon Text) */
-    #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; display: none; pointer-events: none;}
+    /* Canvas Scene */
+    #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; display: block; pointer-events: none; transition: transform 1s ease-in-out;}
     #neon-text {
-        position: absolute; top: 20%; width: 100%; text-align: center;
-        font-size: 40px; font-weight: bold; color: #fff;
+        position: absolute; top: 15%; width: 100%; text-align: center;
+        font-size: 50px; font-weight: bold; color: #fff;
         text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 30px #ff00de, 0 0 40px #ff00de;
         display: none; z-index: 2;
     }
-    .explode-text { animation: explode 0.5s forwards; }
-    @keyframes explode { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; filter: blur(10px); } }
+    .explode-text { animation: explode 1s forwards; }
+    @keyframes explode { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; filter: blur(20px); display:none;} }
 
     /* River of Tears */
     #tear-river {
         position: fixed; bottom: 0; left: 0; width: 100%; height: 0%;
-        background-color: var(--tear-color); z-index: 9999; transition: height 4s ease-in;
+        background-color: var(--tear-color); z-index: 9999; transition: height 5s ease-in; pointer-events: none;
     }
 
     /* Buttons Container */
-    #btn-container { position: absolute; bottom: 10%; display: flex; gap: 15px; z-index: 100;}
+    #btn-container { position: absolute; bottom: 5%; display: flex; gap: 15px; z-index: 100;}
 </style>
 </head>
 <body>
 
-<!-- Speech Bubble -->
-<div id="speech-bubble"></div>
-<!-- Tear River -->
+<!-- Setup Container -->
 <div id="tear-river"></div>
+<div id="speech-bubble"></div>
+<canvas id="canvas-container"></canvas>
+<div id="neon-text">Happy Birthday To Yosi 🎉</div>
 
-<!-- Leo The Cat SVG (Merged with your custom drawing) -->
+<!-- Leo SVG Custom -->
 <div id="leo-wrapper">
     <svg id="leo-svg" width="260" height="260" viewBox="0 0 260 260">
-        
-        <!-- Base Body (Always visible - from your drawing) -->
+        <!-- Base Body -->
         <g id="leo-base">
-            <!-- الرأس -->
             <circle cx="130" cy="135" r="85" fill="#ffffff" stroke="#2b2b2b" stroke-width="5" />
-            <!-- الأذن اليسرى -->
             <path d="M68 72 L96 28 L118 82 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
             <path d="M81 70 L96 42 L110 73 Z" fill="#ffb8c8"/>
-            <!-- الأذن اليمنى -->
             <path d="M142 82 L164 28 L192 72 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
             <path d="M150 73 L164 42 L179 70 Z" fill="#ffb8c8"/>
-            <!-- بقعة الفرو العلوية -->
             <path d="M82 66 Q130 38 178 66 Q166 83 150 90 Q130 74 110 90 Q94 84 82 66 Z" fill="#c8c8c8"/>
-            <!-- الخدود -->
             <ellipse cx="78" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
             <ellipse cx="182" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
-            <!-- الأنف -->
             <path d="M130 145 L122 154 L138 154 Z" fill="#ff8ca8"/>
-            <!-- بقع الفرو الجانبية -->
             <ellipse cx="92" cy="142" rx="12" ry="9" fill="#d8d8d8" opacity="0.75"/>
             <ellipse cx="168" cy="142" rx="12" ry="9" fill="#d8d8d8" opacity="0.75"/>
-            <!-- الشوارب -->
             <line x1="38" y1="145" x2="82" y2="140" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
             <line x1="36" y1="156" x2="82" y2="156" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
             <line x1="38" y1="167" x2="82" y2="172" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
@@ -142,115 +144,6 @@
 
         <!-- 1. Normal State -->
         <g id="state-normal">
-            <!-- العيون -->
-            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="96" cy="119" r="4" fill="white"/>
-            <circle cx="102" cy="128" r="1.8" fill="white"/>
-            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="156" cy="119" r="4" fill="white"/>
-            <circle cx="162" cy="128" r="1.8" fill="white"/>
-            <!-- الحواجب -->
-            <path d="M82 95 Q100 88 118 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M142 95 Q160 88 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <!-- الفم -->
-            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <!-- الأيدي -->
-            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-            <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
-            <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-            <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
-        </g>
-
-        <!-- 2. Sweat State (😅) -->
-        <g id="state-sweat" style="display: none;">
-            <!-- عيون مغلقة تعرق -->
-            <path d="M86 125 Q100 115 114 125" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M146 125 Q160 115 174 125" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <!-- حواجب متوترة -->
-            <path d="M82 100 L118 90" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M178 100 L142 90" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <!-- الفم العادي -->
-            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <!-- قطرة العرق -->
-            <path d="M195 85 Q205 95 195 105 Q185 95 195 85 Z" fill="#85C1E9"/>
-            <!-- اليد اليسرى العادية -->
-            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-            <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
-            <!-- اليد اليمنى تحك الرأس -->
-            <g transform="translate(-20, -135) rotate(45, 188, 205)">
-                <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-                <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
-            </g>
-        </g>
-
-        <!-- 3. Angry State (😡) -->
-        <g id="state-angry" style="display: none;">
-            <!-- عيون غاضبة -->
-            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="96" cy="119" r="4" fill="white"/>
-            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="156" cy="119" r="4" fill="white"/>
-            <path d="M80 110 L120 120" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
-            <path d="M180 110 L140 120" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
-            <!-- فم غاضب -->
-            <path d="M120 160 Q130 150 140 160" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <!-- أذرع مكتفة -->
-            <path d="M70 190 L190 200 M190 190 L70 200" stroke="#ffffff" stroke-width="15" stroke-linecap="round" fill="none"/>
-            <path d="M70 190 L190 200 M190 190 L70 200" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <!-- قدم تطق بالأرض -->
-            <g id="angry-foot">
-                 <ellipse cx="188" cy="225" rx="22" ry="12" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-                 <circle cx="176" cy="222" r="3" fill="#ffb8c8"/> <circle cx="184" cy="218" r="3" fill="#ffb8c8"/> <circle cx="192" cy="218" r="3" fill="#ffb8c8"/> <circle cx="200" cy="222" r="3" fill="#ffb8c8"/>
-            </g>
-        </g>
-
-        <!-- 4. Love State (😍) -->
-        <g id="state-love" style="display: none;">
-            <!-- عيون قلوب -->
-            <path d="M100 110 A 8 8 0 0 0 85 120 L100 140 L115 120 A 8 8 0 0 0 100 110" fill="#ff4d6d"/>
-            <path d="M160 110 A 8 8 0 0 0 145 120 L160 140 L175 120 A 8 8 0 0 0 160 110" fill="#ff4d6d"/>
-            <!-- حواجب عادية -->
-            <path d="M82 95 Q100 88 118 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M142 95 Q160 88 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <!-- فم مفتوح مبتسم -->
-            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M118 162 Q130 175 142 162" fill="#ffb6c1" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <!-- أيدي ترجى 🙏🏻 -->
-            <path d="M125 180 L125 210 M135 180 L135 210" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
-            <path d="M125 180 L125 210 M135 180 L135 210" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-        </g>
-
-        <!-- 5. Sad State (🥺) -->
-        <g id="state-sad" style="display: none;">
-            <!-- عيون بلمعة كبيرة وحزينة -->
-            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="100" cy="130" r="5" fill="white"/>
-            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-            <circle cx="160" cy="130" r="5" fill="white"/>
-            <!-- حواجب حزينة -->
-            <path d="M82 95 Q100 85 118 100" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <path d="M142 100 Q160 85 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
-            <!-- فم حزين -->
-            <path d="M120 160 Q130 155 140 160" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            <!-- دموع -->
-            <g id="sad-tears" style="display:none;">
-                <path d="M100 145 L100 220 M160 145 L160 220" stroke="#85C1E9" stroke-width="6" stroke-linecap="round" stroke-dasharray="10 10">
-                    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="0.5s" repeatCount="indefinite"/>
-                </path>
-            </g>
-            <!-- الأيدي العادية -->
-            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-            <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
-            <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-            <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
-        </g>
-
-        <!-- 6. Apron State -->
-        <g id="state-apron" style="display: none;">
-            <!-- الوجه العادي -->
             <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
             <circle cx="96" cy="119" r="4" fill="white"/> <circle cx="102" cy="128" r="1.8" fill="white"/>
             <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
@@ -259,19 +152,89 @@
             <path d="M142 95 Q160 88 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
             <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
             <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-            
-            <!-- الأيدي العادية -->
             <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
             <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
             <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
             <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
+        </g>
 
-            <!-- المريلة -->
+        <!-- 2. Sweat State 😅 -->
+        <g id="state-sweat" style="display: none;">
+            <path d="M86 125 Q100 115 114 125" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M146 125 Q160 115 174 125" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M82 100 L118 90" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M178 100 L142 90" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M195 85 Q205 95 195 105 Q185 95 195 85 Z" fill="#85C1E9"/>
+            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+            <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
+            <!-- Hand Scratching -->
+            <g transform="translate(-20, -135) rotate(45, 188, 205)">
+                <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+                <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
+            </g>
+        </g>
+
+        <!-- 3. Angry State 😡 -->
+        <g id="state-angry" style="display: none;">
+            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="96" cy="119" r="4" fill="white"/>
+            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="156" cy="119" r="4" fill="white"/>
+            <path d="M80 110 L120 120" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
+            <path d="M180 110 L140 120" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
+            <path d="M120 160 Q130 150 140 160" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <!-- Crossed Arms -->
+            <path d="M70 190 L190 200 M190 190 L70 200" stroke="#ffffff" stroke-width="15" stroke-linecap="round" fill="none"/>
+            <path d="M70 190 L190 200 M190 190 L70 200" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <g id="angry-foot">
+                 <ellipse cx="188" cy="225" rx="22" ry="12" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+                 <circle cx="176" cy="222" r="3" fill="#ffb8c8"/> <circle cx="184" cy="218" r="3" fill="#ffb8c8"/> <circle cx="192" cy="218" r="3" fill="#ffb8c8"/> <circle cx="200" cy="222" r="3" fill="#ffb8c8"/>
+            </g>
+        </g>
+
+        <!-- 4. Love State 😍 🙏🏻 -->
+        <g id="state-love" style="display: none;">
+            <path d="M100 110 A 8 8 0 0 0 85 120 L100 140 L115 120 A 8 8 0 0 0 100 110" fill="#ff4d6d"/>
+            <path d="M160 110 A 8 8 0 0 0 145 120 L160 140 L175 120 A 8 8 0 0 0 160 110" fill="#ff4d6d"/>
+            <path d="M82 95 Q100 88 118 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M142 95 Q160 88 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M118 162 Q130 175 142 162" fill="#ffb6c1" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M125 180 L125 210 M135 180 L135 210" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
+            <path d="M125 180 L125 210 M135 180 L135 210" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- 5. Sad State 🥺 -->
+        <g id="state-sad" style="display: none;">
+            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="100" cy="130" r="5" fill="white"/>
+            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="160" cy="130" r="5" fill="white"/>
+            <path d="M82 95 Q100 85 118 100" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M142 100 Q160 85 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M120 160 Q130 155 140 160" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <g id="sad-tears" style="display:none;">
+                <path d="M100 145 L100 220 M160 145 L160 220" stroke="#85C1E9" stroke-width="6" stroke-linecap="round" stroke-dasharray="10 10">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="0.5s" repeatCount="indefinite"/>
+                </path>
+            </g>
+            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+            <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
+            <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+            <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/> <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/> <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
+        </g>
+
+        <!-- 6. Apron State 🎂 -->
+        <g id="state-apron" style="display: none;">
+            <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="96" cy="119" r="4" fill="white"/> <circle cx="102" cy="128" r="1.8" fill="white"/>
+            <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/> <circle cx="156" cy="119" r="4" fill="white"/> <circle cx="162" cy="128" r="1.8" fill="white"/>
+            <path d="M82 95 Q100 88 118 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M142 95 Q160 88 178 95" fill="none" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+            <path d="M130 154 Q124 162 118 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+            
             <path d="M80 170 L180 170 L190 240 L70 240 Z" fill="#ffb8c8" stroke="#2b2b2b" stroke-width="3"/>
-            <!-- الكيكة -->
             <rect x="100" y="180" width="60" height="40" rx="5" fill="#fff" stroke="#2b2b2b" stroke-width="3"/>
             <text x="112" y="205" font-size="14" font-weight="bold" fill="#ff4d6d">HBD</text>
-            <!-- الشموع -->
             <g id="candles">
                 <rect id="c1" x="110" y="160" width="6" height="20" fill="#ffd700" stroke="#2b2b2b" stroke-width="1"/>
                 <circle id="f1" cx="113" cy="155" r="4" fill="#ff9900"><animate attributeName="opacity" values="1;0.5;1" dur="0.2s" repeatCount="indefinite"/></circle>
@@ -280,44 +243,38 @@
                 <rect id="c3" x="144" y="160" width="6" height="20" fill="#ffd700" stroke="#2b2b2b" stroke-width="1"/>
                 <circle id="f3" cx="147" cy="155" r="4" fill="#ff9900"><animate attributeName="opacity" values="1;0.5;1" dur="0.2s" repeatCount="indefinite"/></circle>
             </g>
+            <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+            <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
         </g>
     </svg>
 </div>
 
-<!-- Dynamic Button Container -->
-<div id="btn-container">
-    <button id="main-btn" class="btn btn-green shake" onclick="startSequence()">Click me!</button>
-</div>
-
 <!-- Notebook Scene -->
 <div id="notebook-scene">
-    <div id="notebook-svg">
-        <svg width="200" height="150" viewBox="0 0 200 150">
-            <rect x="20" y="10" width="160" height="130" rx="10" fill="#fff" stroke="#2b2b2b" stroke-width="4"/>
-            <line x1="40" y1="10" x2="40" y2="140" stroke="#ffb8c8" stroke-width="2"/>
-            <path d="M160 5 L180 25 L120 85 L100 65 Z" fill="#78a890" stroke="#2b2b2b" stroke-width="2"/> <!-- Pen -->
-        </svg>
+    <div style="background: white; border: 4px solid #2b2b2b; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; position:relative;">
+        <div style="position: absolute; top: 10px; left: 10px; width: 4px; height: 100%; background: #ffb8c8;"></div>
+        <h3 style="color:#2b2b2b; margin-top:0; font-family: 'Fredoka', sans-serif;">My Notebook</h3>
+        <input type="text" id="nickname-input" placeholder="What is your nickname?" autocomplete="off">
+        <div id="arabic-warning">Sorry, English only 😅</div>
     </div>
-    <input type="text" id="nickname-input" placeholder="What is your nickname?" autocomplete="off">
-    <div id="arabic-warning">Sorry, English only 😅</div>
-    <button id="check-btn" class="btn btn-green" style="display:none; margin-top:15px;" onclick="checkName()">Check</button>
+    <button id="check-btn" class="btn btn-green" onclick="checkName()">Check</button>
 </div>
 
-<!-- Canvas for Hearts, Fireworks, Glitter -->
-<canvas id="canvas-container"></canvas>
-<div id="neon-text">Happy Birthday To Yosi 🎉</div>
+<!-- Buttons Container -->
+<div id="btn-container">
+    <button id="start-btn" class="btn btn-green shake-btn" onclick="startSequence()">Click Me</button>
+</div>
 
 <script>
-    // --- Global Variables ---
     const bubble = document.getElementById('speech-bubble');
     const leoWrap = document.getElementById('leo-wrapper');
-    const mainBtn = document.getElementById('main-btn');
     const btnContainer = document.getElementById('btn-container');
+    const startBtn = document.getElementById('start-btn');
     
     let typeInterval;
     let idleTimeout;
-    
-    // --- Helper Functions ---
+
+    // --- State Management ---
     function setCatState(stateId) {
         const states = ['state-normal', 'state-sweat', 'state-angry', 'state-love', 'state-sad', 'state-apron'];
         states.forEach(s => document.getElementById(s).style.display = 'none');
@@ -326,88 +283,77 @@
         else document.getElementById('angry-foot').classList.remove('foot-tap');
     }
 
-    function showBubble(text, cb) {
+    function typeText(text, callback) {
         clearInterval(typeInterval);
         bubble.style.display = 'block';
-        bubble.style.opacity = '1';
+        setTimeout(() => bubble.style.opacity = '1', 50);
         bubble.innerHTML = '';
         let i = 0;
         typeInterval = setInterval(() => {
             if (i < text.length) { bubble.innerHTML += text.charAt(i); i++; } 
-            else { clearInterval(typeInterval); if (cb) cb(); }
-        }, 50);
+            else { clearInterval(typeInterval); if (callback) callback(); }
+        }, 50); // Speed of typing
     }
 
-    function hideBubble() { bubble.style.opacity = '0'; setTimeout(() => bubble.style.display = 'none', 300); }
+    function hideBubble() { 
+        bubble.style.opacity = '0'; 
+        setTimeout(() => bubble.style.display = 'none', 500); 
+    }
 
     function updateBtn(text, colorClass, onClick, extraClass='') {
-        mainBtn.style.display = 'block';
-        mainBtn.innerHTML = text;
-        mainBtn.className = `btn ${colorClass} ${extraClass}`;
-        mainBtn.onclick = onClick;
-    }
-
-    function clearBtns() { btnContainer.innerHTML = ''; }
-
-    function addBtn(text, colorClass, id, onClick) {
+        btnContainer.innerHTML = '';
         const b = document.createElement('button');
-        b.innerHTML = text; b.className = `btn ${colorClass}`; b.id = id; b.onclick = onClick;
+        b.innerHTML = text; b.className = `btn ${colorClass} ${extraClass}`; b.onclick = onClick;
         btnContainer.appendChild(b);
     }
 
     // --- Scene 1: Start ---
     function startSequence() {
-        mainBtn.style.display = 'none';
+        startBtn.style.display = 'none';
         leoWrap.classList.add('leo-slide-up');
         setTimeout(() => {
-            showBubble("Hello! I am Leo, Lama's cat.", () => {
-                updateBtn("Hello Leo", "btn-green", giftIntro);
-                btnContainer.appendChild(mainBtn);
+            typeText("Hello, I’m Leo, Lama’s cat.", () => {
+                updateBtn("Hi Leo", "btn-green", sceneGift);
             });
         }, 1000);
     }
 
-    // --- Scene 2: Gift Intro ---
-    function giftIntro() {
-        mainBtn.style.display = 'none';
-        showBubble("This is a gift for you from her for your birthday", () => {
-            updateBtn("Awesome!", "btn-green", notebookScene);
+    // --- Scene 2: Gift Message ---
+    function sceneGift() {
+        btnContainer.innerHTML = '';
+        typeText("This is a gift from her for your birthday.", () => {
+            updateBtn("Awesome!", "btn-green", sceneNotebook);
         });
     }
 
-    // --- Scene 3: Notebook & Nickname ---
-    function notebookScene() {
-        mainBtn.style.display = 'none';
+    // --- Scene 3: Notebook ---
+    function sceneNotebook() {
+        btnContainer.innerHTML = '';
         hideBubble();
         leoWrap.classList.add('leo-step-back');
         
         setTimeout(() => {
             document.getElementById('notebook-scene').style.display = 'flex';
             setupInputCheck();
-        }, 500);
+        }, 800);
     }
 
     function setupInputCheck() {
         const input = document.getElementById('nickname-input');
         const warn = document.getElementById('arabic-warning');
-        const checkBtn = document.getElementById('check-btn');
         input.focus();
-        
         resetIdleTimer();
 
         input.addEventListener('input', (e) => {
             resetIdleTimer();
-            leoWrap.style.zIndex = "10";
+            leoWrap.classList.remove('peek-shake');
+            setCatState('state-normal');
             
             if (/[\u0600-\u06FF]/.test(input.value)) {
                 warn.style.opacity = '1';
                 setCatState('state-sweat');
-                checkBtn.style.display = 'none';
             } else {
                 warn.style.opacity = '0';
-                setCatState('state-normal');
-                if(input.value.trim().length > 0) checkBtn.style.display = 'block';
-                else checkBtn.style.display = 'none';
             }
         });
     }
@@ -418,23 +364,14 @@
     }
 
     function triggerIdleMeow() {
-        leoWrap.style.zIndex = "1";
-        setCatState('state-normal');
-        let count = 0;
-        let meowInt = setInterval(() => {
-            if(count >= 3 || document.getElementById('nickname-input').value !== '') { clearInterval(meowInt); return; }
-            createMeowText();
-            count++;
-        }, 1000);
-    }
-
-    function createMeowText() {
+        leoWrap.classList.add('peek-shake');
         const m = document.createElement('div');
         m.className = 'meow-text'; m.innerText = 'Meow...';
-        m.style.left = (Math.random() * 100 - 50) + 'px';
-        m.style.top = '-20px';
-        leoWrap.appendChild(m);
+        m.style.left = (Math.random() * 60 + 20) + '%';
+        m.style.top = '10%';
+        document.body.appendChild(m);
         setTimeout(() => m.remove(), 2000);
+        resetIdleTimer(); // Repeat if still idle
     }
 
     function checkName() {
@@ -443,13 +380,14 @@
         if (val === 'yosi') {
             setCatState('state-love');
             document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('arabic-warning').style.opacity = '0';
             setTimeout(startBirthdayScene, 2000);
         } else {
             setCatState('state-angry');
         }
     }
 
-    // --- Scene 4: Birthday Canvas (Hearts & Particles) ---
+    // --- Scene 4: Birthday Canvas ---
     const canvas = document.getElementById('canvas-container');
     const ctx = canvas.getContext('2d');
     let W, H;
@@ -460,24 +398,24 @@
 
     function startBirthdayScene() {
         document.getElementById('notebook-scene').style.display = 'none';
-        leoWrap.style.display = 'none'; 
-        canvas.style.display = 'block';
+        leoWrap.classList.remove('leo-step-back', 'peek-shake');
+        leoWrap.classList.add('leo-hide'); // hide Leo for hearts
         
         drawProgressiveHearts(() => {
             document.getElementById('neon-text').style.display = 'block';
-            startParticles();
+            startFireworksAndBalloons();
             
             setTimeout(() => {
                 document.getElementById('neon-text').classList.add('explode-text');
                 createGlitter();
-                setTimeout(startPeekScene, 1500);
-            }, 5000);
+                setTimeout(scenePeek, 2000);
+            }, 6000); // Wait for fireworks to end
         });
     }
 
     function drawProgressiveHearts(onComplete) {
         let progress = 0;
-        const hearts = [ {s: 15, c: '#ff4d6d'}, {s: 10, c: '#ff758f'}, {s: 5, c: '#ffb3c1'} ];
+        const hearts = [ {s: 16, c: '#ff4d6d'}, {s: 11, c: '#ff758f'}, {s: 6, c: '#ffb3c1'} ];
         let currentHeart = 0;
 
         function animateHeart() {
@@ -487,7 +425,7 @@
             for(let i=0; i<currentHeart; i++) drawHeartPath(W/2, H/2, hearts[i].s, 1, hearts[i].c);
             drawHeartPath(W/2, H/2, hearts[currentHeart].s, progress, hearts[currentHeart].c);
             
-            progress += 0.02;
+            progress += 0.015;
             if (progress >= 1) { progress = 0; currentHeart++; }
             requestAnimationFrame(animateHeart);
         }
@@ -495,8 +433,7 @@
     }
 
     function drawHeartPath(x, y, scale, progress, color) {
-        ctx.beginPath();
-        ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 5; ctx.lineCap = 'round';
         for (let t = 0; t <= Math.PI * 2 * progress; t += 0.05) {
             let px = x + scale * (16 * Math.pow(Math.sin(t), 3));
             let py = y - scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
@@ -506,74 +443,121 @@
     }
 
     let particles = [];
-    function startParticles() {
-        for(let i=0; i<50; i++) {
+    let fireworkCount = 0;
+    
+    function startFireworksAndBalloons() {
+        fireworkCount = 0;
+        spawnFirework();
+        setTimeout(spawnFirework, 2000); // 2 times only
+        
+        // Balloons
+        for(let i=0; i<15; i++) {
             particles.push({
-                x: Math.random() * W, y: H + Math.random() * 200,
-                vx: (Math.random() - 0.5) * 2, vy: -(Math.random() * 5 + 3),
-                type: Math.random() > 0.5 ? 'firework' : 'balloon',
-                color: `hsl(${Math.random()*360}, 100%, 60%)`, alpha: 1
+                x: Math.random() * W, y: H + Math.random() * 300,
+                vx: (Math.random() - 0.5), vy: -(Math.random() * 3 + 2),
+                type: 'balloon', color: `hsl(${Math.random()*360}, 100%, 70%)`
             });
         }
         animateParticles();
     }
 
-    function animateParticles() {
-        if(particles.length === 0) return;
-        ctx.clearRect(0,0,W,H);
-        drawHeartPath(W/2, H/2, 15, 1, '#ff4d6d'); drawHeartPath(W/2, H/2, 10, 1, '#ff758f'); drawHeartPath(W/2, H/2, 5, 1, '#ffb3c1');
-        
-        for(let i=0; i<particles.length; i++) {
-            let p = particles[i];
-            p.x += p.vx; p.y += p.vy;
-            if(p.type === 'balloon') {
-                ctx.fillStyle = `rgba(255,255,255,0.4)`; ctx.strokeStyle = p.color;
-                ctx.beginPath(); ctx.ellipse(p.x, p.y, 15, 20, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(p.x, p.y+20); ctx.lineTo(p.x, p.y+40); ctx.stroke();
-            } else {
-                ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
-            }
-        }
-        particles = particles.filter(p => p.y > -50);
-        requestAnimationFrame(animateParticles);
-    }
-
-    function createGlitter() {
-        particles = [];
-        for(let i=0; i<100; i++) {
+    function spawnFirework() {
+        if(fireworkCount >= 2) return;
+        fireworkCount++;
+        let fx = W/2 + (Math.random()-0.5)*300;
+        let fy = H/3 + (Math.random()-0.5)*100;
+        for(let i=0; i<40; i++) {
+            let angle = Math.random() * Math.PI * 2;
+            let speed = Math.random() * 5 + 2;
             particles.push({
-                x: W/2 + (Math.random()-0.5)*300, y: H/2 + (Math.random()-0.5)*300,
-                vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2 + 1,
-                type: 'glitter', alpha: 1
+                x: fx, y: fy, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+                type: 'firework', color: `hsl(${Math.random()*360}, 100%, 60%)`, life: 1
             });
         }
     }
 
-    // --- Scene 5: Peek & Choice ---
-    function startPeekScene() {
-        document.getElementById('neon-text').style.display = 'none';
-        leoWrap.style.display = 'flex';
-        leoWrap.classList.remove('leo-step-back');
-        leoWrap.classList.add('leo-peek');
-        setCatState('state-sad');
-        
-        showBubble("I made something for you... Do you want to see it?", () => {
-            clearBtns();
-            addBtn("Yes, I want to see it", "btn-green", "btn-yes", showCakeSequence);
-            addBtn("No, I don't want to see it", "btn-red", "btn-no", handleRejection);
-        });
+    function createGlitter() {
+        particles = particles.filter(p => p.type !== 'firework' && p.type !== 'balloon');
+        for(let i=0; i<80; i++) {
+            particles.push({
+                x: W/2 + (Math.random()-0.5)*400, y: H/2 + (Math.random()-0.5)*400,
+                vx: 0, vy: Math.random() * 1 + 0.5,
+                type: 'glitter', life: Math.random()
+            });
+        }
     }
 
-    // --- Scene 6A: Yes (Cake) ---
-    function showCakeSequence() {
-        clearBtns();
+    function animateParticles() {
+        ctx.clearRect(0,0,W,H);
+        drawHeartPath(W/2, H/2, 16, 1, '#ff4d6d'); drawHeartPath(W/2, H/2, 11, 1, '#ff758f'); drawHeartPath(W/2, H/2, 6, 1, '#ffb3c1');
+        
+        for(let i=0; i<particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            
+            if(p.type === 'balloon') {
+                ctx.fillStyle = `rgba(255,255,255,0.15)`; ctx.strokeStyle = p.color; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.ellipse(p.x, p.y, 18, 24, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(p.x, p.y+24); ctx.lineTo(p.x, p.y+50); ctx.stroke();
+            } else if(p.type === 'firework') {
+                ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+                p.life -= 0.02; p.vy += 0.1; // gravity
+            } else if(p.type === 'glitter') {
+                ctx.fillStyle = `rgba(255,255,255,${Math.abs(Math.sin(p.life*10))})`;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2); ctx.fill();
+                p.life -= 0.01;
+            }
+        }
+        ctx.globalAlpha = 1;
+        particles = particles.filter(p => p.y > -50 && p.life > 0);
+        requestAnimationFrame(animateParticles);
+    }
+
+    // --- Scene 5: Peek & Push ---
+    function scenePeek() {
+        // Leo appears right and pushes hearts
+        leoWrap.classList.remove('leo-hide');
+        leoWrap.classList.add('leo-push-right');
+        setCatState('state-normal');
+        
+        setTimeout(() => {
+            leoWrap.classList.add('leo-push-in');
+            canvas.style.transform = 'translateX(-50px)'; // Push hearts left
+            
+            setTimeout(() => {
+                leoWrap.classList.remove('leo-push-right', 'leo-push-in');
+                leoWrap.classList.add('leo-hide'); // hide fast
+                
+                setTimeout(() => {
+                    leoWrap.classList.remove('leo-hide');
+                    leoWrap.classList.add('leo-peek-left');
+                    setCatState('state-sad'); // 🥺
+                    
+                    typeText("I made something for you… Do you want to see it?", () => {
+                        btnContainer.innerHTML = '';
+                        const btnY = document.createElement('button');
+                        btnY.innerHTML = "Yes, I want to see it"; btnY.className = "btn btn-green"; btnY.onclick = sceneCake;
+                        const btnN = document.createElement('button');
+                        btnN.innerHTML = "No, I don't want to see it"; btnN.className = "btn btn-red"; btnN.id = "no-btn"; btnN.onclick = sceneCry;
+                        btnContainer.appendChild(btnY); btnContainer.appendChild(btnN);
+                    });
+                }, 800);
+            }, 800);
+        }, 100);
+    }
+
+    // --- Scene 6A: Cake ---
+    function sceneCake() {
+        btnContainer.innerHTML = '';
         hideBubble();
-        leoWrap.classList.remove('leo-peek');
-        leoWrap.classList.add('leo-slide-up');
+        canvas.style.transform = 'translateX(0)';
+        leoWrap.classList.remove('leo-peek-left');
+        leoWrap.classList.add('leo-return-center');
         setCatState('state-apron');
         
         setTimeout(() => {
-            addBtn("Blow!", "btn-green shake", "blow-btn", blowCandles);
+            updateBtn("Blow!", "btn-green shake-btn", blowCandles);
         }, 5000);
     }
 
@@ -582,66 +566,67 @@
         candleClicks++;
         document.getElementById(`f${candleClicks}`).style.display = 'none';
         if (candleClicks === 3) {
-            clearBtns();
-            startParticles();
+            btnContainer.innerHTML = '';
+            spawnFirework(); // Transparent fireworks
+            setTimeout(createGlitter, 1000);
+            
             setTimeout(() => {
                 leoWrap.classList.add('leo-run-away');
-                setTimeout(returnAndKiss, 3000);
+                setTimeout(sceneEnd, 3000);
             }, 2000);
         }
     }
 
-    function returnAndKiss() {
+    function sceneEnd() {
         leoWrap.style.transition = 'none';
-        leoWrap.style.transform = 'translateX(-200vw)';
+        leoWrap.style.transform = 'translateX(-150vw)';
         setCatState('state-normal');
         
         setTimeout(() => {
-            leoWrap.style.transition = 'transform 1s, bottom 1s';
-            leoWrap.style.transform = 'scale(1.2) translateX(0)';
+            leoWrap.style.transition = 'transform 1.5s ease-out';
+            leoWrap.style.transform = 'translateX(-50%) scale(1.2)';
             
-            showBubble("That's all, I wish you a happy year, honey!", () => {
-                setTimeout(blowKissAnim, 1000);
+            typeText("That’s all. I wish you a happy year, honey.", () => {
+                setTimeout(blowKiss, 1000);
             });
         }, 100);
     }
 
-    function blowKissAnim() {
+    function blowKiss() {
         setCatState('state-love'); 
         const m = document.createElement('div');
         m.innerHTML = '❤️';
-        m.style.position = 'absolute'; m.style.fontSize = '40px'; m.style.top = '100px'; m.style.left = '100px';
-        m.style.animation = 'floatUpFade 2s forwards';
+        m.style.position = 'absolute'; m.style.fontSize = '50px'; 
+        m.style.top = '120px'; m.style.left = '100px';
+        m.style.animation = 'fadeOutUp 2s forwards';
         leoWrap.appendChild(m);
     }
 
-    // --- Scene 6B: No (Sad -> Tears) ---
-    function handleRejection() {
-        const btnYes = document.getElementById('btn-yes');
-        const btnNo = document.getElementById('btn-no');
+    // --- Scene 6B: Cry ---
+    function sceneCry() {
+        const btns = btnContainer.querySelectorAll('button');
         
         setCatState('state-sad');
-        hideBubble();
-        
+        // Wait 2s before crying and changing buttons
         setTimeout(() => {
             document.getElementById('sad-tears').style.display = 'block';
-            showBubble("Why?", () => {
-                btnYes.innerHTML = "Okay, I will see it";
-                btnNo.innerHTML = "I told you I don't want to!!!";
-                
-                btnYes.onclick = () => {
+            typeText("Why?", () => {
+                btns[0].innerHTML = "Okay, I'll see it";
+                btns[0].onclick = () => {
                     document.getElementById('sad-tears').style.display = 'none';
-                    showCakeSequence();
+                    sceneCake();
                 };
-                btnNo.onclick = triggerRiverOfTears;
+                
+                btns[1].innerHTML = "I said I don't want!!!";
+                btns[1].onclick = triggerRiverOfTears;
             });
         }, 2000);
     }
 
     function triggerRiverOfTears() {
-        clearBtns();
+        btnContainer.innerHTML = '';
         hideBubble();
-        document.getElementById('sad-tears').style.strokeWidth = "12";
+        document.getElementById('sad-tears').style.strokeWidth = "15";
         const river = document.getElementById('tear-river');
         river.style.height = '100%';
     }
