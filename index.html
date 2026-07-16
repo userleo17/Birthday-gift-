@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
 
 <meta charset="UTF-8">
@@ -9,487 +8,1540 @@
 <title>Happy Birthday</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body{
-
-    width:100%;
-    height:100vh;
-    overflow:hidden;
-    background:linear-gradient(to bottom,#14002f,#001a33);
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0c1b;
 }
 
-#scene{
-
-    position:relative;
-    width:100%;
-    height:100vh;
-    overflow:hidden;
+#experience-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #0b0c1b, #1d0f33);
+    font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#leo{
-
-    position:absolute;
-    left:50%;
-    bottom:-350px;
-    transform:translateX(-50%);
-    width:260px;
-    height:260px;
-    transition:1.2s ease;
+#bg-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-#startBtn{
-
-    position:absolute;
-
-    left:50%;
-    top:50%;
-
-    transform:translate(-50%,-50%);
-
-    padding:18px 45px;
-
-    border:none;
-
-    border-radius:18px;
-
-    background:#73c88d;
-
-    color:white;
-
-    font-size:23px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-    box-shadow:0 0 25px rgba(115,200,141,.35);
-
+/* Floating Cat Head Styling */
+#leo-container {
+    position: absolute;
+    bottom: -300px; /* Hide off-screen initially */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 250px;
+    z-index: 5;
+    transition: bottom 1s cubic-bezier(0.175, 0.885, 0.32, 1.2), left 1.2s ease-in-out, transform 1.2s ease-in-out;
 }
 
-#startBtn:hover{
-
-    transform:translate(-50%,-50%) scale(1.08);
-
+#leo-container.leo-rise {
+    bottom: 120px;
+    animation: floatHead 3s ease-in-out infinite alternate;
 }
 
-#speech{
-
-    position:absolute;
-
-    left:50%;
-
-    top:70px;
-
-    transform:translateX(-50%);
-
-    min-width:320px;
-
-    max-width:430px;
-
-    padding:18px 22px;
-
-    background:white;
-
-    color:#333;
-
-    border-radius:25px;
-
-    display:none;
-
-    text-align:center;
-
-    font-size:20px;
-
-    line-height:1.6;
-
-    box-shadow:0 12px 30px rgba(0,0,0,.25);
-
+#leo-container.leo-back {
+    transform: translateX(-50%) scale(0.8) translateY(-40px);
 }
 
-#speech::after{
-
-    content:"";
-
-    position:absolute;
-
-    bottom:-18px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    border:10px solid transparent;
-
-    border-top-color:white;
-
+#leo-container.leo-right {
+    left: 70%;
+    transform: translateX(-50%) scale(0.9);
 }
 
-#text{
-
-    display:inline-block;
-
+#leo-container.leo-walk-away {
+    left: 150%;
+    transition: left 2.5s ease-in-out;
 }
 
-#nextBtn{
-
-    position:absolute;
-
-    left:50%;
-
-    bottom:70px;
-
-    transform:translateX(-50%);
-
-    padding:15px 40px;
-
-    background:#73c88d;
-
-    color:white;
-
-    border:none;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    font-size:20px;
-
-    display:none;
-
-    transition:.3s;
-
+@keyframes floatHead {
+    0% { transform: translateX(-50%) translateY(0px); }
+    100% { transform: translateX(-50%) translateY(-10px); }
 }
 
-#nextBtn:hover{
-
-    transform:translateX(-50%) scale(1.07);
-
+/* Peeking Leo on left side */
+#leo-peeking {
+    position: absolute;
+    left: -260px;
+    bottom: 80px;
+    width: 240px;
+    height: 240px;
+    z-index: 4;
+    transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.15), transform 1s ease;
+    transform: rotate(20deg);
 }
 
-.fade{
-
-    animation:fade .5s;
-
+#leo-peeking.peek {
+    left: -110px;
 }
 
-@keyframes fade{
-
-from{
-
-opacity:0;
-
-transform:translateY(15px);
-
+#leo-peeking .peeking-paw {
+    transform: translate(182px, 115px) rotate(-90deg);
 }
 
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
+/* Speech Bubble above Leo */
+#speech-bubble {
+    position: absolute;
+    bottom: 390px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 15px 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    max-width: 280px;
+    min-width: 140px;
+    text-align: center;
+    color: #333333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
+#speech-bubble.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
+#speech-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: #ffffff transparent;
+    display: block;
+    width: 0;
+}
+
+#speech-bubble.bubble-right {
+    left: 70%;
+}
+
+/* Expressions Setup inside SVG using CSS toggling */
+#leo-svg .eye-happy,
+#leo-svg .eye-heart,
+#leo-svg .eye-angry,
+#leo-svg .eye-sad,
+#leo-svg .eye-surprised,
+#leo-svg .eye-thinking,
+#leo-svg .eye-kiss,
+#leo-svg .mouth-happy,
+#leo-svg .mouth-sad,
+#leo-svg .mouth-kiss,
+#leo-svg .leo-apron,
+#leo-svg .leo-cake {
+    display: none;
+}
+
+#leo-svg .eye-normal,
+#leo-svg .mouth-normal {
+    display: block;
+}
+
+/* Happy expression */
+.leo-happy #leo-svg .eye-normal { display: none; }
+.leo-happy #leo-svg .eye-happy { display: block; }
+.leo-happy #leo-svg .mouth-normal { display: none; }
+.leo-happy #leo-svg .mouth-happy { display: block; }
+
+/* Laughing expression */
+.leo-laughing #leo-svg .eye-normal { display: none; }
+.leo-laughing #leo-svg .eye-happy { display: block; }
+.leo-laughing #leo-svg .mouth-normal { display: none; }
+.leo-laughing #leo-svg .mouth-happy { display: block; }
+
+/* Heart eyes expression */
+.leo-heart #leo-svg .eye-normal { display: none; }
+.leo-heart #leo-svg .eye-heart { display: block; }
+.leo-heart #leo-svg .mouth-normal { display: none; }
+.leo-heart #leo-svg .mouth-happy { display: block; }
+
+/* Embarrassed expression */
+.leo-embarrassed #leo-svg .eye-normal { display: none; }
+.leo-embarrassed #leo-svg .eye-sad { display: block; }
+.leo-embarrassed #leo-svg .mouth-normal { display: none; }
+.leo-embarrassed #leo-svg .mouth-sad { display: block; }
+
+/* Angry expression */
+.leo-angry #leo-svg .eye-normal { display: none; }
+.leo-angry #leo-svg .eye-angry { display: block; }
+.leo-angry #leo-svg .mouth-normal { display: none; }
+.leo-angry #leo-svg .mouth-sad { display: block; }
+
+/* Sad expression */
+.leo-sad #leo-svg .eye-normal { display: none; }
+.leo-sad #leo-svg .eye-sad { display: block; }
+.leo-sad #leo-svg .mouth-normal { display: none; }
+.leo-sad #leo-svg .mouth-sad { display: block; }
+
+/* Crying expression */
+.leo-crying #leo-svg .eye-normal { display: none; }
+.leo-crying #leo-svg .eye-sad { display: block; }
+.leo-crying #leo-svg .mouth-normal { display: none; }
+.leo-crying #leo-svg .mouth-sad { display: block; }
+
+/* Surprised expression */
+.leo-surprised #leo-svg .eye-normal { display: none; }
+.leo-surprised #leo-svg .eye-surprised { display: block; }
+.leo-surprised #leo-svg .mouth-normal { display: none; }
+.leo-surprised #leo-svg .mouth-happy { display: block; }
+
+/* Thinking expression */
+.leo-thinking #leo-svg .eye-normal { display: none; }
+.leo-thinking #leo-svg .eye-thinking { display: block; }
+.leo-thinking #leo-svg .mouth-normal { display: none; }
+.leo-thinking #leo-svg .mouth-sad { display: block; }
+
+/* Kiss expression */
+.leo-kiss #leo-svg .eye-normal { display: none; }
+.leo-kiss #leo-svg .eye-kiss { display: block; }
+.leo-kiss #leo-svg .mouth-normal { display: none; }
+.leo-kiss #leo-svg .mouth-kiss { display: block; }
+
+/* Apron & Cake toggled by layout state */
+.has-apron-cake #leo-svg .leo-apron { display: block; }
+.has-apron-cake #leo-svg .leo-cake { display: block; }
+
+/* Paw Positioning and Transitions */
+.paw {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+}
+
+.paw-left {
+    transform: translate(45px, 150px);
+}
+
+.paw-right {
+    transform: translate(155px, 150px);
+}
+
+/* Head Scratch Paw Pose */
+.leo-embarrassed .paw-left {
+    transform: translate(35px, 85px) rotate(-45deg);
+}
+
+/* Paws Together Pose */
+.leo-heart .paw-left {
+    transform: translate(85px, 140px) rotate(20deg);
+}
+.leo-heart .paw-right {
+    transform: translate(115px, 140px) rotate(-20deg);
+}
+
+/* Crossed Paws Pose */
+.leo-angry .paw-left {
+    transform: translate(110px, 145px) rotate(35deg);
+}
+.leo-angry .paw-right {
+    transform: translate(90px, 145px) rotate(-35deg);
+}
+
+/* Paw Kiss Windup Pose */
+.leo-kiss-windup .paw-left {
+    transform: translate(100px, 125px) rotate(-15deg);
+}
+
+/* Interactive Control Overlays */
+#controls-container {
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+}
+
+button {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    user-select: none;
+}
+
+.green-btn {
+    background: linear-gradient(135deg, #00e676, #00c853);
+    color: #ffffff;
+    border-radius: 50px;
+    padding: 12px 32px;
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.green-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 230, 118, 0.6);
+}
+
+.green-btn:active {
+    transform: translateY(1px);
+}
+
+.red-btn {
+    background: linear-gradient(135deg, #ff1744, #d50000);
+    color: #ffffff;
+    border-radius: 50px;
+    padding: 12px 32px;
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.red-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 23, 68, 0.6);
+}
+
+.red-btn:active {
+    transform: translateY(1px);
+}
+
+#yes-no-container {
+    display: flex;
+    gap: 15px;
+}
+
+/* Cute Notebook & Input Styling */
+#nickname-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#notebook {
+    background: #fffdf0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px 20px 20px 30px;
+    width: 270px;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
+    position: relative;
+    transform: rotate(-2deg);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.5s ease;
+}
+
+#notebook.notebook-closed {
+    transform: scale(0.01) rotate(-90deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spirals {
+    position: absolute;
+    left: 8px;
+    top: 15px;
+    bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.spiral {
+    width: 14px;
+    height: 8px;
+    background: #b0bec5;
+    border-radius: 4px;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.25);
+}
+
+#nickname-input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px dashed #90caf9;
+    background: transparent;
+    font-size: 1.1rem;
+    font-weight: 600;
+    outline: none;
+    color: #37474f;
+    font-family: 'Fredoka', sans-serif;
+    text-align: center;
+}
+
+.pencil {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 1.5rem;
+    transform: rotate(45deg);
+}
+
+/* Neon Birthday Title */
+#neon-title {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f;
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    width: 90%;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#neon-title.visible {
+    opacity: 1;
+}
+
+/* Stomp Shaking Animation */
+@keyframes stomp {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    15% { transform: translateX(-50%) translateY(-15px); }
+    30% { transform: translateX(-50%) translateY(0); }
+    45% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(0); }
+}
+
+.stomp {
+    animation: stomp 0.6s ease-in-out 2;
+}
+
+/* Blow Button Shaking Animation */
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    10% { transform: translate(-2px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(2px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(2px, 2px) rotate(0deg); }
+}
+
+.shaking {
+    animation: shake 0.5s infinite;
+}
+
+/* Floating kiss heart */
+.kiss-heart {
+    position: absolute;
+    pointer-events: none;
+    z-index: 15;
+    animation: floatKiss 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes floatKiss {
+    0% {
+        transform: scale(0.3) translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3) translate(-30px, -100px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(2) translate(-60px, -220px);
+        opacity: 0;
+    }
+}
+
+/* Dramatic End Screen (Heavy Crying) */
+#game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 12, 27, 0.95);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+}
+
+#game-over-screen.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.game-over-content {
+    text-align: center;
+}
+
+.sad-text {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ff1744;
+    text-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+    margin-bottom: 15px;
+}
+
+.sub-text {
+    font-size: 1.2rem;
+    color: #b0bec5;
+}
+
+.hidden {
+    display: none !important;
+}
 </style>
 
 </head>
 
 <body>
 
-<div id="scene">
+<div id="experience-container">
+    <canvas id="bg-canvas"></canvas>
 
-<button id="startBtn">
+    <!-- Speech bubble above Leo -->
+    <div id="speech-bubble">
+        <p id="bubble-text"></p>
+    </div>
 
-Click Me
+    <!-- Main floating Leo cat head -->
+    <div id="leo-container" class="leo-normal">
+        <svg id="leo-svg" viewBox="0 0 200 200" width="100%" height="100%">
+            <!-- Ears -->
+            <g class="ears">
+                <!-- Left Ear -->
+                <path d="M 50 65 L 15 20 C 15 15, 30 20, 60 45 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+                <path d="M 45 58 L 22 28 C 24 26, 32 30, 52 46 Z" fill="#ffccd5" />
+                <!-- Right Ear -->
+                <path d="M 150 65 L 185 20 C 185 15, 170 20, 140 45 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+                <path d="M 155 58 L 178 28 C 176 26, 168 30, 148 46 Z" fill="#ffccd5" />
+            </g>
 
-</button>
+            <!-- Head Base with fluffy cheeks -->
+            <path d="M 40 90 C 20 100, 20 120, 40 130 C 50 135, 65 138, 80 140 C 90 142, 110 142, 120 140 C 135 138, 150 135, 160 130 C 180 120, 180 100, 160 90 C 155 80, 145 75, 130 73 C 120 71, 80 71, 70 73 C 55 75, 45 80, 40 90 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+            
+            <!-- Light gray patch on top right head -->
+            <path d="M 120 72 C 125 71, 140 73, 148 78 C 145 88, 130 92, 120 85 Z" fill="#d3d3d3" />
 
-<div id="speech">
+            <!-- Blush Cheeks -->
+            <ellipse cx="55" cy="118" rx="10" ry="6" fill="#ffb6c1" opacity="0.8" />
+            <ellipse cx="145" cy="118" rx="10" ry="6" fill="#ffb6c1" opacity="0.8" />
 
-<span id="text"></span>
+            <!-- Whiskers -->
+            <g stroke="#cccccc" stroke-width="2" stroke-linecap="round">
+                <!-- Left whiskers -->
+                <line x1="45" y1="112" x2="20" y2="108" />
+                <line x1="45" y1="118" x2="18" y2="118" />
+                <line x1="45" y1="124" x2="22" y2="128" />
+                <!-- Right whiskers -->
+                <line x1="155" y1="112" x2="180" y2="108" />
+                <line x1="155" y1="118" x2="182" y2="118" />
+                <line x1="155" y1="124" x2="178" y2="128" />
+            </g>
 
-</div>
+            <!-- Expressions Eye Groups -->
+            <g class="eye-normal">
+                <circle cx="70" cy="100" r="10" fill="#222222" />
+                <circle cx="67" cy="97" r="3" fill="#ffffff" />
+                <circle cx="72" cy="103" r="1.5" fill="#ffffff" />
+                <circle cx="130" cy="100" r="10" fill="#222222" />
+                <circle cx="127" cy="97" r="3" fill="#ffffff" />
+                <circle cx="132" cy="103" r="1.5" fill="#ffffff" />
+            </g>
 
-<button id="nextBtn">
+            <g class="eye-happy">
+                <path d="M 60 102 Q 70 92 80 102" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+                <path d="M 120 102 Q 130 92 140 102" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+            </g>
 
-Hi Leo
+            <g class="eye-heart">
+                <path d="M 70 105 C 65 95, 52 97, 60 106 L 70 115 L 80 106 C 88 97, 75 95, 70 105" fill="#ff4d6d" />
+                <path d="M 130 105 C 125 95, 112 97, 120 106 L 130 115 L 140 106 C 148 97, 135 95, 130 105" fill="#ff4d6d" />
+            </g>
 
-</button>
+            <g class="eye-angry">
+                <circle cx="70" cy="100" r="10" fill="#222222" />
+                <circle cx="68" cy="98" r="3" fill="#ffffff" />
+                <line x1="58" y1="90" x2="82" y2="98" stroke="#222222" stroke-width="3.5" stroke-linecap="round" />
+                <circle cx="130" cy="100" r="10" fill="#222222" />
+                <circle cx="128" cy="98" r="3" fill="#ffffff" />
+                <line x1="142" y1="90" x2="118" y2="98" stroke="#222222" stroke-width="3.5" stroke-linecap="round" />
+            </g>
 
-<svg id="leo" width="260" height="260" viewBox="0 0 260 260">
+            <g class="eye-sad">
+                <path d="M 60 98 Q 70 108 80 98" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+                <path d="M 120 98 Q 130 108 140 98" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+            </g>
 
-    <!-- الأذن اليسرى -->
-    <path d="M68 72 L96 28 L118 82 Z"
-          fill="#ffffff"
-          stroke="#2b2b2b"
-          stroke-width="5"/>
+            <g class="eye-surprised">
+                <circle cx="70" cy="100" r="11" fill="#222222" />
+                <circle cx="70" cy="100" r="9" fill="#ffffff" />
+                <circle cx="70" cy="100" r="4" fill="#222222" />
+                <circle cx="130" cy="100" r="11" fill="#222222" />
+                <circle cx="130" cy="100" r="9" fill="#ffffff" />
+                <circle cx="130" cy="100" r="4" fill="#222222" />
+            </g>
 
-    <!-- داخل الأذن -->
-    <path d="M81 70 L96 42 L110 73 Z"
-          fill="#ffb8c8"/>
+            <g class="eye-thinking">
+                <circle cx="70" cy="98" r="10" fill="#222222" />
+                <circle cx="70" cy="94" r="3" fill="#ffffff" />
+                <path d="M 120 100 Q 130 96 140 100" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+            </g>
 
-    <!-- الأذن اليمنى -->
-    <path d="M142 82 L164 28 L192 72 Z"
-          fill="#ffffff"
-          stroke="#2b2b2b"
-          stroke-width="5"/>
+            <g class="eye-kiss">
+                <path d="M 60 102 Q 70 92 80 102" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+                <circle cx="130" cy="100" r="10" fill="#222222" />
+                <circle cx="127" cy="97" r="3" fill="#ffffff" />
+            </g>
 
-    <path d="M150 73 L164 42 L179 70 Z"
-          fill="#ffb8c8"/>
+            <!-- Nose (Always constant) -->
+            <polygon points="96,110 104,110 100,115" fill="#ff4d6d" stroke="#ff4d6d" stroke-linejoin="round" stroke-width="2" />
 
-    <!-- الرأس -->
-    <circle
-        cx="130"
-        cy="135"
-        r="85"
-        fill="#ffffff"
-        stroke="#2b2b2b"
-        stroke-width="5"/>
+            <!-- Mouth expressions -->
+            <path class="mouth-normal" d="M 90 118 Q 95 124 100 119 Q 105 124 110 118" fill="none" stroke="#222222" stroke-width="2.5" stroke-linecap="round" />
+            <path class="mouth-happy" d="M 90 118 Q 100 132 110 118 Q 100 116 90 118" fill="#ff4d6d" stroke="#222222" stroke-width="2" stroke-linecap="round" />
+            <path class="mouth-sad" d="M 92 124 Q 100 117 108 124" fill="none" stroke="#222222" stroke-width="2.5" stroke-linecap="round" />
+            <path class="mouth-kiss" d="M 96 120 Q 100 116 104 120 Q 100 124 96 120" fill="#ff4d6d" stroke="#222222" stroke-width="2" stroke-linecap="round" />
 
-    <!-- بقعة الفرو -->
-    <path
-    d="M82 66
-    Q130 38 178 66
-    Q166 83 150 90
-    Q130 74 110 90
-    Q94 84 82 66 Z"
-    fill="#c8c8c8"/>
+            <!-- Floating Paws -->
+            <g class="paw paw-left">
+                <ellipse cx="0" cy="0" rx="14" ry="11" fill="#ffffff" stroke="#e0e0e0" stroke-width="1.5" />
+                <circle cx="-5" cy="-4" r="2.5" fill="#ffccd5" />
+                <circle cx="0" cy="-6" r="2.5" fill="#ffccd5" />
+                <circle cx="5" cy="-4" r="2.5" fill="#ffccd5" />
+                <ellipse cx="0" cy="3" rx="6" ry="4" fill="#ffccd5" />
+            </g>
+            <g class="paw paw-right">
+                <ellipse cx="0" cy="0" rx="14" ry="11" fill="#ffffff" stroke="#e0e0e0" stroke-width="1.5" />
+                <circle cx="-5" cy="-4" r="2.5" fill="#ffccd5" />
+                <circle cx="0" cy="-6" r="2.5" fill="#ffccd5" />
+                <circle cx="5" cy="-4" r="2.5" fill="#ffccd5" />
+                <ellipse cx="0" cy="3" rx="6" ry="4" fill="#ffccd5" />
+            </g>
 
-    <!-- العين اليسرى -->
-    <ellipse
-        cx="100"
-        cy="125"
-        rx="14"
-        ry="18"
-        fill="#1f1f1f"/>
+            <!-- Apron (for baking cake) -->
+            <g class="leo-apron">
+                <path d="M 80 135 L 120 135 L 115 165 L 85 165 Z" fill="#ffb6c1" stroke="#ff8da1" stroke-width="2" />
+                <path d="M 80 135 Q 100 125 120 135" fill="none" stroke="#ff8da1" stroke-width="2" />
+                <text x="100" y="153" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="bold">LAMA</text>
+            </g>
 
-    <circle
-        cx="96"
-        cy="119"
-        r="4"
-        fill="white"/>
+            <!-- Birthday Cake -->
+            <g class="leo-cake" transform="translate(100, 162)">
+                <!-- Cake Board -->
+                <ellipse cx="0" cy="15" rx="35" ry="8" fill="#d3d3d3" />
+                <!-- Cake Body -->
+                <path d="M -25 0 L 25 0 L 25 15 L -25 15 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" />
+                <ellipse cx="0" cy="0" rx="25" ry="6" fill="#fce4ec" />
+                <ellipse cx="0" cy="15" rx="25" ry="6" fill="#ffffff" />
+                <!-- Frosting drips -->
+                <path d="M -25 0 C -20 5, -15 5, -10 2 C -5 -1, 0 4, 5 1 C 10 -2, 15 5, 20 2 C 23 0, 25 2, 25 0" fill="none" stroke="#ff8da1" stroke-width="2" />
+                <!-- Cake Text -->
+                <text x="0" y="10" font-size="8" fill="#e91e63" font-weight="bold" text-anchor="middle">HBD</text>
+                <!-- Candles -->
+                <g class="candle candle-1">
+                    <line x1="-14" y1="0" x2="-14" y2="-12" stroke="#ffd54f" stroke-width="3" />
+                    <path class="flame" d="M -14 -12 Q -17 -18 -14 -22 Q -11 -18 -14 -12" fill="#ff9100" />
+                </g>
+                <g class="candle candle-2">
+                    <line x1="0" y1="3" x2="0" y2="-9" stroke="#ffd54f" stroke-width="3" />
+                    <path class="flame" d="M 0 -9 Q -3 -15 0 -19 Q 3 -15 0 -9" fill="#ff9100" />
+                </g>
+                <g class="candle candle-3">
+                    <line x1="14" y1="0" x2="14" y2="-12" stroke="#ffd54f" stroke-width="3" />
+                    <path class="flame" d="M 14 -12 Q 11 -18 14 -22 Q 17 -18 14 -12" fill="#ff9100" />
+                </g>
+            </g>
+        </svg>
+    </div>
 
-    <circle
-        cx="102"
-        cy="128"
-        r="2"
-        fill="white"/>
+    <!-- Peeking Leo from the left edge -->
+    <div id="leo-peeking">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <g class="ears">
+                <path d="M 50 65 L 15 20 C 15 15, 30 20, 60 45 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+                <path d="M 45 58 L 22 28 C 24 26, 32 30, 52 46 Z" fill="#ffccd5" />
+                <path d="M 150 65 L 185 20 C 185 15, 170 20, 140 45 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+                <path d="M 155 58 L 178 28 C 176 26, 168 30, 148 46 Z" fill="#ffccd5" />
+            </g>
+            <path d="M 40 90 C 20 100, 20 120, 40 130 C 50 135, 65 138, 80 140 C 90 142, 110 142, 120 140 C 135 138, 150 135, 160 130 C 180 120, 180 100, 160 90 C 155 80, 145 75, 130 73 C 120 71, 80 71, 70 73 C 55 75, 45 80, 40 90 Z" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+            <path d="M 120 72 C 125 71, 140 73, 148 78 C 145 88, 130 92, 120 85 Z" fill="#d3d3d3" />
+            <ellipse cx="55" cy="118" rx="10" ry="6" fill="#ffb6c1" opacity="0.8" />
+            <ellipse cx="145" cy="118" rx="10" ry="6" fill="#ffb6c1" opacity="0.8" />
+            <g stroke="#cccccc" stroke-width="2" stroke-linecap="round">
+                <line x1="45" y1="112" x2="20" y2="108" />
+                <line x1="45" y1="118" x2="18" y2="118" />
+                <line x1="45" y1="124" x2="22" y2="128" />
+                <line x1="155" y1="112" x2="180" y2="108" />
+                <line x1="155" y1="118" x2="182" y2="118" />
+                <line x1="155" y1="124" x2="178" y2="128" />
+            </g>
+            <!-- Peeking Leo uses cute happy eyes -->
+            <g>
+                <path d="M 60 102 Q 70 92 80 102" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+                <path d="M 120 102 Q 130 92 140 102" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" />
+            </g>
+            <polygon points="96,110 104,110 100,115" fill="#ff4d6d" stroke="#ff4d6d" stroke-linejoin="round" stroke-width="2" />
+            <path d="M 90 118 Q 100 132 110 118 Q 100 116 90 118" fill="#ff4d6d" stroke="#222222" stroke-width="2" stroke-linecap="round" />
+            
+            <!-- Right paw gripping left side of screen -->
+            <g class="peeking-paw" transform="translate(180, 110)">
+                <ellipse cx="0" cy="0" rx="14" ry="11" fill="#ffffff" stroke="#e0e0e0" stroke-width="1.5" />
+                <circle cx="-5" cy="-4" r="2.5" fill="#ffccd5" />
+                <circle cx="0" cy="-6" r="2.5" fill="#ffccd5" />
+                <circle cx="5" cy="-4" r="2.5" fill="#ffccd5" />
+                <ellipse cx="0" cy="3" rx="6" ry="4" fill="#ffccd5" />
+            </g>
+        </svg>
+    </div>
 
-    <!-- العين اليمنى -->
-    <ellipse
-        cx="160"
-        cy="125"
-        rx="14"
-        ry="18"
-        fill="#1f1f1f"/>
+    <!-- UI Overlay Controls -->
+    <div id="controls-container">
+        <!-- Interactive buttons -->
+        <button id="action-btn" class="green-btn">Click Me</button>
 
-    <circle
-        cx="156"
-        cy="119"
-        r="4"
-        fill="white"/>
+        <!-- Nickname prompt form -->
+        <div id="nickname-form" class="hidden">
+            <div id="notebook" class="notebook-closed">
+                <div class="spirals">
+                    <div class="spiral"></div>
+                    <div class="spiral"></div>
+                    <div class="spiral"></div>
+                    <div class="spiral"></div>
+                    <div class="spiral"></div>
+                </div>
+                <div class="page">
+                    <input type="text" id="nickname-input" placeholder="What is your nickname?" autocomplete="off" />
+                </div>
+                <div class="pencil">✏️</div>
+            </div>
+            <button id="check-btn" class="green-btn">Check</button>
+        </div>
 
-    <circle
-        cx="162"
-        cy="128"
-        r="2"
-        fill="white"/>
+        <!-- Yes/No options -->
+        <div id="yes-no-container" class="hidden">
+            <button id="yes-btn" class="green-btn">Yes, I want to see it</button>
+            <button id="no-btn" class="red-btn">No, I don't want to</button>
+        </div>
 
-    <!-- الحواجب -->
-    <path
-    d="M82 95
-    Q100 88 118 95"
-    fill="none"
-    stroke="#2b2b2b"
-    stroke-width="4"
-    stroke-linecap="round"/>
+        <!-- Shaking Blow Button -->
+        <button id="blow-btn" class="green-btn shaking hidden">Blow!</button>
+    </div>
 
-    <path
-    d="M142 95
-    Q160 88 178 95"
-    fill="none"
-    stroke="#2b2b2b"
-    stroke-width="4"
-    stroke-linecap="round"/>
+    <!-- Neon Title Display -->
+    <h1 id="neon-title">Happy Birthday To Yosi 🎉</h1>
 
-    <!-- الخدود -->
-    <ellipse
-        cx="78"
-        cy="155"
-        rx="12"
-        ry="8"
-        fill="#ffb6c1"
-        opacity=".6"/>
-
-    <ellipse
-        cx="182"
-        cy="155"
-        rx="12"
-        ry="8"
-        fill="#ffb6c1"
-        opacity=".6"/>
-
-    <!-- الأنف -->
-    <path
-    d="M130 145
-    L122 154
-    L138 154 Z"
-    fill="#ff8ca8"/>
-
-    <!-- الفم -->
-    <path
-    d="M130 154
-    Q124 162 118 162"
-    fill="none"
-    stroke="#2b2b2b"
-    stroke-width="3"
-    stroke-linecap="round"/>
-
-    <path
-    d="M130 154
-    Q136 162 142 162"
-    fill="none"
-    stroke="#2b2b2b"
-    stroke-width="3"
-    stroke-linecap="round"/>
-
-    <!-- الشوارب -->
-    <line x1="38" y1="145" x2="82" y2="140"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <line x1="36" y1="156" x2="82" y2="156"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <line x1="38" y1="167" x2="82" y2="172"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <line x1="178" y1="140" x2="222" y2="145"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <line x1="178" y1="156" x2="224" y2="156"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <line x1="178" y1="172" x2="222" y2="167"
-          stroke="#2b2b2b"
-          stroke-width="3"
-          stroke-linecap="round"/>
-
-    <!-- اليد اليسرى -->
-    <ellipse
-        cx="72"
-        cy="205"
-        rx="22"
-        ry="16"
-        fill="#ffffff"
-        stroke="#2b2b2b"
-        stroke-width="4"/>
-
-    <circle cx="60" cy="198" r="3.5" fill="#ffb8c8"/>
-    <circle cx="68" cy="194" r="3.5" fill="#ffb8c8"/>
-    <circle cx="76" cy="194" r="3.5" fill="#ffb8c8"/>
-    <circle cx="84" cy="198" r="3.5" fill="#ffb8c8"/>
-
-    <!-- اليد اليمنى -->
-    <ellipse
-        cx="188"
-        cy="205"
-        rx="22"
-        ry="16"
-        fill="#ffffff"
-        stroke="#2b2b2b"
-        stroke-width="4"/>
-
-    <circle cx="176" cy="198" r="3.5" fill="#ffb8c8"/>
-    <circle cx="184" cy="194" r="3.5" fill="#ffb8c8"/>
-    <circle cx="192" cy="194" r="3.5" fill="#ffb8c8"/>
-    <circle cx="200" cy="198" r="3.5" fill="#ffb8c8"/>
-
-</svg>
-
+    <!-- Dramatic Heavy Crying End State Screen -->
+    <div id="game-over-screen">
+        <div class="game-over-content">
+            <p class="sad-text">You broke Leo's heart... 💔</p>
+            <p class="sub-text">The page is completely filled with his tears.</p>
+        </div>
+    </div>
 </div>
 
 <script>
+(function () {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
 
-const startBtn = document.getElementById("startBtn");
-const leo = document.getElementById("leo");
-const speech = document.getElementById("speech");
-const text = document.getElementById("text");
-const nextBtn = document.getElementById("nextBtn");
+    const experienceContainer = document.getElementById('experience-container');
+    const actionBtn = document.getElementById('action-btn');
+    const nicknameForm = document.getElementById('nickname-form');
+    const checkBtn = document.getElementById('check-btn');
+    const nicknameInput = document.getElementById('nickname-input');
+    const yesNoContainer = document.getElementById('yes-no-container');
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+    const blowBtn = document.getElementById('blow-btn');
+    const speechBubble = document.getElementById('speech-bubble');
+    const bubbleText = document.getElementById('bubble-text');
+    const leoContainer = document.getElementById('leo-container');
+    const leoPeeking = document.getElementById('leo-peeking');
+    const neonTitle = document.getElementById('neon-title');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const notebook = document.getElementById('notebook');
 
-const message = "Hello, I'm Leo, Lama's cat.";
+    // Canvas rendering arrays
+    const particles = [];
+    const rockets = [];
+    const balloons = [];
+    const tears = [];
 
-function typeWriter(sentence, speed = 50){
+    // Animation state machine
+    let currentFlowState = 'INIT'; 
+    let heartsDrawProgress = [0, 0, 0];
+    let heartSequenceIdx = -1;
+    let heartsScaleFactor = 1;
+    let heartsXOffset = 0;
+    let heartsXOffsetTarget = 0;
 
-    text.innerHTML = "";
+    let isCrying = false;
+    let isHeavyCrying = false;
+    let waterLevel = 0;
+    let cryFrequencyTimer = 0;
+    let balloonReleaseActive = false;
+    let waveOffset = 0;
 
-    let i = 0;
+    let typingTimeout;
+    let idleCountdownTimer;
+    let isCurrentlyMeowing = false;
+    let meowLoopInterval;
+    let secondDecisionRoute = false;
 
-    const timer = setInterval(function(){
+    // Set canvas dimensions
+    function syncCanvasDimensions() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    syncCanvasDimensions();
+    window.addEventListener('resize', syncCanvasDimensions);
 
-        text.innerHTML += sentence.charAt(i);
+    // Dynamic typewriter logic
+    function speak(text, duration = 40, callback) {
+        speechBubble.classList.add('visible');
+        clearTimeout(typingTimeout);
+        bubbleText.innerHTML = "";
+        let index = 0;
+        
+        function appendCharacter() {
+            if (index < text.length) {
+                bubbleText.innerHTML += text.charAt(index);
+                index++;
+                typingTimeout = setTimeout(appendCharacter, duration);
+            } else {
+                if (callback) callback();
+            }
+        }
+        appendCharacter();
+    }
 
-        i++;
+    function silence() {
+        speechBubble.classList.remove('visible');
+    }
 
-        if(i >= sentence.length){
+    // Interactive button clicks
+    actionBtn.addEventListener('click', () => {
+        if (currentFlowState === 'INIT') {
+            actionBtn.classList.add('hidden');
+            leoContainer.classList.add('leo-rise');
+            setLeoState('normal');
 
-            clearInterval(timer);
+            setTimeout(() => {
+                speak("Hello, I'm Leo, Lama's cat.", 45, () => {
+                    actionBtn.innerText = "Hi Leo";
+                    actionBtn.classList.remove('hidden');
+                    currentFlowState = 'MEET_LEO';
+                });
+            }, 1000);
+        } else if (currentFlowState === 'MEET_LEO') {
+            actionBtn.classList.add('hidden');
+            speak("This is a birthday gift from her.", 45, () => {
+                actionBtn.innerText = "Awesome!";
+                actionBtn.classList.remove('hidden');
+                currentFlowState = 'AWESOME';
+            });
+        } else if (currentFlowState === 'AWESOME') {
+            actionBtn.classList.add('hidden');
+            leoContainer.classList.add('leo-back');
+            notebook.classList.remove('notebook-closed');
+            nicknameForm.classList.remove('hidden');
+            setLeoState('normal');
+            currentFlowState = 'INPUT_NICKNAME';
+            resetIdleTimer();
+        }
+    });
 
-            nextBtn.style.display = "block";
+    // Nickname validation logic
+    function checkIsArabic(text) {
+        return /[\u0600-\u06FF]/.test(text);
+    }
 
+    function handleUserInput() {
+        if (isCurrentlyMeowing) {
+            stopMeowingCycle();
+        }
+        resetIdleTimer();
+
+        const val = nicknameInput.value;
+        if (checkIsArabic(val)) {
+            setLeoState('embarrassed');
+            speak("Sorry, English only 😅");
+        } else if (val.trim().length > 0) {
+            setLeoState('thinking');
+            silence();
+        } else {
+            setLeoState('normal');
+        }
+    }
+
+    nicknameInput.addEventListener('input', handleUserInput);
+    nicknameInput.addEventListener('focus', handleUserInput);
+
+    function resetIdleTimer() {
+        clearTimeout(idleCountdownTimer);
+        idleCountdownTimer = setTimeout(() => {
+            if (currentFlowState === 'INPUT_NICKNAME' && !isCurrentlyMeowing) {
+                startMeowingCycle();
+            }
+        }, 5000);
+    }
+
+    function startMeowingCycle() {
+        isCurrentlyMeowing = true;
+        notebook.classList.add('notebook-closed');
+        
+        function meowCycle() {
+            setLeoState('normal');
+            speak("Meow...", 50, () => {
+                setTimeout(() => {
+                    silence();
+                }, 1000);
+            });
+        }
+        meowCycle();
+        meowLoopInterval = setInterval(meowCycle, 2000);
+    }
+
+    function stopMeowingCycle() {
+        isCurrentlyMeowing = false;
+        clearInterval(meowLoopInterval);
+        notebook.classList.remove('notebook-closed');
+        silence();
+        resetIdleTimer();
+    }
+
+    checkBtn.addEventListener('click', () => {
+        if (isCurrentlyMeowing) {
+            stopMeowingCycle();
+        }
+        clearTimeout(idleCountdownTimer);
+
+        const val = nicknameInput.value.trim();
+        if (val.length === 0 || checkIsArabic(val)) {
+            // Invalid entry reaction
+            setLeoState('angry');
+            leoContainer.classList.add('stomp');
+            speak("No, that's not it!", 45);
+            setTimeout(() => {
+                leoContainer.classList.remove('stomp');
+                setLeoState('normal');
+                resetIdleTimer();
+            }, 2000);
+        } else {
+            // Valid nickname entry
+            setLeoState('heart');
+            speak("Yay! Perfect! ❤️", 45);
+            nicknameForm.classList.add('hidden');
+            
+            setTimeout(() => {
+                silence();
+                currentFlowState = 'CELEBRATION';
+                startHeartTransition();
+            }, 2000);
+        }
+    });
+
+    // Drawing Heart Mathematics
+    function retrieveHeartPoint(t, scale, cx, cy) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+        return {
+            x: cx + x * scale,
+            y: cy - y * scale
+        };
+    }
+
+    function startHeartTransition() {
+        heartSequenceIdx = 0;
+        heartsDrawProgress = [0, 0, 0];
+        
+        function animateTrace() {
+            if (heartSequenceIdx < 3) {
+                heartsDrawProgress[heartSequenceIdx] += 0.05;
+                if (heartsDrawProgress[heartSequenceIdx] >= Math.PI * 2) {
+                    heartsDrawProgress[heartSequenceIdx] = Math.PI * 2;
+                    heartSequenceIdx++;
+                }
+                setTimeout(animateTrace, 16);
+            } else {
+                // Drawing completed, trigger fireworks
+                neonTitle.classList.add('visible');
+                triggerFireworkRound();
+                
+                setTimeout(() => {
+                    triggerFireworkRound();
+                }, 1800);
+
+                setTimeout(() => {
+                    triggerBalloonsRound();
+                }, 3500);
+            }
+        }
+        animateTrace();
+    }
+
+    // Choice sequence
+    function enterChoicePhase() {
+        currentFlowState = 'CHOICE_DECISION';
+        heartsXOffsetTarget = -canvas.width * 0.15;
+        leoContainer.classList.add('leo-right');
+        leoPeeking.classList.add('peek');
+
+        setTimeout(() => {
+            speak("I made something for you... Would you like to see it?", 45, () => {
+                yesNoContainer.classList.remove('hidden');
+            });
+        }, 1200);
+    }
+
+    yesBtn.addEventListener('click', () => {
+        yesNoContainer.classList.add('hidden');
+        if (secondDecisionRoute) {
+            // Wiping tears path
+            secondDecisionRoute = false;
+            isCrying = false;
+            setLeoState('normal');
+            proceedToBakeCake();
+        } else {
+            proceedToBakeCake();
+        }
+    });
+
+    noBtn.addEventListener('click', () => {
+        yesNoContainer.classList.add('hidden');
+        if (!secondDecisionRoute) {
+            secondDecisionRoute = true;
+            setLeoState('sad');
+            speak("...", 40);
+            
+            setTimeout(() => {
+                setLeoState('crying');
+                isCrying = true;
+                speak("Why?", 45, () => {
+                    yesBtn.innerText = "Okay, I'll see it";
+                    noBtn.innerText = "I told you NO!!";
+                    yesNoContainer.classList.remove('hidden');
+                });
+            }, 2000);
+        } else {
+            // User persists on refusing
+            isCrying = false;
+            setLeoState('crying');
+            isHeavyCrying = true;
+            silence();
+        }
+    });
+
+    function proceedToBakeCake() {
+        leoPeeking.classList.remove('peek');
+        leoContainer.classList.remove('leo-right');
+        heartsXOffsetTarget = 0;
+
+        setTimeout(() => {
+            leoContainer.classList.add('has-apron-cake');
+            setLeoState('happy');
+            speak("Tadaaa! Look what I baked for you! 🎂", 45, () => {
+                setTimeout(() => {
+                    blowBtn.classList.remove('hidden');
+                }, 5000);
+            });
+        }, 1200);
+    }
+
+    // Extinguish Cake Candles
+    let extinguishedCandleCount = 0;
+    blowBtn.addEventListener('click', () => {
+        extinguishedCandleCount++;
+        if (extinguishedCandleCount === 1) {
+            document.querySelector('#leo-svg .candle-3 .flame').style.display = 'none';
+        } else if (extinguishedCandleCount === 2) {
+            document.querySelector('#leo-svg .candle-2 .flame').style.display = 'none';
+        } else if (extinguishedCandleCount === 3) {
+            document.querySelector('#leo-svg .candle-1 .flame').style.display = 'none';
+            blowBtn.classList.add('hidden');
+            
+            triggerTransparentFireworks();
+
+            setTimeout(() => {
+                leoContainer.classList.add('leo-walk-away');
+                silence();
+
+                setTimeout(() => {
+                    leoContainer.classList.remove('leo-walk-away');
+                    leoContainer.classList.remove('has-apron-cake');
+                    setLeoState('happy');
+                    
+                    setTimeout(() => {
+                        speak("That's everything. Happy Birthday, Sweetie.", 45, () => {
+                            setTimeout(() => {
+                                triggerPawKiss();
+                            }, 1500);
+                        });
+                    }, 1200);
+                }, 3000);
+
+            }, 2000);
+        }
+    });
+
+    // Blowing kiss gesture
+    function triggerPawKiss() {
+        setLeoState('kiss');
+        setTimeout(() => {
+            leoContainer.classList.add('leo-kiss-windup');
+            setTimeout(() => {
+                generateFloatingKissHeart();
+                setTimeout(() => {
+                    leoContainer.classList.remove('leo-kiss-windup');
+                    setLeoState('happy');
+                }, 1000);
+            }, 600);
+        }, 200);
+    }
+
+    function generateFloatingKissHeart() {
+        const rect = leoContainer.getBoundingClientRect();
+        const parentRect = experienceContainer.getBoundingClientRect();
+        const kissHeartNode = document.createElement('div');
+        kissHeartNode.className = 'kiss-heart';
+        kissHeartNode.innerHTML = `
+            <svg viewBox="0 0 24 24" width="35" height="35">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#ff4d6d" />
+            </svg>
+        `;
+        const xPos = rect.left - parentRect.left + rect.width / 2 - 17.5;
+        const yPos = rect.top - parentRect.top + rect.height / 2 - 10;
+        kissHeartNode.style.left = `${xPos}px`;
+        kissHeartNode.style.top = `${yPos}px`;
+        experienceContainer.appendChild(kissHeartNode);
+        
+        setTimeout(() => {
+            kissHeartNode.remove();
+        }, 2000);
+    }
+
+    // Helper to configure cat eyes and mouth
+    function setLeoState(state) {
+        leoContainer.className = 'leo-' + state;
+        if (state === 'normal') {
+            leoContainer.classList.add('leo-rise');
+        }
+    }
+
+    // Core Particle Structures
+    class CanvasParticle {
+        constructor(x, y, color, isGlitter = false) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.isGlitter = isGlitter;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = isGlitter ? Math.random() * 3 + 1 : Math.random() * 6 + 2;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.gravity = isGlitter ? 0.04 : 0.15;
+            this.alpha = 1;
+            this.decay = isGlitter ? 0.015 : 0.02;
+            this.size = isGlitter ? Math.random() * 2 + 1.5 : Math.random() * 3 + 2;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += this.gravity;
+            this.alpha -= this.decay;
+        }
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    class Rocket {
+        constructor(startX, startY, targetX, targetY, color) {
+            this.x = startX;
+            this.y = startY;
+            this.targetX = targetX;
+            this.targetY = targetY;
+            this.color = color;
+            const angle = Math.atan2(targetY - startY, targetX - startX);
+            const speed = 11;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.alive = true;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.vy >= 0 || this.y <= this.targetY) {
+                this.alive = false;
+                for (let i = 0; i < 65; i++) {
+                    particles.push(new CanvasParticle(this.x, this.y, this.color));
+                }
+            }
+        }
+        draw() {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    class Balloon {
+        constructor() {
+            this.radius = Math.random() * 10 + 16;
+            this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
+            this.y = canvas.height + Math.random() * 100 + 40;
+            const colors = [
+                'rgba(255, 182, 193, 0.55)', // Soft pink
+                'rgba(173, 216, 230, 0.55)', // Soft blue
+                'rgba(255, 255, 224, 0.55)', // Soft yellow
+                'rgba(221, 160, 221, 0.55)', // Soft lavender
+                'rgba(152, 251, 152, 0.55)'  // Soft green
+            ];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.speedY = Math.random() * 1.5 + 1.2;
+            this.wobbleSpeed = Math.random() * 0.02 + 0.01;
+            this.wobbleRange = Math.random() * 1.5 + 0.5;
+            this.wobblePhase = Math.random() * Math.PI * 2;
+            this.stringLength = this.radius * 2.5;
+        }
+        update() {
+            this.y -= this.speedY;
+            this.wobblePhase += this.wobbleSpeed;
+            this.x += Math.sin(this.wobblePhase) * this.wobbleRange * 0.5;
+        }
+        draw() {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Highlight shine
+            ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+            ctx.beginPath();
+            ctx.ellipse(this.x - this.radius * 0.3, this.y - this.radius * 0.4, this.radius * 0.2, this.radius * 0.3, Math.PI/4, 0, Math.PI*2);
+            ctx.fill();
+
+            // String connector
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y + this.radius);
+            ctx.lineTo(this.x - 4, this.y + this.radius + 5);
+            ctx.lineTo(this.x + 4, this.y + this.radius + 5);
+            ctx.closePath();
+            ctx.fill();
+
+            // Ribbon line
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y + this.radius + 5);
+            for (let i = 0; i < this.stringLength; i += 2) {
+                let wx = this.x + Math.sin(i * 0.1 + this.wobblePhase) * 3;
+                ctx.lineTo(wx, this.y + this.radius + 5 + i);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    class Tear {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.vy = Math.random() * 1.5 + 1;
+            this.vx = (Math.random() - 0.5) * 1.2;
+            this.size = Math.random() * 2 + 2;
+            this.alpha = 0.85;
+        }
+        update() {
+            this.y += this.vy;
+            this.x += this.vx;
+            this.vy += 0.08; // Gravity pulls tear drops
+        }
+        draw() {
+            ctx.save();
+            ctx.fillStyle = `rgba(135, 206, 250, ${this.alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y - this.size);
+            ctx.quadraticCurveTo(this.x - this.size, this.y + this.size, this.x, this.y + this.size * 1.5);
+            ctx.quadraticCurveTo(this.x + this.size, this.y + this.size, this.x, this.y - this.size);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // Launch firework round
+    function triggerFireworkRound() {
+        const palette = ['#ff4081', '#00e676', '#2979ff', '#ffd600', '#d500f9'];
+        for (let i = 0; i < 3; i++) {
+            const startX = Math.random() * canvas.width;
+            const startY = canvas.height;
+            const targetX = canvas.width * 0.2 + Math.random() * (canvas.width * 0.6);
+            const targetY = canvas.height * 0.15 + Math.random() * (canvas.height * 0.25);
+            const color = palette[Math.floor(Math.random() * palette.length)];
+            rockets.push(new Rocket(startX, startY, targetX, targetY, color));
+        }
+    }
+
+    function triggerTransparentFireworks() {
+        const colors = ['rgba(255,105,180,0.65)', 'rgba(0,191,255,0.65)', 'rgba(152,251,152,0.65)', 'rgba(255,223,0,0.65)'];
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                const startX = Math.random() * canvas.width;
+                const startY = canvas.height;
+                const targetX = canvas.width * 0.2 + Math.random() * (canvas.width * 0.6);
+                const targetY = canvas.height * 0.15 + Math.random() * (canvas.height * 0.3);
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                rockets.push(new Rocket(startX, startY, targetX, targetY, color));
+            }, i * 350);
+        }
+        
+        // Spawn extra beautiful glitter around the cake
+        const rect = leoContainer.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const cx = rect.left - canvasRect.left + rect.width / 2;
+        const cy = rect.top - canvasRect.top + rect.height / 2 + 50;
+        for (let i = 0; i < 80; i++) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new CanvasParticle(cx + (Math.random() - 0.5) * 60, cy + (Math.random() - 0.5) * 60, color, true));
+        }
+    }
+
+    function triggerBalloonsRound() {
+        for (let i = 0; i < 16; i++) {
+            balloons.push(new Balloon());
+        }
+        balloonReleaseActive = true;
+    }
+
+    function explodeNeonTitle() {
+        neonTitle.classList.remove('visible');
+        const colors = ['#ffd700', '#ff007f', '#00ffff', '#ff9f1c', '#ffffff'];
+        const rect = neonTitle.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const cx = rect.left - canvasRect.left + rect.width / 2;
+        const cy = rect.top - canvasRect.top + rect.height / 2;
+        
+        for (let i = 0; i < 180; i++) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new CanvasParticle(cx + (Math.random() - 0.5) * 150, cy + (Math.random() - 0.5) * 40, color, true));
         }
 
-    }, speed);
+        setTimeout(() => {
+            enterChoicePhase();
+        }, 1500);
+    }
 
-}
+    // Capture precise coordinates for crying droplets
+    function fetchEyePositions() {
+        const rect = leoContainer.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const scaleX = rect.width / 200;
+        const scaleY = rect.height / 200;
+        return {
+            left: {
+                x: rect.left - canvasRect.left + 55 * scaleX,
+                y: rect.top - canvasRect.top + 100 * scaleY
+            },
+            right: {
+                x: rect.left - canvasRect.left + 145 * scaleX,
+                y: rect.top - canvasRect.top + 100 * scaleY
+            }
+        };
+    }
 
-startBtn.addEventListener("click", function(){
+    // Animation Render Loop
+    function frameUpdate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    startBtn.style.display = "none";
+        // Smoothly pan canvas hearts
+        heartsXOffset += (heartsXOffsetTarget - heartsXOffset) * 0.05;
 
-    leo.style.bottom = "120px";
+        // Draw drawn overlay hearts
+        if (heartSequenceIdx >= 0) {
+            heartsScaleFactor = Math.min(canvas.width, canvas.height) / 90;
+            const positions = [
+                { cx: canvas.width / 2 - heartsScaleFactor * 10, cy: canvas.height / 2 + heartsScaleFactor * 3, scale: heartsScaleFactor * 0.7 },
+                { cx: canvas.width / 2 + heartsScaleFactor * 10, cy: canvas.height / 2 + heartsScaleFactor * 3, scale: heartsScaleFactor * 0.7 },
+                { cx: canvas.width / 2, cy: canvas.height / 2 - heartsScaleFactor * 5, scale: heartsScaleFactor * 1.0 }
+            ];
 
-    setTimeout(function(){
+            // Render previously fully traced shapes
+            for (let i = 0; i < heartSequenceIdx; i++) {
+                if (i < 3) {
+                    ctx.save();
+                    ctx.translate(heartsXOffset, 0);
+                    ctx.beginPath();
+                    const startPt = retrieveHeartPoint(0, positions[i].scale, positions[i].cx, positions[i].cy);
+                    ctx.moveTo(startPt.x, startPt.y);
+                    for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.03) {
+                        const pt = retrieveHeartPoint(t, positions[i].scale, positions[i].cx, positions[i].cy);
+                        ctx.lineTo(pt.x, pt.y);
+                    }
+                    ctx.fillStyle = "rgba(255, 182, 193, 0.7)";
+                    ctx.fill();
+                    ctx.strokeStyle = "rgba(255, 77, 109, 0.9)";
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
 
-        speech.style.display = "block";
+            // Draw current path in real time
+            if (heartSequenceIdx < 3) {
+                const currentLimit = heartsDrawProgress[heartSequenceIdx];
+                ctx.save();
+                ctx.translate(heartsXOffset, 0);
+                ctx.beginPath();
+                const startPt = retrieveHeartPoint(0, positions[heartSequenceIdx].scale, positions[heartSequenceIdx].cx, positions[heartSequenceIdx].cy);
+                ctx.moveTo(startPt.x, startPt.y);
+                for (let t = 0; t <= currentLimit; t += 0.03) {
+                    const pt = retrieveHeartPoint(t, positions[heartSequenceIdx].scale, positions[heartSequenceIdx].cx, positions[heartSequenceIdx].cy);
+                    ctx.lineTo(pt.x, pt.y);
+                }
+                ctx.strokeStyle = "rgba(255, 77, 109, 0.9)";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
 
-        typeWriter(message);
+        // Draw and update active rockets
+        for (let i = rockets.length - 1; i >= 0; i--) {
+            rockets[i].update();
+            rockets[i].draw();
+            if (!rockets[i].alive) {
+                rockets.splice(i, 1);
+            }
+        }
 
-    },1200);
+        // Update active glitter particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].alpha <= 0) {
+                particles.splice(i, 1);
+            }
+        }
 
-});
-    
-nextBtn.addEventListener("click", function(){
+        // Update active balloons
+        for (let i = balloons.length - 1; i >= 0; i--) {
+            balloons[i].update();
+            balloons[i].draw();
+            if (balloons[i].y < -60) {
+                balloons.splice(i, 1);
+            }
+        }
 
-    nextBtn.style.display = "none";
+        // Trigger explosion when balloons exit top edge
+        if (balloonReleaseActive && balloons.length === 0) {
+            balloonReleaseActive = false;
+            explodeNeonTitle();
+        }
 
-    text.innerHTML = "";
+        // Crying simulation
+        if (isCrying) {
+            cryFrequencyTimer++;
+            if (cryFrequencyTimer % 4 === 0) {
+                const positions = fetchEyePositions();
+                tears.push(new Tear(positions.left.x, positions.left.y));
+                tears.push(new Tear(positions.right.x, positions.right.y));
+            }
+        }
 
-    typeWriter("This is a gift from her for your birthday.");
+        if (isHeavyCrying) {
+            cryFrequencyTimer++;
+            if (cryFrequencyTimer % 1 === 0) {
+                const positions = fetchEyePositions();
+                tears.push(new Tear(positions.left.x - 3 + Math.random() * 6, positions.left.y));
+                tears.push(new Tear(positions.right.x - 3 + Math.random() * 6, positions.right.y));
+                tears.push(new Tear(positions.left.x, positions.left.y + 2));
+                tears.push(new Tear(positions.right.x, positions.right.y + 2));
+            }
+            // Rapid liquid level rise
+            waterLevel += 1.4;
+        }
 
-});
+        // Update active tear drops
+        for (let i = tears.length - 1; i >= 0; i--) {
+            tears[i].update();
+            tears[i].draw();
+            if (tears[i].y > canvas.height - waterLevel || tears[i].y > canvas.height + 20) {
+                tears.splice(i, 1);
+            }
+        }
+
+        // Draw rising water during heavy crying
+        if (waterLevel > 0) {
+            ctx.save();
+            ctx.fillStyle = "rgba(41, 121, 255, 0.75)";
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - waterLevel);
+            
+            // Generate gentle horizontal wave formula
+            waveOffset += 0.08;
+            for (let x = 0; x <= canvas.width; x += 15) {
+                const y = canvas.height - waterLevel + Math.sin(x * 0.015 + waveOffset) * 6;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            if (waterLevel >= canvas.height && !gameOverScreen.classList.contains('visible')) {
+                gameOverScreen.classList.add('visible');
+            }
+        }
+
+        requestAnimationFrame(frameUpdate);
+    }
+    requestAnimationFrame(frameUpdate);
+
+})();
 </script>
 
 </body>
-
 </html>
