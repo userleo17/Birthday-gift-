@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday for Yosi</title>
+    <title>Happy Birthday Yosi</title>
     <style>
-        /* 🌌 خلفية ليلية متدرجة تناسب عيد الميلاد */
+        /* 🌌 خلفية ليلية كحلية عميقة ومريحة للعين */
         body {
             margin: 0;
             padding: 0;
@@ -13,10 +13,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, #0a0e2a 0%, #010208 100%);
+            background: radial-gradient(circle at center, #07152c 0%, #020712 100%);
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
         }
 
@@ -26,121 +25,122 @@
             width: 100%;
             height: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
             z-index: 10;
         }
 
-        /* 🎂 عبارة Happy Birthday مع تأثير النيون */
-        .header-text {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: -30px; /* تداخل خفيف مع القلوب */
-            color: #fff;
-            /* تأثير النيون (Glow) */
-            text-shadow: 
-                0 0 7px #fff,
-                0 0 10px #ff66b3,
-                0 0 21px #ff66b3,
-                0 0 42px #ff66b3,
-                0 0 82px #ff66b3,
-                0 0 92px #ff66b3;
-            animation: textPulse 1.5s infinite alternate;
-        }
-
-        @keyframes textPulse {
-            from { opacity: 0.8; text-shadow: 0 0 10px #ff66b3, 0 0 20px #ff66b3; }
-            to { opacity: 1; text-shadow: 0 0 15px #ff66b3, 0 0 30px #ff66b3; }
-        }
-
-        /* حاوية القلوب المتداخلة (مقتبسة من هيكل الصورة) */
-        .hearts-wrapper {
-            position: relative;
-            width: 300px; /* حجم مناسب للكمبيوتر */
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 💗 القلوب النحيفة النيون (تأثير الرسم التدريجي) */
-        .heart {
+        /* 💗 حاوية القلوب النيون المتداخلة */
+        .hearts-svg {
+            width: 90vw;
+            max-width: 480px;
+            height: auto;
             position: absolute;
-            fill: none; /* القلوب من الداخل مفرغة */
-            stroke: #ff66b3; /* لون النيون */
-            stroke-width: 1.5px; /* نحيفة جداً مثل الصورة */
+            /* 🔥 السر هنا: يمنع المتصفح من قص لمعة النيون ويجعلها تنتشر بحرية دون حواف مربعة */
+            overflow: visible !important; 
+        }
+
+        /* ستايل مسارات القلوب النحيفة */
+        .heart-path {
+            fill: none;
+            stroke: #ff66b3; /* لون نيون وردي ساحر */
+            stroke-width: 1px; /* خطوط نحيفة جداً ومطابقة لطلبك */
             stroke-linecap: round;
-            filter: drop-shadow(0 0 5px #ff66b3) drop-shadow(0 0 15px #ff66b3);
-            /* أنيميشن الرسم التدريجي */
+            vector-effect: non-scaling-stroke; /* للحفاظ على النحافة في كل الشاشات */
+            
+            /* ✨ تأثير توهج نيون طبيعي وناعم ينتشر بالكامل */
+            filter: drop-shadow(0 0 8px rgba(255, 102, 179, 0.8)) 
+                    drop-shadow(0 0 20px rgba(255, 51, 153, 0.5))
+                    drop-shadow(0 0 35px rgba(255, 51, 153, 0.3));
+            
+            /* تجهيز أنيميشن الرسم التدريجي */
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-            animation: drawHeart 4s ease-out forwards;
         }
 
-        /* إحداثيات القلب النحيف النيوني (دقيقة) */
-        /* قلب كبير */
-        .heart-outer { width: 300px; height: 300px; animation-delay: 0s; }
-        /* قلب وسط */
-        .heart-middle { width: 220px; height: 220px; animation-delay: 1.5s; }
-        /* قلب صغير */
-        .heart-inner { width: 140px; height: 140px; animation-delay: 3s; }
+        /* ⏱️ تراتبية الرسم التدريجي (من الصغير إلى الكبير) */
+        
+        /* 1. القلب الصغير (يبدأ أولاً) */
+        .heart-inner {
+            transform-origin: 50px 53px;
+            transform: scale(0.5);
+            animation: drawStep 2s ease-out 0.5s forwards;
+        }
 
-        @keyframes drawHeart {
+        /* 2. القلب الوسط (يبدأ ثانياً) */
+        .heart-middle {
+            transform-origin: 50px 53px;
+            transform: scale(0.75);
+            animation: drawStep 2s ease-out 2s forwards;
+        }
+
+        /* 3. القلب الكبير (يبدأ أخيراً) */
+        .heart-outer {
+            transform-origin: 50px 53px;
+            transform: scale(1);
+            animation: drawStep 2s ease-out 3.5s forwards;
+        }
+
+        @keyframes drawStep {
             to {
                 stroke-dashoffset: 0;
             }
         }
 
-        /* النص داخل القلب */
-        .inner-text {
+        /* 🎂 عبارة التهنئة (نيون ناعم بالمنتصف تماماً مثل الصورة) */
+        .birthday-text {
             position: absolute;
-            font-size: 1rem;
-            color: #ff66b3;
-            font-weight: normal;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #ffb3d9;
             font-style: italic;
+            text-align: center;
+            pointer-events: none;
+            z-index: 15;
             opacity: 0;
-            animation: fadeIn 1s ease-out 4.5s forwards; /* يظهر بعد اكتمال رسم القلوب */
+            /* نيون فخم للنص متناسق مع لمعة القلوب */
+            text-shadow: 
+                0 0 6px #ff66b3,
+                0 0 15px #ff3399;
+            animation: fadeInText 1.5s ease-out 1s forwards;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInText {
             to { opacity: 1; }
         }
 
-        /* 🎈 البالونات شفافة جداً */
+        /* 🎈 البالونات الشفافة جداً */
         .balloon {
             position: absolute;
-            width: 40px;
-            height: 50px;
+            width: 45px;
+            height: 55px;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0.15; /* شفافية عالية جداً */
-            background-color: #ff66b3; /* لون أساسي خفيف */
-            border: 1px solid rgba(255, 102, 179, 0.4);
-            bottom: -60px;
-            animation: floatUp 15s linear infinite;
+            background-color: rgba(255, 102, 179, 0.04); /* شفافة للغاية */
+            border: 1px solid rgba(255, 102, 179, 0.15);
+            bottom: -80px;
+            z-index: 2;
+            animation: floatUp 14s linear infinite;
         }
         
-        .balloon-string {
+        .balloon::after {
+            content: "";
             position: absolute;
             width: 1px;
-            height: 30px;
-            background: rgba(255, 102, 179, 0.2);
-            bottom: -30px;
+            height: 25px;
+            background: rgba(255, 102, 179, 0.08);
+            bottom: -25px;
             left: 50%;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 0.15; }
-            90% { opacity: 0.15; }
-            100% { transform: translateY(-110vh); opacity: 0; }
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(15deg); opacity: 0; }
         }
 
-        /* 🎆 حاوية الألعاب النارية */
-        #fireworks-canvas {
+        /* 🎆 الألعاب النارية */
+        #canvas-fireworks {
             position: absolute;
             top: 0;
             left: 0;
@@ -150,149 +150,118 @@
             z-index: 1;
         }
 
-        /* 📱 التوافق مع الجوال والآيباد */
-        @media (max-width: 768px) {
-            .header-text { font-size: 2rem; margin-bottom: -15px; }
-            .hearts-wrapper { width: 220px; height: 220px; }
-            .heart-outer { width: 220px; height: 220px; }
-            .heart-middle { width: 160px; height: 160px; }
-            .heart-inner { width: 100px; height: 100px; }
-            .inner-text { font-size: 0.8rem; }
-        }
-
-        @media (max-width: 480px) {
-            .header-text { font-size: 1.5rem; margin-bottom: -10px; }
-            .hearts-wrapper { width: 180px; height: 180px; }
-            .heart-outer { width: 180px; height: 180px; }
-            .heart-middle { width: 130px; height: 130px; }
-            .heart-inner { width: 80px; height: 80px; }
-            .inner-text { font-size: 0.7rem; }
+        /* 📱 متجاوب بالكامل مع كافة الشاشات (Responsive) */
+        @media (max-width: 600px) {
+            .birthday-text {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🎆 كانفاس للألعاب النارية -->
-    <canvas id="fireworks-canvas"></canvas>
+    <!-- 🎆 تأثير الألعاب النارية -->
+    <canvas id="canvas-fireworks"></canvas>
 
     <div class="container">
-        <!-- 🎂 عبارة التهنئة الرئيسية (نيون) -->
-        <div class="header-text">Happy Birthday to yosi 🎉</div>
+        <!-- 🎂 عبارة التهنئة النيون بالمنتصف -->
+        <div class="birthday-text">Happy Birthday to yosi 🎉</div>
 
-        <!-- 💗 حاوية القلوب النحيفة المتداخلة (مستوحاة من الصورة) -->
-        <div class="hearts-wrapper">
-            <!-- مسار القلب SVG النحيف للتحكم في الرسم -->
-            <svg class="heart heart-outer" viewBox="0 0 32 29.6">
-                <path d="M23.6 0c-3.4 0-6.3 2.7-7.6 5.6C14.7 2.7 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z"/>
-            </svg>
-            <svg class="heart heart-middle" viewBox="0 0 32 29.6">
-                <path d="M23.6 0c-3.4 0-6.3 2.7-7.6 5.6C14.7 2.7 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z"/>
-            </svg>
-            <svg class="heart heart-inner" viewBox="0 0 32 29.6">
-                <path d="M23.6 0c-3.4 0-6.3 2.7-7.6 5.6C14.7 2.7 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z"/>
-            </svg>
+        <!-- 💗 القلوب النحيفة مدمجة داخل SVG مع تفعيل ميزة عدم القص (overflow: visible) -->
+        <svg class="hearts-svg" viewBox="0 0 100 106">
+            <!-- القلب الصغير (الداخلي) -->
+            <path class="heart-path heart-inner" d="M 50,32 C 43,18 25,18 25,45 C 25,67 50,88 50,88 C 50,88 75,67 75,45 C 75,18 57,18 50,32 Z" />
             
-            <!-- النص الداخلي -->
-            <div class="inner-text">Happy Birthday to yosi</div>
-        </div>
+            <!-- القلب الوسط (الأوسط) -->
+            <path class="heart-path heart-middle" d="M 50,32 C 43,18 25,18 25,45 C 25,67 50,88 50,88 C 50,88 75,67 75,45 C 75,18 57,18 50,32 Z" />
+            
+            <!-- القلب الكبير (الخارجي) -->
+            <path class="heart-path heart-outer" d="M 50,32 C 43,18 25,18 25,45 C 25,67 50,88 50,88 C 50,88 75,67 75,45 C 75,18 57,18 50,32 Z" />
+        </svg>
     </div>
 
     <script>
-        // --- 🎆 تأثير الألعاب النارية (تنفجر مرتين وتتوقف) ---
-        const canvas = document.getElementById('fireworks-canvas');
+        // --- 🎈 إنشاء بالونات شفافة هادئة ---
+        function generateBalloons() {
+            for (let i = 0; i < 12; i++) {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.animationDelay = Math.random() * 8 + 's';
+                document.body.appendChild(b);
+            }
+        }
+        generateBalloons();
+
+        // --- 🎆 الألعاب النارية (انفجارين فقط لتجنب الإزعاج البصري) ---
+        const canvas = document.getElementById('canvas-fireworks');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
         const particles = [];
-        const colors = ['#ff66b3', '#ff99cc', '#fff', '#ff3385'];
-        let explosionCount = 0;
+        const colors = ['#ff66b3', '#ff99cc', '#ffffff'];
+        let explosions = 0;
 
         class Particle {
-            constructor(x, y, color) {
+            constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.color = color;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * 6 + 1;
-                this.friction = 0.95;
-                this.gravity = 0.1;
+                this.speed = Math.random() * 5 + 1;
+                this.gravity = 0.08;
                 this.opacity = 1;
-                this.decay = Math.random() * 0.015 + 0.01;
+                this.decay = Math.random() * 0.012 + 0.01;
+            }
+            update() {
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed + this.gravity;
+                this.opacity -= this.decay;
             }
             draw() {
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, 1.8, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
-                // تأثير توهج للألعاب النارية
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 6;
                 ctx.shadowColor = this.color;
                 ctx.fill();
                 ctx.restore();
             }
-            update() {
-                this.speed *= this.friction;
-                this.x += Math.cos(this.angle) * this.speed;
-                this.y += Math.sin(this.angle) * this.speed + this.gravity;
-                this.opacity -= this.decay;
+        }
+
+        function triggerExplosion(x, y) {
+            explosions++;
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(x, y));
             }
         }
 
-        function createExplosion(x, y) {
-            explosionCount++;
-            for (let i = 0; i < 60; i++) {
-                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
-            }
-        }
-
-        function animateFireworks() {
-            if (explosionCount > 1 && particles.length === 0) return; // توقف بعد انفجارين وتلاشي الجزيئات
-            requestAnimationFrame(animateFireworks);
+        function anim() {
+            if (explosions >= 2 && particles.length === 0) return; // توقف بعد انفجارين
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => {
+            particles.forEach((p, idx) => {
                 if (p.opacity > 0) {
                     p.update();
                     p.draw();
                 } else {
-                    particles.splice(i, 1);
+                    particles.splice(idx, 1);
                 }
             });
+            requestAnimationFrame(anim);
         }
 
-        // إطلاق الانفجارين
-        setTimeout(() => createExplosion(window.innerWidth * 0.3, window.innerHeight * 0.3), 1000);
-        setTimeout(() => createExplosion(window.innerWidth * 0.7, window.innerHeight * 0.2), 2500);
-        animateFireworks();
-
-
-        // --- 🎈 إنشاء بالونات شفافة ---
-        function createBalloon() {
-            const b = document.createElement('div');
-            b.className = 'balloon';
-            b.style.left = Math.random() * 90 + 'vw';
-            b.style.animationDelay = Math.random() * 5 + 's';
-            
-            const string = document.createElement('div');
-            string.className = 'balloon-string';
-            b.appendChild(string);
-            
-            document.body.appendChild(b);
-            
-            // إزالة البالونة بعد انتهاء الأنيميشن لتوفير الذاكرة
-            setTimeout(() => b.remove(), 16000);
-        }
-
-        // إنشاء بالونات بشكل دوري
-        setInterval(createBalloon, 800);
-        
-        // تعديل حجم الكانفاس عند تغيير حجم الشاشة
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
+        // تفجير الألعاب النارية مرتين في أوقات متفرقة وجذابة
+        setTimeout(() => triggerExplosion(window.innerWidth * 0.25, window.innerHeight * 0.3), 1200);
+        setTimeout(() => triggerExplosion(window.innerWidth * 0.75, window.innerHeight * 0.25), 2600);
+        anim();
     </script>
 </body>
 </html>
