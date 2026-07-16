@@ -1,466 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meet Leo!</title>
-  
-  <!-- Premium rounded font for a soft visual design -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;800&display=swap" rel="stylesheet">
-
-  <style>
-    /* Reset & Base Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    body {
-      font-family: 'Quicksand', sans-serif;
-      /* Premium dark purple and navy soft radial gradient */
-      background: radial-gradient(circle at center, #1b133a 0%, #0a0618 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      color: #ffffff;
-    }
-
-    .scene-container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100vh;
-      padding: 20px;
-    }
-
-    /* Common Button Design */
-    .btn {
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 800;
-      font-size: 1.25rem;
-      padding: 16px 36px;
-      border-radius: 50px;
-      border: 4px solid #1e1333;
-      cursor: pointer;
-      outline: none;
-      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  box-shadow 0.25s ease, 
-                  background-color 0.2s ease,
-                  opacity 0.5s ease;
-    }
-
-    /* Soft green matching the background palette */
-    .btn-green {
-      background-color: #55c583;
-      color: #122c1d;
-      box-shadow: 0 8px 0 #1e1333;
-    }
-
-    .btn-green:hover {
-      transform: translateY(-4px) scale(1.03);
-      background-color: #62d894;
-      box-shadow: 0 12px 0 #1e1333;
-    }
-
-    .btn-green:active {
-      transform: translateY(2px) scale(0.98);
-      box-shadow: 0 2px 0 #1e1333;
-    }
-
-    /* Initial State */
-    #start-btn {
-      opacity: 1;
-      transform: scale(1);
-      z-index: 10;
-    }
-
-    #start-btn.fade-out {
-      opacity: 0;
-      transform: scale(0.8);
-      pointer-events: none;
-    }
-
-    /* Leo Wrapper Setup */
-    #leo-container {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      bottom: -500px; /* Hidden far below */
-      opacity: 0;
-      transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                  opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      width: 100%;
-      max-width: 380px;
-      z-index: 5;
-    }
-
-    /* Rises and centers beautifully */
-    #leo-container.active {
-      transform: translateY(-55vh); /* Adjusts position dynamically across screen sizes */
-      opacity: 1;
-    }
-
-    /* Responsive scaling wrapper for Leo SVG */
-    .leo-svg-wrapper {
-      width: 260px;
-      height: 230px;
-      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Custom Speech Bubble */
-    .speech-bubble {
-      position: relative;
-      background: #ffffff;
-      border: 4px solid #23193c;
-      border-radius: 24px;
-      padding: 16px 24px;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #23193c;
-      max-width: 280px;
-      text-align: center;
-      margin-bottom: 25px;
-      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
-      opacity: 0;
-      transform: scale(0);
-      transform-origin: bottom center;
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  opacity 0.4s ease;
-    }
-
-    .speech-bubble.bounce-in {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* Speech Bubble Outline-Styled Arrow */
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 16px 16px 0;
-      border-style: solid;
-      border-color: #ffffff transparent;
-      display: block;
-      width: 0;
-    }
-
-    .speech-bubble::before {
-      content: '';
-      position: absolute;
-      bottom: -22px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 18px 18px 0;
-      border-style: solid;
-      border-color: #23193c transparent;
-      display: block;
-      width: 0;
-      z-index: -1;
-    }
-
-    /* Blinking Typewriter Cursor */
-    .cursor {
-      display: inline-block;
-      width: 3px;
-      height: 1.1rem;
-      background-color: #23193c;
-      margin-left: 4px;
-      vertical-align: middle;
-      animation: blink-cursor 0.8s infinite step-end;
-    }
-
-    @keyframes blink-cursor {
-      from, to { background-color: transparent }
-      50% { background-color: #23193c }
-    }
-
-    /* "Hi Leo" Button Styling */
-    #next-btn {
-      opacity: 0;
-      transform: translateY(20px) scale(0.9);
-      pointer-events: none;
-      margin-top: 30px;
-      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    #next-btn.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    /* ==========================================================================
-       SVG ANIMATIONS (Breathing, Twitching Ears, Eyes Blinking)
-       ========================================================================== */
-
-    /* Head Assembly Breathing: slight scaling and moving up & down */
-    .leo-head-group {
-      transform-origin: 200px 190px;
-      animation: breatheHead 4s infinite ease-in-out;
-    }
-
-    @keyframes breatheHead {
-      0%, 100% {
-        transform: translateY(0px) scale(1);
-      }
-      50% {
-        transform: translateY(-6px) scale(1.02);
-      }
-    }
-
-    /* Paws Breathing out of phase to create an organic 2.5D depth */
-    .leo-paws-group {
-      transform-origin: 200px 285px;
-      animation: breathePaws 4s infinite ease-in-out;
-    }
-
-    @keyframes breathePaws {
-      0%, 100% {
-        transform: translateY(0px) scale(1);
-      }
-      50% {
-        transform: translateY(-2px) scale(0.97);
-      }
-    }
-
-    /* Left Ear Twitching */
-    .ear-left {
-      transform-origin: 125px 95px;
-      animation: twitchEarLeft 6s infinite ease-in-out;
-    }
-
-    @keyframes twitchEarLeft {
-      0%, 90%, 100% { transform: rotate(0deg); }
-      93% { transform: rotate(-5deg); }
-      96% { transform: rotate(3deg); }
-    }
-
-    /* Right Ear Twitching */
-    .ear-right {
-      transform-origin: 275px 95px;
-      animation: twitchEarRight 6.4s infinite ease-in-out;
-    }
-
-    @keyframes twitchEarRight {
-      0%, 88%, 100% { transform: rotate(0deg); }
-      91% { transform: rotate(5deg); }
-      94% { transform: rotate(-3deg); }
-    }
-
-    /* Eye Blinking CSS Hook */
-    .eye-left {
-      transform-origin: 125px 180px;
-      transition: transform 0.1s ease-in-out;
-    }
-
-    .eye-right {
-      transform-origin: 275px 180px;
-      transition: transform 0.1s ease-in-out;
-    }
-
-    /* Class dynamic toggle via JavaScript for randomized organic blinking */
-    .eye-blink {
-      transform: scaleY(0.1);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Yosi</title>
+<style>
+:root {
+--bg-color: #050510;
+--flash-color: rgba(255, 240, 245, 1);
+--flash-transparent: rgba(255, 240, 245, 0);
+}
+body, html {
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+background-color: var(--bg-color);
+overflow: hidden;
+font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+#mainCanvas {
+position: absolute;
+top: 0;
+left: 0;
+z-index: 1;
+transition: opacity 2s ease-in-out;
+}
+#titleContainer {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: #ffffff;
+font-size: 3.5rem;
+font-weight: 300;
+z-index: 2;
+text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+white-space: nowrap;
+transition: opacity 2s ease-in-out;
+}
+.cursor::after {
+content: '';
+display: inline-block;
+width: 3px;
+height: 1em;
+background-color: #fff;
+vertical-align: middle;
+margin-left: 5px;
+animation: blink 0.8s step-end infinite;
+}
+.cursor-hidden::after {
+display: none !important;
+}
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+#flashOverlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: var(--flash-transparent);
+z-index: 10;
+pointer-events: none;
+}
+.flash-active {
+transition: background-color 0.2s ease-out;
+background-color: var(--flash-color) !important;
+}
+.flash-fade {
+transition: background-color 2s ease-in-out;
+background-color: var(--flash-transparent) !important;
+}
+#bubbleContainer {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: #ffffff;
+border-radius: 24px;
+padding: 30px 40px;
+box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+z-index: 20;
+opacity: 0;
+visibility: hidden;
+transition: opacity 1s ease-in-out;
+display: flex;
+flex-direction: column;
+align-items: center;
+max-width: 80%;
+min-width: 280px;
+text-align: center;
+}
+#bubbleText {
+color: #333;
+font-size: 1.6rem;
+line-height: 1.5;
+min-height: 2.4rem;
+}
+#bubbleText.cursor::after {
+background-color: #333;
+width: 2px;
+}
+#pixelCanvas {
+margin-top: 20px;
+width: 60px;
+height: 60px;
+display: none;
+}
+@media (max-width: 768px) {
+#titleContainer { font-size: 2rem; }
+#bubbleText { font-size: 1.2rem; }
+}
+</style>
 </head>
 <body>
-
-  <div class="scene-container">
-    
-    <!-- Start Button -->
-    <button id="start-btn" class="btn btn-green">Click Me</button>
-
-    <!-- Leo & Speech Bubble Container -->
-    <div id="leo-container">
-      
-      <!-- Speech Bubble -->
-      <div id="speech-bubble" class="speech-bubble">
-        <span id="speech-text"></span><span id="cursor-symbol" class="cursor"></span>
-      </div>
-
-      <!-- Leo High-Quality original Vector Graphic -->
-      <div class="leo-svg-wrapper">
-        <svg id="leo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="100%" height="100%">
-          
-          <!-- Shadow Base -->
-          <ellipse cx="200" cy="305" rx="75" ry="8" fill="#140a28" opacity="0.4" />
-
-          <!-- Main Head Group for Breathing Effect -->
-          <g class="leo-head-group">
-            
-            <!-- Left Ear Outer -->
-            <path class="ear-left" d="M 125 95 L 75 15 C 70 5, 90 5, 115 35 L 155 85 Z" fill="#ffffff" stroke="#23193c" stroke-width="7" stroke-linejoin="round" />
-            <!-- Left Ear Inner -->
-            <path class="ear-left" d="M 117 80 L 85 27 C 83 23, 95 23, 110 43 L 137 75 Z" fill="#ffccd5" />
-
-            <!-- Right Ear Outer -->
-            <path class="ear-right" d="M 275 95 L 325 15 C 330 5, 310 5, 285 35 L 245 85 Z" fill="#ffffff" stroke="#23193c" stroke-width="7" stroke-linejoin="round" />
-            <!-- Right Ear Inner -->
-            <path class="ear-right" d="M 283 80 L 315 27 C 317 23, 305 23, 290 43 L 263 75 Z" fill="#ffccd5" />
-
-            <!-- Head Base with Large Rounded Cheeks -->
-            <path d="M 150 90 C 95 90, 40 120, 40 185 C 40 235, 70 260, 115 270 C 145 277, 255 277, 285 270 C 330 260, 360 235, 360 185 C 360 120, 305 90, 250 90 Z" fill="#ffffff" stroke="#23193c" stroke-width="7" stroke-linejoin="round" />
-
-            <!-- Gray Forehead Patch -->
-            <path d="M 172 92 C 182 135, 218 135, 228 92 Z" fill="#e2e5e9" />
-
-            <!-- Eyes (Glossy Anime Style) -->
-            <!-- Left Eye -->
-            <g class="eye-left">
-              <circle cx="125" cy="180" r="23" fill="#23193c" />
-              <!-- Highlight Layers -->
-              <circle cx="117" cy="170" r="8" fill="#ffffff" />
-              <circle cx="133" cy="188" r="4.5" fill="#ffffff" />
-            </g>
-            
-            <!-- Right Eye -->
-            <g class="eye-right">
-              <circle cx="275" cy="180" r="23" fill="#23193c" />
-              <!-- Highlight Layers -->
-              <circle cx="267" cy="170" r="8" fill="#ffffff" />
-              <circle cx="283" cy="188" r="4.5" fill="#ffffff" />
-            </g>
-
-            <!-- Cheeks Blush -->
-            <ellipse cx="88" cy="216" rx="18" ry="10" fill="#ffb3c1" opacity="0.65" />
-            <ellipse cx="312" cy="216" rx="18" ry="10" fill="#ffb3c1" opacity="0.65" />
-
-            <!-- Nose (Tiny Pink Rounded Triangle) -->
-            <polygon points="194,196 206,196 200,202" fill="#ff8fa3" stroke="#ff8fa3" stroke-width="3" stroke-linejoin="round" />
-
-            <!-- Smiling Mouth "w" -->
-            <path d="M 188,208 C 193,214 199,214 200,208 C 201,214 207,214 212,208" fill="none" stroke="#23193c" stroke-width="4.5" stroke-linecap="round" />
-
-            <!-- Whiskers -->
-            <!-- Left Side -->
-            <line x1="60" y1="205" x2="20" y2="201" stroke="#23193c" stroke-width="3.5" stroke-linecap="round" />
-            <line x1="63" y1="216" x2="23" y2="218" stroke="#23193c" stroke-width="3.5" stroke-linecap="round" />
-            <!-- Right Side -->
-            <line x1="340" y1="205" x2="380" y2="201" stroke="#23193c" stroke-width="3.5" stroke-linecap="round" />
-            <line x1="337" y1="216" x2="377" y2="218" stroke="#23193c" stroke-width="3.5" stroke-linecap="round" />
-
-          </g> <!-- End Head Group -->
-
-          <!-- Floating Paws Group -->
-          <g class="leo-paws-group">
-            <!-- Left Paw -->
-            <path d="M 130 263 C 130 248, 150 248, 150 263 C 150 278, 130 278, 130 263 Z" fill="#ffffff" stroke="#23193c" stroke-width="5" stroke-linejoin="round" />
-            <!-- Right Paw -->
-            <path d="M 250 263 C 250 248, 270 248, 270 263 C 270 278, 250 278, 250 263 Z" fill="#ffffff" stroke="#23193c" stroke-width="5" stroke-linejoin="round" />
-          </g>
-
-        </svg>
-      </div> <!-- End SVG Wrapper -->
-
-      <!-- "Hi Leo" Action Button (Reveals on typing finish) -->
-      <button id="next-btn" class="btn btn-green">Hi Leo</button>
-
-    </div> <!-- End Leo Container -->
-
-  </div>
-
-  <script>
-    const startBtn = document.getElementById('start-btn');
-    const leoContainer = document.getElementById('leo-container');
-    const speechBubble = document.getElementById('speech-bubble');
-    const speechText = document.getElementById('speech-text');
-    const cursor = document.getElementById('cursor-symbol');
-    const nextBtn = document.getElementById('next-btn');
-
-    const dialogText = "Hello, I'm Leo, Lama's cat.";
-
-    // --- Interactive State Triggers ---
-
-    startBtn.addEventListener('click', () => {
-      // 1. Hide the Start Button
-      startBtn.classList.add('fade-out');
-
-      // 2. Animate Leo rising up smoothly
-      setTimeout(() => {
-        startBtn.style.display = 'none';
-        leoContainer.classList.add('active');
-      }, 300);
-
-      // 3. Display the Speech Bubble after Leo arrives
-      setTimeout(() => {
-        speechBubble.classList.add('bounce-in');
-        
-        // 4. Start the typewriter animation
-        setTimeout(() => {
-          startTypewriter(dialogText);
-        }, 600);
-
-      }, 1500);
-    });
-
-    // --- Typewriter Mechanism ---
-    function startTypewriter(text) {
-      let charIndex = 0;
-      speechText.textContent = ''; // Clear fallback inside
-      
-      function type() {
-        if (charIndex < text.length) {
-          speechText.textContent += text.charAt(charIndex);
-          charIndex++;
-          // Slightly organic random speed variation (80ms avg)
-          const typingSpeed = 70 + Math.random() * 30;
-          setTimeout(type, typingSpeed);
-        } else {
-          // Finished Typing - Hide the cursor and fade-in "Hi Leo"
-          cursor.style.display = 'none';
-          revealNextButton();
-        }
-      }
-      type();
-    }
-
-    function revealNextButton() {
-      nextBtn.classList.add('visible');
-    }
-
-    // --- Smooth Randomized Blinking Script ---
-    function triggerRandomBlinks() {
-      const leftEye = document.querySelector('.eye-left');
-      const rightEye = document.querySelector('.eye-right');
-      
-      const blinkCycle = () => {
-        leftEye.classList.add('eye-blink');
-        rightEye.classList.add('eye-blink');
-        
-        setTimeout(() => {
-          leftEye.classList.remove('eye-blink');
-          rightEye.classList.remove('eye-blink');
-          
-          // Re-schedule the next blink organically (between 2 to 5 seconds)
-          setTimeout(blinkCycle, 2000 + Math.random() * 3000);
-        }, 120); // Quick blink duration
-      };
-
-      // Start initial scheduling
-      setTimeout(blinkCycle, 2000);
-    }
-
-    // Initialize background activities
-    triggerRandomBlinks();
-  </script>
+<canvas id="mainCanvas"></canvas>
+<div id="titleContainer"></div>
+<div id="flashOverlay"></div>
+<div id="bubbleContainer">
+<div id="bubbleText"></div>
+<canvas id="pixelCanvas" width="60" height="60"></canvas>
+</div>
+<script>
+const message = "";
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const titleContainer = document.getElementById('titleContainer');
+const flashOverlay = document.getElementById('flashOverlay');
+const bubbleContainer = document.getElementById('bubbleContainer');
+const bubbleText = document.getElementById('bubbleText');
+const pixelCanvas = document.getElementById('pixelCanvas');
+const pixelCtx = pixelCanvas.getContext('2d');
+let w, h;
+let stage = 'DRAW_HEARTS'; // DRAW_HEARTS, TYPE_TITLE, CELEBRATE, FADE, DONE
+let lastTime = performance.now();
+function resize() {
+w = canvas.width = window.innerWidth;
+h = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+// --- Mathematical Hearts Setup ---
+const hearts = [];
+const numHearts = 3;
+let currentHeartIndex = 0;
+let heartDrawProgress = 0;
+function initHearts() {
+const spacing = Math.min(w / (numHearts + 1), 300);
+const startX = (w - (spacing * (numHearts - 1))) / 2;
+const scale = Math.min(w, h) * 0.008;
+for (let i = 0; i < numHearts; i++) {
+hearts.push({
+x: startX + (i * spacing),
+y: h / 2,
+scale: scale,
+paths: []
+});
+}
+}
+function getHeartPoint(t, scale) {
+const x = 16 * Math.pow(Math.sin(t), 3);
+const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+return { x: x * scale, y: y * scale };
+}
+function drawStaticHearts() {
+ctx.lineWidth = 2;
+ctx.strokeStyle = 'rgba(255, 50, 100, 0.8)';
+ctx.shadowBlur = 15;
+ctx.shadowColor = 'rgba(255, 50, 100, 0.5)';
+for (let i = 0; i < currentHeartIndex; i++) {
+const heart = hearts[i];
+ctx.beginPath();
+for (let t = 0; t <= Math.PI * 2; t += 0.05) {
+const pt = getHeartPoint(t, heart.scale);
+if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
+else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+}
+ctx.stroke();
+}
+}
+function animateHearts(dt) {
+drawStaticHearts();
+if (currentHeartIndex < numHearts) {
+const heart = hearts[currentHeartIndex];
+ctx.beginPath();
+ctx.lineWidth = 2;
+ctx.strokeStyle = 'rgba(255, 50, 100, 1)';
+ctx.shadowBlur = 20;
+ctx.shadowColor = 'rgba(255, 50, 100, 0.8)';
+for (let t = 0; t <= heartDrawProgress; t += 0.05) {
+const pt = getHeartPoint(t, heart.scale);
+if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
+else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+}
+ctx.stroke();
+heartDrawProgress += dt * 0.004;
+if (heartDrawProgress >= Math.PI * 2) {
+heartDrawProgress = 0;
+currentHeartIndex++;
+}
+} else {
+stage = 'TYPE_TITLE';
+setTimeout(startTitleTypewriter, 500);
+}
+}
+// --- Typewriter Logic ---
+const titleText = Array.from("Happy Birthday To Yosi 🎉");
+let typeIndex = 0;
+function startTitleTypewriter() {
+titleContainer.classList.add('cursor');
+typeTitleChar();
+}
+function typeTitleChar() {
+if (typeIndex < titleText.length) {
+titleContainer.innerText += titleText[typeIndex];
+typeIndex++;
+let delay = 100 + Math.random() * 80;
+setTimeout(typeTitleChar, delay);
+} else {
+setTimeout(() => {
+titleContainer.classList.add('cursor-hidden');
+stage = 'CELEBRATE';
+startCelebration();
+}, 800);
+}
+}
+// --- Celebration (Balloons & Fireworks) ---
+const balloons = [];
+const fireworks = [];
+const particles = [];
+let celebrationTime = 0;
+let stopSpawning = false;
+class Balloon {
+constructor() {
+this.x = Math.random() * w;
+this.y = h + 100;
+this.radius = 30 + Math.random() * 20;
+this.speedY = 1.5 + Math.random() * 2;
+this.speedX = (Math.random() - 0.5) * 1;
+this.wobblePhase = Math.random() * Math.PI * 2;
+this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+const hues = [340, 350, 10, 20, 320];
+const hue = hues[Math.floor(Math.random() * hues.length)];
+this.color = hsla(${hue}, 80%, 60%, 0.6);
+this.stringLen = 50 + Math.random() * 30;
+}
+update(dt) {
+this.y -= this.speedY * (dt / 16);
+this.wobblePhase += this.wobbleSpeed * (dt / 16);
+this.x += Math.sin(this.wobblePhase) * 1.5 * (dt / 16) + this.speedX;
+return this.y + this.radius + this.stringLen < 0;
+}
+draw(ctx) {
+ctx.beginPath();
+ctx.fillStyle = this.color;
+ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius, 0, 0, Math.PI * 2);
+ctx.fill();
+ctx.beginPath();
+ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+ctx.lineWidth = 1;
+ctx.moveTo(this.x, this.y + this.radius);
+ctx.lineTo(this.x + Math.sin(this.wobblePhase)*10, this.y + this.radius + this.stringLen);
+ctx.stroke();
+}
+}
+class Firework {
+constructor() {
+this.x = Math.random() * w;
+this.y = h;
+this.targetY = h * 0.1 + Math.random() * (h * 0.4);
+this.speed = 8 + Math.random() * 4;
+this.exploded = false;
+const hues = [40, 60, 330, 20];
+this.hue = hues[Math.floor(Math.random() * hues.length)];
+}
+update(dt) {
+if (!this.exploded) {
+this.y -= this.speed * (dt / 16);
+if (this.y <= this.targetY) this.explode();
+}
+return this.exploded;
+}
+explode() {
+this.exploded = true;
+const numParticles = 60 + Math.random() * 40;
+for (let i = 0; i < numParticles; i++) {
+particles.push(new Particle(this.x, this.y, this.hue));
+}
+}
+draw(ctx) {
+if (!this.exploded) {
+ctx.beginPath();
+ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+ctx.fillStyle = hsl(${this.hue}, 100%, 70%);
+ctx.fill();
+}
+}
+}
+class Particle {
+constructor(x, y, hue) {
+this.x = x;
+this.y = y;
+const angle = Math.random() * Math.PI * 2;
+const speed = Math.random() * 6 + 1;
+this.vx = Math.cos(angle) * speed;
+this.vy = Math.sin(angle) * speed;
+this.friction = 0.95;
+this.gravity = 0.15;
+this.alpha = 1;
+this.decay = 0.015 + Math.random() * 0.015;
+this.hue = hue + (Math.random() * 40 - 20);
+}
+update(dt) {
+this.vx *= this.friction;
+this.vy *= this.friction;
+this.vy += this.gravity;
+this.x += this.vx * (dt / 16);
+this.y += this.vy * (dt / 16);
+this.alpha -= this.decay * (dt / 16);
+return this.alpha <= 0;
+}
+draw(ctx) {
+ctx.beginPath();
+ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+ctx.fillStyle = hsla(${this.hue}, 100%, 70%, ${this.alpha});
+ctx.shadowBlur = 5;
+ctx.shadowColor = hsl(${this.hue}, 100%, 70%);
+ctx.fill();
+ctx.shadowBlur = 0;
+}
+}
+function startCelebration() {
+celebrationTime = 0;
+stopSpawning = false;
+}
+function runCelebration(dt) {
+ctx.clearRect(0, 0, w, h);
+drawStaticHearts();
+celebrationTime += dt;
+if (celebrationTime > 8000) {
+stopSpawning = true;
+} else {
+if (Math.random() < 0.03 && balloons.length < 25) balloons.push(new Balloon());
+if (Math.random() < 0.02 && fireworks.length < 8) fireworks.push(new Firework());
+}
+for (let i = balloons.length - 1; i >= 0; i--) {
+const b = balloons[i];
+if (b.update(dt)) balloons.splice(i, 1);
+else b.draw(ctx);
+}
+for (let i = fireworks.length - 1; i >= 0; i--) {
+const fw = fireworks[i];
+if (fw.update(dt)) fireworks.splice(i, 1);
+else fw.draw(ctx);
+}
+for (let i = particles.length - 1; i >= 0; i--) {
+const p = particles[i];
+if (p.update(dt)) particles.splice(i, 1);
+else p.draw(ctx);
+}
+if (stopSpawning && balloons.length === 0 && fireworks.length === 0 && particles.length === 0) {
+stage = 'FADE';
+triggerFadeOut();
+}
+}
+function triggerFadeOut() {
+canvas.style.opacity = '0';
+titleContainer.style.opacity = '0';
+setTimeout(triggerFlash, 2100);
+}
+function triggerFlash() {
+stage = 'DONE'; // Stop main canvas loop
+flashOverlay.classList.add('flash-active');
+setTimeout(() => {
+flashOverlay.classList.remove('flash-active');
+flashOverlay.classList.add('flash-fade');
+setTimeout(showChatBubble, 500);
+}, 200);
+}
+// --- Chat Bubble & Pixel Heart Logic ---
+function showChatBubble() {
+bubbleContainer.style.visibility = 'visible';
+bubbleContainer.style.opacity = '1';
+setTimeout(startBubbleTypewriter, 1000);
+}
+let bubbleTypeIndex = 0;
+const msgText = Array.from(message);
+function startBubbleTypewriter() {
+bubbleText.classList.add('cursor');
+if (msgText.length > 0) {
+typeBubbleChar();
+} else {
+finishBubbleTyping();
+}
+}
+function typeBubbleChar() {
+if (bubbleTypeIndex < msgText.length) {
+bubbleText.innerText += msgText[bubbleTypeIndex];
+bubbleTypeIndex++;
+let delay = 50 + Math.random() * 50;
+setTimeout(typeBubbleChar, delay);
+} else {
+finishBubbleTyping();
+}
+}
+function finishBubbleTyping() {
+setTimeout(() => {
+bubbleText.classList.remove('cursor');
+setTimeout(startPixelHeart, 1000);
+}, 500);
+}
+// Retro pixel heart
+const heartGrid = [
+[0,1,1,0,1,1,0],
+[1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1],
+[0,1,1,1,1,1,0],
+[0,0,1,1,1,0,0],
+[0,0,0,1,0,0,0]
+];
+let pulseTime = 0;
+function startPixelHeart() {
+pixelCanvas.style.display = 'block';
+requestAnimationFrame(renderPixelHeart);
+}
+function renderPixelHeart(timestamp) {
+pulseTime = timestamp * 0.004;
+const pCtx = pixelCtx;
+pCtx.clearRect(0, 0, 60, 60);
+const scale = 1 + 0.15 * Math.sin(pulseTime);
+const pixelSize = 6;
+const gridW = 7 * pixelSize;
+const gridH = 6 * pixelSize;
+pCtx.save();
+pCtx.translate(30, 30);
+pCtx.scale(scale, scale);
+pCtx.translate(-gridW / 2, -gridH / 2);
+pCtx.fillStyle = '#ff3366';
+for (let r = 0; r < heartGrid.length; r++) {
+for (let c = 0; c < heartGrid[r].length; c++) {
+if (heartGrid[r][c]) {
+pCtx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+}
+}
+}
+pCtx.restore();
+requestAnimationFrame(renderPixelHeart);
+}
+// --- Main Loop ---
+initHearts();
+function loop(timestamp) {
+const dt = timestamp - lastTime;
+lastTime = timestamp;
+if (stage === 'DRAW_HEARTS') {
+ctx.clearRect(0, 0, w, h);
+animateHearts(dt);
+} else if (stage === 'TYPE_TITLE') {
+ctx.clearRect(0, 0, w, h);
+drawStaticHearts();
+} else if (stage === 'CELEBRATE' || stage === 'FADE') {
+runCelebration(dt);
+}
+if (stage !== 'DONE') {
+requestAnimationFrame(loop);
+}
+}
+requestAnimationFrame(loop);
+</script>
 </body>
 </html>
