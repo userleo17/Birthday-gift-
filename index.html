@@ -5,127 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday Yosi</title>
 <style>
-:root {
---bg-color: #050510;
---flash-color: rgba(255, 240, 245, 1);
---flash-transparent: rgba(255, 240, 245, 0);
-}
-body, html {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-background-color: var(--bg-color);
-overflow: hidden;
-font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-#mainCanvas {
-position: absolute;
-top: 0;
-left: 0;
-z-index: 1;
-transition: opacity 2s ease-in-out;
-}
-#titleContainer {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-color: #ffffff;
-font-size: 3.5rem;
-font-weight: 300;
-z-index: 2;
-text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-white-space: nowrap;
-transition: opacity 2s ease-in-out;
-}
-.cursor::after {
-content: '';
-display: inline-block;
-width: 3px;
-height: 1em;
-background-color: #fff;
-vertical-align: middle;
-margin-left: 5px;
-animation: blink 0.8s step-end infinite;
-}
-.cursor-hidden::after {
-display: none !important;
-}
-@keyframes blink {
-0%, 100% { opacity: 1; }
-50% { opacity: 0; }
-}
-#flashOverlay {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: var(--flash-transparent);
-z-index: 10;
-pointer-events: none;
-}
-.flash-active {
-transition: background-color 0.2s ease-out;
-background-color: var(--flash-color) !important;
-}
-.flash-fade {
-transition: background-color 2s ease-in-out;
-background-color: var(--flash-transparent) !important;
-}
-#bubbleContainer {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-background: #ffffff;
-border-radius: 24px;
-padding: 30px 40px;
-box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
-z-index: 20;
-opacity: 0;
-visibility: hidden;
-transition: opacity 1s ease-in-out;
-display: flex;
-flex-direction: column;
-align-items: center;
-max-width: 80%;
-min-width: 280px;
-text-align: center;
-}
-#bubbleText {
-color: #333;
-font-size: 1.6rem;
-line-height: 1.5;
-min-height: 2.4rem;
-}
-#bubbleText.cursor::after {
-background-color: #333;
-width: 2px;
-}
-#pixelCanvas {
-margin-top: 20px;
-width: 60px;
-height: 60px;
-display: none;
-}
-@media (max-width: 768px) {
-#titleContainer { font-size: 2rem; }
-#bubbleText { font-size: 1.2rem; }
-}
+    :root {
+        --bg-color: #050510;
+        --flash-color: rgba(255, 240, 245, 1);
+        --flash-transparent: rgba(255, 240, 245, 0);
+    }
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-color);
+        overflow: hidden;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    #mainCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        transition: opacity 2s ease-in-out;
+    }
+    #titleContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff;
+        font-size: 3.5rem;
+        font-weight: 300;
+        z-index: 2;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        white-space: nowrap;
+        transition: opacity 2s ease-in-out;
+    }
+    .cursor::after {
+        content: '';
+        display: inline-block;
+        width: 3px;
+        height: 1em;
+        background-color: #fff;
+        vertical-align: middle;
+        margin-left: 5px;
+        animation: blink 0.8s step-end infinite;
+    }
+    .cursor-hidden::after {
+        display: none !important;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    #flashOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--flash-transparent);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .flash-active {
+        transition: background-color 0.2s ease-out;
+        background-color: var(--flash-color) !important;
+    }
+    .flash-fade {
+        transition: background-color 2s ease-in-out;
+        background-color: var(--flash-transparent) !important;
+    }
+    #bubbleContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 30px 40px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+        z-index: 20;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 80%;
+        min-width: 280px;
+        text-align: center;
+    }
+    #bubbleText {
+        color: #333;
+        font-size: 1.6rem;
+        line-height: 1.5;
+        min-height: 2.4rem;
+    }
+    #bubbleText.cursor::after {
+        background-color: #333;
+        width: 2px;
+    }
+    #pixelCanvas {
+        margin-top: 20px;
+        width: 60px;
+        height: 60px;
+        display: none;
+    }
+    @media (max-width: 768px) {
+        #titleContainer { font-size: 2rem; }
+        #bubbleText { font-size: 1.2rem; }
+    }
 </style>
 </head>
 <body>
+
 <canvas id="mainCanvas"></canvas>
 <div id="titleContainer"></div>
 <div id="flashOverlay"></div>
 <div id="bubbleContainer">
-<div id="bubbleText"></div>
-<canvas id="pixelCanvas" width="60" height="60"></canvas>
+    <div id="bubbleText"></div>
+    <canvas id="pixelCanvas" width="60" height="60"></canvas>
 </div>
+
 <script>
-const message = "";
+// يمكنك كتابة رسالتك هنا لاحقاً
+const message = ""; 
+
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 const titleContainer = document.getElementById('titleContainer');
@@ -134,339 +138,382 @@ const bubbleContainer = document.getElementById('bubbleContainer');
 const bubbleText = document.getElementById('bubbleText');
 const pixelCanvas = document.getElementById('pixelCanvas');
 const pixelCtx = pixelCanvas.getContext('2d');
+
 let w, h;
-let stage = 'DRAW_HEARTS'; // DRAW_HEARTS, TYPE_TITLE, CELEBRATE, FADE, DONE
-let lastTime = performance.now();
+let stage = 'DRAW_HEARTS'; 
+let lastTime = null;
+
 function resize() {
-w = canvas.width = window.innerWidth;
-h = canvas.height = window.innerHeight;
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resize);
 resize();
-// --- Mathematical Hearts Setup ---
+
 const hearts = [];
 const numHearts = 3;
 let currentHeartIndex = 0;
 let heartDrawProgress = 0;
+
 function initHearts() {
-const spacing = Math.min(w / (numHearts + 1), 300);
-const startX = (w - (spacing * (numHearts - 1))) / 2;
-const scale = Math.min(w, h) * 0.008;
-for (let i = 0; i < numHearts; i++) {
-hearts.push({
-x: startX + (i * spacing),
-y: h / 2,
-scale: scale,
-paths: []
-});
+    const spacing = Math.min(w / (numHearts + 1), 300);
+    const startX = (w - (spacing * (numHearts - 1))) / 2;
+    const scale = Math.min(w, h) * 0.008;
+    
+    for (let i = 0; i < numHearts; i++) {
+        hearts.push({
+            x: startX + (i * spacing),
+            y: h / 2,
+            scale: scale
+        });
+    }
 }
-}
+
 function getHeartPoint(t, scale) {
-const x = 16 * Math.pow(Math.sin(t), 3);
-const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-return { x: x * scale, y: y * scale };
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    return { x: x * scale, y: y * scale };
 }
+
 function drawStaticHearts() {
-ctx.lineWidth = 2;
-ctx.strokeStyle = 'rgba(255, 50, 100, 0.8)';
-ctx.shadowBlur = 15;
-ctx.shadowColor = 'rgba(255, 50, 100, 0.5)';
-for (let i = 0; i < currentHeartIndex; i++) {
-const heart = hearts[i];
-ctx.beginPath();
-for (let t = 0; t <= Math.PI * 2; t += 0.05) {
-const pt = getHeartPoint(t, heart.scale);
-if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
-else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(255, 50, 100, 0.8)';
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(255, 50, 100, 0.5)';
+    
+    for (let i = 0; i < currentHeartIndex; i++) {
+        const heart = hearts[i];
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2; t += 0.05) {
+            const pt = getHeartPoint(t, heart.scale);
+            if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
+            else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+        }
+        ctx.stroke();
+    }
 }
-ctx.stroke();
-}
-}
+
 function animateHearts(dt) {
-drawStaticHearts();
-if (currentHeartIndex < numHearts) {
-const heart = hearts[currentHeartIndex];
-ctx.beginPath();
-ctx.lineWidth = 2;
-ctx.strokeStyle = 'rgba(255, 50, 100, 1)';
-ctx.shadowBlur = 20;
-ctx.shadowColor = 'rgba(255, 50, 100, 0.8)';
-for (let t = 0; t <= heartDrawProgress; t += 0.05) {
-const pt = getHeartPoint(t, heart.scale);
-if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
-else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+    drawStaticHearts();
+    
+    if (currentHeartIndex < numHearts) {
+        const heart = hearts[currentHeartIndex];
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255, 50, 100, 1)';
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = 'rgba(255, 50, 100, 0.8)';
+        
+        for (let t = 0; t <= heartDrawProgress; t += 0.05) {
+            const pt = getHeartPoint(t, heart.scale);
+            if (t === 0) ctx.moveTo(heart.x + pt.x, heart.y + pt.y);
+            else ctx.lineTo(heart.x + pt.x, heart.y + pt.y);
+        }
+        ctx.stroke();
+        
+        heartDrawProgress += dt * 0.004;
+        if (heartDrawProgress >= Math.PI * 2) {
+            heartDrawProgress = 0;
+            currentHeartIndex++;
+        }
+    } else {
+        stage = 'TYPE_TITLE';
+        setTimeout(startTitleTypewriter, 500);
+    }
 }
-ctx.stroke();
-heartDrawProgress += dt * 0.004;
-if (heartDrawProgress >= Math.PI * 2) {
-heartDrawProgress = 0;
-currentHeartIndex++;
-}
-} else {
-stage = 'TYPE_TITLE';
-setTimeout(startTitleTypewriter, 500);
-}
-}
-// --- Typewriter Logic ---
+
 const titleText = Array.from("Happy Birthday To Yosi 🎉");
 let typeIndex = 0;
+
 function startTitleTypewriter() {
-titleContainer.classList.add('cursor');
-typeTitleChar();
+    titleContainer.classList.add('cursor');
+    typeTitleChar();
 }
+
 function typeTitleChar() {
-if (typeIndex < titleText.length) {
-titleContainer.innerText += titleText[typeIndex];
-typeIndex++;
-let delay = 100 + Math.random() * 80;
-setTimeout(typeTitleChar, delay);
-} else {
-setTimeout(() => {
-titleContainer.classList.add('cursor-hidden');
-stage = 'CELEBRATE';
-startCelebration();
-}, 800);
+    if (typeIndex < titleText.length) {
+        titleContainer.innerText += titleText[typeIndex];
+        typeIndex++;
+        let delay = 100 + Math.random() * 80;
+        setTimeout(typeTitleChar, delay);
+    } else {
+        setTimeout(() => {
+            titleContainer.classList.add('cursor-hidden');
+            stage = 'CELEBRATE';
+            startCelebration();
+        }, 800);
+    }
 }
-}
-// --- Celebration (Balloons & Fireworks) ---
+
 const balloons = [];
 const fireworks = [];
 const particles = [];
 let celebrationTime = 0;
 let stopSpawning = false;
+
 class Balloon {
-constructor() {
-this.x = Math.random() * w;
-this.y = h + 100;
-this.radius = 30 + Math.random() * 20;
-this.speedY = 1.5 + Math.random() * 2;
-this.speedX = (Math.random() - 0.5) * 1;
-this.wobblePhase = Math.random() * Math.PI * 2;
-this.wobbleSpeed = 0.02 + Math.random() * 0.03;
-const hues = [340, 350, 10, 20, 320];
-const hue = hues[Math.floor(Math.random() * hues.length)];
-this.color = hsla(${hue}, 80%, 60%, 0.6);
-this.stringLen = 50 + Math.random() * 30;
+    constructor() {
+        this.x = Math.random() * w;
+        this.y = h + 100;
+        this.radius = 30 + Math.random() * 20;
+        this.speedY = 1.5 + Math.random() * 2;
+        this.speedX = (Math.random() - 0.5) * 1;
+        this.wobblePhase = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+        
+        const hues = [340, 350, 10, 20, 320]; 
+        const hue = hues[Math.floor(Math.random() * hues.length)];
+        this.color = `hsla(${hue}, 80%, 60%, 0.6)`;
+        this.stringLen = 50 + Math.random() * 30;
+    }
+    update(dt) {
+        this.y -= this.speedY * (dt / 16);
+        this.wobblePhase += this.wobbleSpeed * (dt / 16);
+        this.x += Math.sin(this.wobblePhase) * 1.5 * (dt / 16) + this.speedX;
+        return this.y + this.radius + this.stringLen < 0;
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius, 0, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1;
+        ctx.moveTo(this.x, this.y + this.radius);
+        ctx.lineTo(this.x + Math.sin(this.wobblePhase)*10, this.y + this.radius + this.stringLen);
+        ctx.stroke();
+    }
 }
-update(dt) {
-this.y -= this.speedY * (dt / 16);
-this.wobblePhase += this.wobbleSpeed * (dt / 16);
-this.x += Math.sin(this.wobblePhase) * 1.5 * (dt / 16) + this.speedX;
-return this.y + this.radius + this.stringLen < 0;
-}
-draw(ctx) {
-ctx.beginPath();
-ctx.fillStyle = this.color;
-ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius, 0, 0, Math.PI * 2);
-ctx.fill();
-ctx.beginPath();
-ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-ctx.lineWidth = 1;
-ctx.moveTo(this.x, this.y + this.radius);
-ctx.lineTo(this.x + Math.sin(this.wobblePhase)*10, this.y + this.radius + this.stringLen);
-ctx.stroke();
-}
-}
+
 class Firework {
-constructor() {
-this.x = Math.random() * w;
-this.y = h;
-this.targetY = h * 0.1 + Math.random() * (h * 0.4);
-this.speed = 8 + Math.random() * 4;
-this.exploded = false;
-const hues = [40, 60, 330, 20];
-this.hue = hues[Math.floor(Math.random() * hues.length)];
+    constructor() {
+        this.x = Math.random() * w;
+        this.y = h;
+        this.targetY = h * 0.1 + Math.random() * (h * 0.4);
+        this.speed = 8 + Math.random() * 4;
+        this.exploded = false;
+        const hues = [40, 60, 330, 20];
+        this.hue = hues[Math.floor(Math.random() * hues.length)];
+    }
+    update(dt) {
+        if (!this.exploded) {
+            this.y -= this.speed * (dt / 16);
+            if (this.y <= this.targetY) this.explode();
+        }
+        return this.exploded;
+    }
+    explode() {
+        this.exploded = true;
+        const numParticles = 60 + Math.random() * 40;
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle(this.x, this.y, this.hue));
+        }
+    }
+    draw(ctx) {
+        if (!this.exploded) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
+            ctx.fill();
+        }
+    }
 }
-update(dt) {
-if (!this.exploded) {
-this.y -= this.speed * (dt / 16);
-if (this.y <= this.targetY) this.explode();
-}
-return this.exploded;
-}
-explode() {
-this.exploded = true;
-const numParticles = 60 + Math.random() * 40;
-for (let i = 0; i < numParticles; i++) {
-particles.push(new Particle(this.x, this.y, this.hue));
-}
-}
-draw(ctx) {
-if (!this.exploded) {
-ctx.beginPath();
-ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-ctx.fillStyle = hsl(${this.hue}, 100%, 70%);
-ctx.fill();
-}
-}
-}
+
 class Particle {
-constructor(x, y, hue) {
-this.x = x;
-this.y = y;
-const angle = Math.random() * Math.PI * 2;
-const speed = Math.random() * 6 + 1;
-this.vx = Math.cos(angle) * speed;
-this.vy = Math.sin(angle) * speed;
-this.friction = 0.95;
-this.gravity = 0.15;
-this.alpha = 1;
-this.decay = 0.015 + Math.random() * 0.015;
-this.hue = hue + (Math.random() * 40 - 20);
+    constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6 + 1;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.friction = 0.95;
+        this.gravity = 0.15;
+        this.alpha = 1;
+        this.decay = 0.015 + Math.random() * 0.015;
+        this.hue = hue + (Math.random() * 40 - 20);
+    }
+    update(dt) {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.vy += this.gravity;
+        this.x += this.vx * (dt / 16);
+        this.y += this.vy * (dt / 16);
+        this.alpha -= this.decay * (dt / 16);
+        return this.alpha <= 0;
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${this.alpha})`;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = `hsl(${this.hue}, 100%, 70%)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
 }
-update(dt) {
-this.vx *= this.friction;
-this.vy *= this.friction;
-this.vy += this.gravity;
-this.x += this.vx * (dt / 16);
-this.y += this.vy * (dt / 16);
-this.alpha -= this.decay * (dt / 16);
-return this.alpha <= 0;
-}
-draw(ctx) {
-ctx.beginPath();
-ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-ctx.fillStyle = hsla(${this.hue}, 100%, 70%, ${this.alpha});
-ctx.shadowBlur = 5;
-ctx.shadowColor = hsl(${this.hue}, 100%, 70%);
-ctx.fill();
-ctx.shadowBlur = 0;
-}
-}
+
 function startCelebration() {
-celebrationTime = 0;
-stopSpawning = false;
+    celebrationTime = 0;
+    stopSpawning = false;
 }
+
 function runCelebration(dt) {
-ctx.clearRect(0, 0, w, h);
-drawStaticHearts();
-celebrationTime += dt;
-if (celebrationTime > 8000) {
-stopSpawning = true;
-} else {
-if (Math.random() < 0.03 && balloons.length < 25) balloons.push(new Balloon());
-if (Math.random() < 0.02 && fireworks.length < 8) fireworks.push(new Firework());
+    ctx.clearRect(0, 0, w, h);
+    drawStaticHearts();
+    
+    celebrationTime += dt;
+    
+    if (celebrationTime > 8000) {
+        stopSpawning = true;
+    } else {
+        if (Math.random() < 0.03 && balloons.length < 25) balloons.push(new Balloon());
+        if (Math.random() < 0.02 && fireworks.length < 8) fireworks.push(new Firework());
+    }
+    
+    for (let i = balloons.length - 1; i >= 0; i--) {
+        const b = balloons[i];
+        if (b.update(dt)) balloons.splice(i, 1);
+        else b.draw(ctx);
+    }
+    
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+        const fw = fireworks[i];
+        if (fw.update(dt)) fireworks.splice(i, 1);
+        else fw.draw(ctx);
+    }
+    
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        if (p.update(dt)) particles.splice(i, 1);
+        else p.draw(ctx);
+    }
+    
+    if (stopSpawning && balloons.length === 0 && fireworks.length === 0 && particles.length === 0) {
+        stage = 'FADE';
+        triggerFadeOut();
+    }
 }
-for (let i = balloons.length - 1; i >= 0; i--) {
-const b = balloons[i];
-if (b.update(dt)) balloons.splice(i, 1);
-else b.draw(ctx);
-}
-for (let i = fireworks.length - 1; i >= 0; i--) {
-const fw = fireworks[i];
-if (fw.update(dt)) fireworks.splice(i, 1);
-else fw.draw(ctx);
-}
-for (let i = particles.length - 1; i >= 0; i--) {
-const p = particles[i];
-if (p.update(dt)) particles.splice(i, 1);
-else p.draw(ctx);
-}
-if (stopSpawning && balloons.length === 0 && fireworks.length === 0 && particles.length === 0) {
-stage = 'FADE';
-triggerFadeOut();
-}
-}
+
 function triggerFadeOut() {
-canvas.style.opacity = '0';
-titleContainer.style.opacity = '0';
-setTimeout(triggerFlash, 2100);
+    canvas.style.opacity = '0';
+    titleContainer.style.opacity = '0';
+    setTimeout(triggerFlash, 2100);
 }
+
 function triggerFlash() {
-stage = 'DONE'; // Stop main canvas loop
-flashOverlay.classList.add('flash-active');
-setTimeout(() => {
-flashOverlay.classList.remove('flash-active');
-flashOverlay.classList.add('flash-fade');
-setTimeout(showChatBubble, 500);
-}, 200);
+    stage = 'DONE'; 
+    flashOverlay.classList.add('flash-active');
+    
+    setTimeout(() => {
+        flashOverlay.classList.remove('flash-active');
+        flashOverlay.classList.add('flash-fade');
+        setTimeout(showChatBubble, 500);
+    }, 200);
 }
-// --- Chat Bubble & Pixel Heart Logic ---
+
 function showChatBubble() {
-bubbleContainer.style.visibility = 'visible';
-bubbleContainer.style.opacity = '1';
-setTimeout(startBubbleTypewriter, 1000);
+    bubbleContainer.style.visibility = 'visible';
+    bubbleContainer.style.opacity = '1';
+    setTimeout(startBubbleTypewriter, 1000);
 }
+
 let bubbleTypeIndex = 0;
 const msgText = Array.from(message);
+
 function startBubbleTypewriter() {
-bubbleText.classList.add('cursor');
-if (msgText.length > 0) {
-typeBubbleChar();
-} else {
-finishBubbleTyping();
+    bubbleText.classList.add('cursor');
+    if (msgText.length > 0) {
+        typeBubbleChar();
+    } else {
+        finishBubbleTyping();
+    }
 }
-}
+
 function typeBubbleChar() {
-if (bubbleTypeIndex < msgText.length) {
-bubbleText.innerText += msgText[bubbleTypeIndex];
-bubbleTypeIndex++;
-let delay = 50 + Math.random() * 50;
-setTimeout(typeBubbleChar, delay);
-} else {
-finishBubbleTyping();
+    if (bubbleTypeIndex < msgText.length) {
+        bubbleText.innerText += msgText[bubbleTypeIndex];
+        bubbleTypeIndex++;
+        let delay = 50 + Math.random() * 50;
+        setTimeout(typeBubbleChar, delay);
+    } else {
+        finishBubbleTyping();
+    }
 }
-}
+
 function finishBubbleTyping() {
-setTimeout(() => {
-bubbleText.classList.remove('cursor');
-setTimeout(startPixelHeart, 1000);
-}, 500);
+    setTimeout(() => {
+        bubbleText.classList.remove('cursor');
+        setTimeout(startPixelHeart, 1000);
+    }, 500);
 }
-// Retro pixel heart
+
 const heartGrid = [
-[0,1,1,0,1,1,0],
-[1,1,1,1,1,1,1],
-[1,1,1,1,1,1,1],
-[0,1,1,1,1,1,0],
-[0,0,1,1,1,0,0],
-[0,0,0,1,0,0,0]
+    [0,1,1,0,1,1,0],
+    [1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,0],
+    [0,0,1,1,1,0,0],
+    [0,0,0,1,0,0,0]
 ];
 let pulseTime = 0;
+
 function startPixelHeart() {
-pixelCanvas.style.display = 'block';
-requestAnimationFrame(renderPixelHeart);
+    pixelCanvas.style.display = 'block';
+    requestAnimationFrame(renderPixelHeart);
 }
+
 function renderPixelHeart(timestamp) {
-pulseTime = timestamp * 0.004;
-const pCtx = pixelCtx;
-pCtx.clearRect(0, 0, 60, 60);
-const scale = 1 + 0.15 * Math.sin(pulseTime);
-const pixelSize = 6;
-const gridW = 7 * pixelSize;
-const gridH = 6 * pixelSize;
-pCtx.save();
-pCtx.translate(30, 30);
-pCtx.scale(scale, scale);
-pCtx.translate(-gridW / 2, -gridH / 2);
-pCtx.fillStyle = '#ff3366';
-for (let r = 0; r < heartGrid.length; r++) {
-for (let c = 0; c < heartGrid[r].length; c++) {
-if (heartGrid[r][c]) {
-pCtx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+    pulseTime = timestamp * 0.004;
+    const pCtx = pixelCtx;
+    pCtx.clearRect(0, 0, 60, 60);
+    
+    const scale = 1 + 0.15 * Math.sin(pulseTime);
+    const pixelSize = 6;
+    const gridW = 7 * pixelSize;
+    const gridH = 6 * pixelSize;
+    
+    pCtx.save();
+    pCtx.translate(30, 30);
+    pCtx.scale(scale, scale);
+    pCtx.translate(-gridW / 2, -gridH / 2);
+    
+    pCtx.fillStyle = '#ff3366';
+    for (let r = 0; r < heartGrid.length; r++) {
+        for (let c = 0; c < heartGrid[r].length; c++) {
+            if (heartGrid[r][c]) {
+                pCtx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+            }
+        }
+    }
+    pCtx.restore();
+    
+    requestAnimationFrame(renderPixelHeart);
 }
-}
-}
-pCtx.restore();
-requestAnimationFrame(renderPixelHeart);
-}
-// --- Main Loop ---
+
 initHearts();
 function loop(timestamp) {
-const dt = timestamp - lastTime;
-lastTime = timestamp;
-if (stage === 'DRAW_HEARTS') {
-ctx.clearRect(0, 0, w, h);
-animateHearts(dt);
-} else if (stage === 'TYPE_TITLE') {
-ctx.clearRect(0, 0, w, h);
-drawStaticHearts();
-} else if (stage === 'CELEBRATE' || stage === 'FADE') {
-runCelebration(dt);
-}
-if (stage !== 'DONE') {
-requestAnimationFrame(loop);
-}
+    if (lastTime === null) lastTime = timestamp;
+    
+    let dt = timestamp - lastTime;
+    if (dt > 100) dt = 16; 
+    lastTime = timestamp;
+    
+    if (stage === 'DRAW_HEARTS') {
+        ctx.clearRect(0, 0, w, h);
+        animateHearts(dt);
+    } else if (stage === 'TYPE_TITLE') {
+        ctx.clearRect(0, 0, w, h);
+        drawStaticHearts();
+    } else if (stage === 'CELEBRATE' || stage === 'FADE') {
+        runCelebration(dt);
+    }
+    
+    if (stage !== 'DONE') {
+        requestAnimationFrame(loop);
+    }
 }
 requestAnimationFrame(loop);
 </script>
