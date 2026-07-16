@@ -12,11 +12,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, #061124 0%, #020610 100%);
+            background: radial-gradient(circle at center, #0a1128 0%, #020514 100%);
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Neue', sans-serif;
             position: relative;
             user-select: none;
+        }
+
+        /* حاوي الشاشة الرئيسي القابل للإزاحة عند الدفع */
+        #content-slider {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            transition: left 5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
         }
 
         .container {
@@ -28,48 +42,49 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10;
             box-sizing: border-box;
         }
 
         #main-canvas {
             width: 100%;
             height: 100%;
-            max-height: 85vh;
             display: none;
             background: transparent;
             pointer-events: none;
             position: absolute;
-            top: 5vh;
+            top: 0;
+            left: 0;
             z-index: 5;
+            transition: opacity 1.5s ease;
         }
 
+        /* البالونات الكيوت: تظهر بسرعة وتصعد ببطء شديد */
         .balloon {
             position: absolute;
-            width: 42px;
-            height: 56px;
+            width: 45px;
+            height: 60px;
             border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
             bottom: -100px;
             z-index: 2;
-            animation: floatUpSlowly 14s linear forwards;
+            animation: floatUpSlowly 18s linear forwards;
         }
         .balloon::after {
             content: "";
             position: absolute;
-            width: 1.2px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            bottom: -30px;
-            left: calc(50% - 0.6px);
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            bottom: -40px;
+            left: 50%;
         }
         @keyframes floatUpSlowly {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-125vh) rotate(10deg); opacity: 0; }
+            5% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-130vh) rotate(15deg); opacity: 0; }
         }
 
-        /* ==================== 🐱 واجهة اللعبة التفاعلية الكيوت ==================== */
+        /* واجهة اللعبة والقطو */
         .game-overlay {
             position: absolute;
             width: 90%;
@@ -79,68 +94,49 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            transition: all 0.8s ease-in-out;
+            transition: opacity 1s ease-in-out;
             z-index: 100;
         }
 
-        /* وعاء القط الواقف بشكل كامل */
         .cat-container {
-            width: 160px;
+            width: 180px;
             height: 240px;
             margin-bottom: 20px;
             position: relative;
-            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s, left 1.2s, bottom 1.2s;
-        }
-
-        .cat-escape {
-            transform: translateX(600px) scale(0.8) !important;
+            /* أنميشن ظهور القطو من تحت عند البداية */
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s, left 1.2s, bottom 1.2s;
+            transform: translateY(150px) scale(0.6);
             opacity: 0;
         }
-
-        .smoke-cloud {
-            position: absolute;
-            bottom: 10px;
-            left: 50px;
-            width: 40px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .smoke-active {
-            animation: smokeBlow 0.8s ease-out forwards;
-        }
-        @keyframes smokeBlow {
-            0% { transform: scale(0.5) translateX(0); opacity: 0; filter: blur(0px); }
-            50% { opacity: 0.6; filter: blur(3px); }
-            100% { transform: scale(1.5) translateX(-80px); opacity: 0; filter: blur(6px); }
+        /* كلاس لتكبير وتقريب القطو في البداية */
+        .cat-container.intro-active {
+            transform: translateY(20px) scale(1.35);
+            opacity: 1;
         }
 
-        /* مياو نصوص شفافة ناعمة وبطيئة وبدون خلفية */
+        /* نصوص المياو الناعمة بدون حواف حادة ولا ايموجيات */
         .meow-text {
             position: absolute;
             color: #ff99cc;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Arial Rounded MT Bold', sans-serif;
             pointer-events: none;
             opacity: 0;
-            text-shadow: 0 0 8px rgba(255, 153, 204, 0.6);
-            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* طق الرجل للأرض عند العصبية */
+        /* طق الرجل اللطيف عند الغضب */
         @keyframes footTap {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+            50% { transform: translateY(-5px); }
         }
         .taping-foot {
-            animation: footTap 0.3s ease infinite;
+            animation: footTap 0.25s ease infinite;
         }
 
-        /* أزرار مريحة للعين ومتناسقة مع الخلفية */
-        .btn-click, .btn-check {
+        /* أزرار مريحة للعين ومتناسقة مع الخلفية الليلية */
+        .btn-click, .btn-check, .btn-intro-next {
             background: linear-gradient(135deg, #ff75c3 0%, #ffa6b9 100%);
             color: white;
             border: none;
@@ -153,7 +149,7 @@
             transition: all 0.4s ease;
             margin-top: 15px;
         }
-        .btn-click:hover, .btn-check:hover {
+        .btn-click:hover, .btn-check:hover, .btn-intro-next:hover {
             transform: scale(1.03);
             box-shadow: 0 8px 20px rgba(255, 117, 195, 0.5);
         }
@@ -194,29 +190,30 @@
 
         .warning-msg {
             color: #ff9494;
-            font-size: 13px;
+            font-size: 14px;
             margin-top: 8px;
-            min-height: 20px;
+            min-height: 24px;
             font-weight: bold;
         }
 
-        /* ==================== 💬 فقاعة المحادثة الكيوت والكتابة التفاعلية ==================== */
+        /* فقاعة المحادثة الفاخرة للقطو ليو */
         .speech-bubble {
             position: absolute;
-            background: rgba(20, 30, 55, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             border: 2.5px solid #ff99cc;
             color: #fff;
             padding: 12px 20px;
             border-radius: 20px;
             font-size: 15px;
             font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-            max-width: 220px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            max-width: 240px;
             display: none;
-            z-index: 110;
-            bottom: 230px;
+            z-index: 150;
+            bottom: 270px;
             left: 50%;
             transform: translateX(-50%);
+            text-align: center;
         }
         .speech-bubble::after {
             content: '';
@@ -231,47 +228,49 @@
             width: 0;
         }
 
-        /* أزرار الاختيار للسيناريوهات النهائية */
+        /* الأزرار النهائية مريحة جداً للعين ومتناسقة مع الخلفية المظلمة */
         .action-buttons {
             display: none;
             position: absolute;
-            bottom: 30px;
+            bottom: 40px;
             gap: 15px;
-            z-index: 120;
+            z-index: 160;
         }
         .btn-yes {
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
-            color: white;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: #e8f5e9;
             border: none;
-            padding: 10px 22px;
+            padding: 12px 24px;
             font-size: 14px;
+            font-weight: bold;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(67, 160, 71, 0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.3s;
         }
         .btn-no {
-            background: linear-gradient(135deg, #e53935 0%, #ef5350 100%);
-            color: white;
+            background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);
+            color: #ffebee;
             border: none;
-            padding: 10px 22px;
+            padding: 12px 24px;
             font-size: 14px;
+            font-weight: bold;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(229, 57, 53, 0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.3s;
         }
         .btn-yes:hover, .btn-no:hover {
             transform: scale(1.05);
         }
 
-        /* الكعكة الذهبية والشموع المشتعلة */
+        /* الكعكة والشموع */
         #cake-svg-container {
             display: none;
             position: absolute;
-            bottom: 60px;
-            width: 110px;
-            height: 110px;
+            bottom: 70px;
+            width: 120px;
+            height: 120px;
             z-index: 105;
             transition: all 0.8s ease;
         }
@@ -280,8 +279,8 @@
         .btn-blow {
             display: none;
             position: absolute;
-            bottom: 20px;
-            background: linear-gradient(135deg, #ffa726 0%, #ffb74d 100%);
+            bottom: 25px;
+            background: linear-gradient(135deg, #e65100 0%, #f57c00 100%);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -289,24 +288,24 @@
             font-weight: bold;
             border-radius: 25px;
             cursor: pointer;
-            z-index: 130;
-            box-shadow: 0 5px 15px rgba(255, 167, 38, 0.4);
+            z-index: 170;
+            box-shadow: 0 5px 15px rgba(230, 81, 0, 0.4);
             animation: shakeBtn 0.3s infinite;
         }
         @keyframes shakeBtn {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-2.5px); }
-            75% { transform: translateX(2.5px); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
 
-        /* فيضان الدموع اللانهائي */
+        /* فيضان الدموع النهائي */
         #tear-flood {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 0%;
-            background: linear-gradient(to top, rgba(0, 150, 255, 0.75), rgba(100, 200, 255, 0.6));
+            background: linear-gradient(to top, rgba(0, 119, 182, 0.8), rgba(0, 180, 216, 0.6));
             z-index: 200;
             transition: height 5s cubic-bezier(0.1, 0.3, 0.2, 1);
             pointer-events: none;
@@ -337,125 +336,211 @@
             0% { transform: translate(0, 0) rotate(-45deg) scale(0.1); opacity: 1; }
             100% { transform: translate(-80px, -150px) rotate(-45deg) scale(2.2); opacity: 0; }
         }
+
+        /* قطو الدفع (يظهر منفصلاً في اليمين لدفع الشاشة) */
+        #pusher-cat {
+            display: none;
+            position: absolute;
+            width: 180px;
+            height: 240px;
+            right: -180px;
+            bottom: 20px;
+            z-index: 120;
+            transition: right 5s linear;
+        }
+
+        /* حركة طقطقة القلم على الرأس عند التفكير 📓✏️ */
+        @keyframes penTapMotion {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-4px, -12px) rotate(-20deg); }
+        }
+        .thinking-pen-animation {
+            animation: penTapMotion 0.4s ease-in-out infinite alternate;
+            transform-origin: 52px 64px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-wrapper">
-        <!-- فيضان الدموع -->
-        <div id="tear-flood"></div>
-
-        <!-- فقاعة المحادثة الكيوت -->
-        <div class="speech-bubble" id="speech-box"></div>
-
-        <!-- أزرار الاختيار للسيناريوهات النهائية -->
-        <div class="action-buttons" id="action-box">
-            <button class="btn-yes" id="opt-yes" onclick="chooseYes()">Yes, I want to!</button>
-            <button class="btn-no" id="opt-no" onclick="chooseNo()">No, I don't.</button>
-        </div>
-
-        <!-- زر النفخ المهتز للشموع -->
-        <button class="btn-blow" id="blow-btn" onclick="blowCandle()">Blow! 🌬️</button>
-
-        <!-- الكعكة التفاعلية -->
-        <div id="cake-svg-container">
-            <svg viewBox="0 0 100 100" width="100%" height="100%">
-                <!-- الصحن -->
-                <ellipse cx="50" cy="85" rx="40" ry="10" fill="#e0e0e0"/>
-                <!-- الكعكة البيضاء الكيوت -->
-                <rect x="20" y="45" width="60" height="32" rx="4" fill="#ffffff"/>
-                <rect x="20" y="45" width="60" height="10" fill="#ffb74d" opacity="0.3"/> <!-- طبقة كريمة بالوسط -->
-                <!-- نص HBD -->
-                <text x="50" y="66" fill="#ff66b3" font-size="10" font-weight="bold" text-anchor="middle">HBD</text>
+    <div id="content-slider">
+        <div class="container" id="main-wrapper">
+            <!-- واجهة اللعبة والقطو -->
+            <div class="game-overlay" id="setup-panel">
                 
-                <!-- الشموع الذهبية الثلاث -->
-                <!-- شمعة 1 (يسار) -->
-                <rect id="candle-1" x="32" y="25" width="5" height="20" fill="#ffd700" rx="1"/>
-                <!-- شمعة 2 (وسط) -->
-                <rect id="candle-2" x="47" y="22" width="5" height="23" fill="#ffd700" rx="1"/>
-                <!-- شمعة 3 (يمين) -->
-                <rect id="candle-3" x="62" y="25" width="5" height="20" fill="#ffd700" rx="1"/>
+                <div class="cat-container" id="interactive-cat">
+                    <div class="meow-text" id="meow-text-1" style="left: -15px; top: 15px;">Meow...</div>
+                    <div class="meow-text" id="meow-text-2" style="right: -15px; top: 5px;">Meow~</div>
 
-                <!-- نيران الشموع المتحركة الكيوت -->
-                <path id="flame-1" d="M 34.5,15 Q 37,21 34.5,25 Q 32,21 34.5,15 Z" fill="#ff6d00"/>
-                <path id="flame-2" d="M 49.5,12 Q 52,18 49.5,22 Q 47,18 49.5,12 Z" fill="#ff6d00"/>
-                <path id="flame-3" d="M 64.5,15 Q 67,21 64.5,25 Q 62,21 64.5,15 Z" fill="#ff6d00"/>
-            </svg>
+                    <!-- رسمة قطو "تشي" ليو أبيض ورمادي مخطط فائق الكيوت بالـ SVG -->
+                    <svg id="cat-svg" viewBox="0 0 100 130" width="100%" height="100%">
+                        <!-- الذيل المخطط رمادي وأبيض -->
+                        <path d="M 68 95 C 85 95, 85 75, 75 70" fill="none" stroke="#808080" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 68 95 C 85 95, 85 75, 75 70" fill="none" stroke="#ffffff" stroke-width="6" stroke-dasharray="4,4" stroke-linecap="round"/>
+
+                        <!-- الجسم الكامل الواقف -->
+                        <ellipse cx="50" cy="85" rx="22" ry="26" fill="#ffffff"/>
+                        <!-- خطوط رمادية على الظهر والجنب -->
+                        <path d="M 28 85 Q 35 85 32 75 Q 28 72 28 85 Z" fill="#808080"/>
+                        <path d="M 72 85 Q 65 85 68 75 Q 72 72 72 85 Z" fill="#808080"/>
+
+                        <!-- الأقدام الخلفية مع الفوطة/الوسادة السوداء الكيوت المحددة 🐾 -->
+                        <g id="foot-l">
+                            <ellipse cx="36" cy="112" rx="7" ry="6" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                            <circle cx="36" cy="112" r="3" fill="#222222"/>
+                            <circle cx="32" cy="108" r="1.2" fill="#222222"/>
+                            <circle cx="36" cy="107" r="1.2" fill="#222222"/>
+                            <circle cx="40" cy="108" r="1.2" fill="#222222"/>
+                        </g>
+                        <g id="foot-r">
+                            <ellipse cx="64" cy="112" rx="7" ry="6" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                            <circle cx="64" cy="112" r="3" fill="#222222"/>
+                            <circle cx="60" cy="108" r="1.2" fill="#222222"/>
+                            <circle cx="64" cy="107" r="1.2" fill="#222222"/>
+                            <circle cx="68" cy="108" r="1.2" fill="#222222"/>
+                        </g>
+                        
+                        <!-- الرأس الكبير الدائري للقط "تشي" -->
+                        <circle cx="50" cy="45" r="23" fill="#ffffff"/>
+                        <!-- الخطوط الرمادية الثلاثة المميزة على جبهة وجوانب الرأس -->
+                        <path d="M 44,22 Q 50,28 50,32 Q 50,28 56,22 Z" fill="#808080"/>
+                        <path d="M 36,25 Q 43,29 45,34" fill="none" stroke="#808080" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M 64,25 Q 57,29 55,34" fill="none" stroke="#808080" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M 28,42 Q 34,44 33,48" fill="none" stroke="#808080" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M 72,42 Q 66,44 67,48" fill="none" stroke="#808080" stroke-width="2.5" stroke-linecap="round"/>
+
+                        <!-- الأذن اليسرى الكبيرة والوردية من الداخل -->
+                        <polygon points="29,32 42,12 49,29" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                        <polygon points="32,29 41,16 46,27" fill="#fbc4b6"/>
+                        <!-- الأذن اليمنى الكبيرة -->
+                        <polygon points="71,32 58,12 51,29" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                        <polygon points="68,29 59,16 54,27" fill="#fbc4b6"/>
+
+                        <!-- مريلة المطبخ (مخفية للبداية) -->
+                        <g id="apron" style="display: none;">
+                            <path d="M 36,74 L 64,74 L 58,98 L 42,98 Z" fill="#ffffff" stroke="#ff99cc" stroke-width="1.2"/>
+                            <circle cx="50" cy="86" r="3" fill="#ff99cc"/>
+                        </g>
+
+                        <!-- ملامح الوجه التفاعلية لـ "ليو" -->
+                        <g id="cat-face-features">
+                            <circle cx="36" cy="42" r="3.5" fill="#222222"/>
+                            <circle cx="64" cy="42" r="3.5" fill="#222222"/>
+                            <circle cx="35" cy="40.5" r="1.2" fill="#ffffff"/>
+                            <circle cx="63" cy="40.5" r="1.2" fill="#ffffff"/>
+                            <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                            <path d="M 45,51 Q 50,54 55,51" fill="none" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+                            <!-- شوارب القطو -->
+                            <line x1="26" y1="48" x2="16" y2="47" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            <line x1="26" y1="51" x2="14" y2="52" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            <line x1="26" y1="54" x2="17" y2="57" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            
+                            <line x1="74" y1="48" x2="84" y2="47" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            <line x1="74" y1="51" x2="86" y2="52" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            <line x1="74" y1="54" x2="83" y2="57" stroke="#222222" stroke-width="1" stroke-linecap="round"/>
+                            <!-- خدود وردية -->
+                            <circle cx="30" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+                            <circle cx="70" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+                        </g>
+
+                        <!-- يدين قطو تفاعلية -->
+                        <g id="cat-paws">
+                            <ellipse cx="30" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                            <ellipse cx="70" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- شاشة 1 (البداية) -->
+                <div class="start-screen" id="step-1">
+                    <button class="btn-click" onclick="introStep1()">Click Me!</button>
+                </div>
+
+                <!-- شاشة الحوار التعريفي الأول (أنا قط لمى) -->
+                <div class="question-screen" id="step-intro-chat1">
+                    <button class="btn-intro-next" onclick="introStep2()">Okay...</button>
+                </div>
+
+                <!-- شاشة الحوار التعريفي الثاني (هذه هدية منها) -->
+                <div class="question-screen" id="step-intro-chat2">
+                    <button class="btn-intro-next" onclick="goToQuestion()">Hello, Leo! 👋🏼</button>
+                </div>
+
+                <!-- شاشة السؤال الكبرى (ما هو لقبك؟) -->
+                <div class="question-screen" id="step-2">
+                    <div class="label-text">What is your favorite nickname?</div>
+                    <input type="text" class="input-box" id="nickname-input" placeholder="Type here..." oninput="checkArabicInstant()">
+                    <button class="btn-check" id="check-btn" onclick="performCheck()">Check</button>
+                    <div class="warning-msg" id="msg-box"></div>
+                </div>
+
+            </div>
+
+            <canvas id="main-canvas"></canvas>
         </div>
-
-        <!-- ==================== 🐱 واجهة اللعبة المصغرة الكيوت ==================== -->
-        <div class="game-overlay" id="setup-panel">
-            
-            <div class="cat-container" id="interactive-cat">
-                <!-- نصوص مياو بدون أي خلفيات بيضاء ومتناسقة وسلسة -->
-                <div class="meow-text" id="meow-text-1" style="left: -10px; top: 10px;">Meow... 🐾</div>
-                <div class="meow-text" id="meow-text-2" style="right: -15px; top: -5px;">Meow~ 💗</div>
-
-                <svg id="cat-svg" viewBox="0 0 100 130" width="100%" height="100%">
-                    <!-- جسم القط بالكامل (واقف طوال الوقت) -->
-                    <ellipse cx="50" cy="85" rx="20" ry="28" fill="#f5e1c4"/>
-                    <!-- الأرجل الخلفية للوقوف -->
-                    <ellipse id="foot-left" cx="40" cy="114" rx="6" ry="5" fill="#e3cca9"/>
-                    <ellipse id="foot-right" cx="60" cy="114" rx="6" ry="5" fill="#e3cca9"/>
-                    
-                    <!-- الرأس الكيوت المبتسم دائماً -->
-                    <circle cx="50" cy="45" r="21" fill="#f5e1c4"/>
-                    <!-- الأذن اليسرى -->
-                    <polygon points="32,32 42,16 48,30" fill="#f5e1c4"/>
-                    <polygon points="35,30 42,19 46,29" fill="#f2bca6"/>
-                    <!-- الأذن اليمنى -->
-                    <polygon points="68,32 58,16 52,30" fill="#f5e1c4"/>
-                    <polygon points="65,30 58,19 54,29" fill="#f2bca6"/>
-                    
-                    <!-- الذيل الكيوت -->
-                    <path d="M 68 95 C 80 95, 82 80, 77 75" fill="none" stroke="#f5e1c4" stroke-width="4.5" stroke-linecap="round"/>
-
-                    <!-- مريلة الطبخ (مخفية بالبداية) -->
-                    <g id="apron" style="display: none;">
-                        <path d="M 38,72 L 62,72 L 58,95 L 42,95 Z" fill="#ffffff" stroke="#ff99cc" stroke-width="1"/>
-                        <circle cx="50" cy="82" r="2.5" fill="#ff99cc"/>
-                    </g>
-
-                    <!-- ملامح الوجه واليدين -->
-                    <g id="cat-face-features">
-                        <!-- عيون مبتسمة كيوت دائرية -->
-                        <circle cx="38" cy="43" r="2.2" fill="#6b4c35"/>
-                        <circle cx="62" cy="43" r="2.2" fill="#6b4c35"/>
-                        <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                        <!-- ابتسامة لطيفة مستمرة ومفتوحة خفيف -->
-                        <path d="M 46,52 Q 50,55 54,52" fill="none" stroke="#6b4c35" stroke-width="1.5" stroke-linecap="round"/>
-                        <circle cx="34" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
-                        <circle cx="66" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
-                    </g>
-
-                    <!-- يدين القط الكيوت مستقلة للتحريك -->
-                    <g id="cat-paws">
-                        <!-- يد يسار ويمين طبيعية ومبتسمة -->
-                        <ellipse cx="32" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                        <ellipse cx="68" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                    </g>
-                </svg>
-                <div class="smoke-cloud" id="escape-smoke"></div>
-            </div>
-
-            <!-- شاشة 1 -->
-            <div class="start-screen" id="step-1">
-                <button class="btn-click" onclick="goToQuestion()">Click Me!</button>
-            </div>
-
-            <!-- شاشة 2 (مع زر Check) -->
-            <div class="question-screen" id="step-2">
-                <div class="label-text">What is your favorite nickname?</div>
-                <input type="text" class="input-box" id="nickname-input" placeholder="Type here...">
-                <button class="btn-check" onclick="performCheck()">Check</button>
-                <div class="warning-msg" id="msg-box"></div>
-            </div>
-
-        </div>
-
-        <div class="kiss-heart" id="flying-heart"></div>
-        <canvas id="main-canvas"></canvas>
     </div>
+
+    <!-- قطو الدفع المنفصل للتمرير والازاحة -->
+    <div id="pusher-cat">
+        <svg viewBox="0 0 100 130" width="100%" height="100%">
+            <ellipse cx="50" cy="85" rx="22" ry="26" fill="#ffffff" transform="rotate(-15, 50, 85)"/>
+            <path d="M 28 85 Q 35 85 32 75 Q 28 72 28 85 Z" fill="#808080"/>
+            <path d="M 72 85 Q 65 85 68 75 Q 72 72 72 85 Z" fill="#808080"/>
+            <ellipse cx="32" cy="112" rx="7" ry="6" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+            <ellipse cx="60" cy="112" rx="7" ry="6" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+            <circle cx="45" cy="45" r="23" fill="#ffffff"/>
+            <polygon points="24,32 37,12 44,29" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+            <polygon points="66,32 53,12 46,29" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+            <g>
+                <path d="M 30,42 L 35,39 L 30,36" fill="none" stroke="#222222" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 60,42 L 55,39 L 60,36" fill="none" stroke="#222222" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 28,31 L 38,34" stroke="#222222" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 62,31 L 52,34" stroke="#222222" stroke-width="2.5" stroke-linecap="round"/>
+                <polygon points="43,47 47,47 45,49" fill="#fbc4b6"/>
+                <path d="M 40,54 Q 45,48 50,54" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <g>
+                <path d="M 30,70 L 10,65" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 30,78 L 10,73" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- فيضان الدموع اللطيف -->
+    <div id="tear-flood"></div>
+
+    <!-- فقاعة محادثة كيوت منفصلة تماماً تظهر للقط الميتوايق -->
+    <div class="speech-bubble" id="speech-box"></div>
+
+    <!-- الأزرار التفاعلية النهائية للمفاجأة -->
+    <div class="action-buttons" id="action-box">
+        <button class="btn-yes" id="opt-yes" onclick="chooseYes()">Yes, I want to!</button>
+        <button class="btn-no" id="opt-no" onclick="chooseNo()">No, I don't.</button>
+    </div>
+
+    <!-- زر النفخ المهتز -->
+    <button class="btn-blow" id="blow-btn" onclick="blowCandle()">Blow! 🌬️</button>
+
+    <!-- كعكة الشموع الذهبية الثلاث -->
+    <div id="cake-svg-container">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <ellipse cx="50" cy="85" rx="42" ry="10" fill="#f0f0f0"/>
+            <rect x="18" y="45" width="64" height="32" rx="5" fill="#ffffff" stroke="#f0f0f0" stroke-width="1"/>
+            <rect x="18" y="55" width="64" height="8" fill="#ffb74d" opacity="0.3"/> 
+            <text x="50" y="68" fill="#ff66b3" font-size="11" font-weight="bold" font-family="'Arial Rounded MT Bold', sans-serif" text-anchor="middle">HBD</text>
+            
+            <!-- شموع ذهبية ممتدة -->
+            <rect id="candle-1" x="32" y="24" width="5" height="21" fill="#ffd700" rx="1"/>
+            <rect id="candle-2" x="48" y="20" width="5" height="25" fill="#ffd700" rx="1"/>
+            <rect id="candle-3" x="64" y="24" width="5" height="21" fill="#ffd700" rx="1"/>
+
+            <!-- ألسنة اللهب المتحركة -->
+            <path id="flame-1" d="M 34.5,14 Q 37,20 34.5,24 Q 32,20 34.5,14 Z" fill="#ff6d00"/>
+            <path id="flame-2" d="M 50.5,10 Q 53,16 50.5,20 Q 48,16 50.5,10 Z" fill="#ff6d00"/>
+            <path id="flame-3" d="M 66.5,14 Q 69,20 66.5,24 Q 64,20 66.5,14 Z" fill="#ff6d00"/>
+        </svg>
+    </div>
+
+    <div class="kiss-heart" id="flying-heart"></div>
 
     <script>
         const canvas = document.getElementById('main-canvas');
@@ -479,6 +564,7 @@
         }
 
         function drawHeart(scale, points) {
+            ctx.save();
             ctx.beginPath();
             for (let i = 0; i <= points; i++) {
                 let a = (i / 628) * Math.PI * 2;
@@ -489,137 +575,199 @@
                 else ctx.lineTo(x, y);
             }
             ctx.strokeStyle = "#ff66cc";
-            ctx.lineWidth = 3.5;
-            ctx.shadowBlur = 20;
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 15;
             ctx.shadowColor = "#ff66cc";
             ctx.stroke();
-            ctx.shadowBlur = 0;
+            ctx.restore();
         }
 
-        // ==================== 🐱 ملامح وتحريكات القطة الكيوت ====================
+        // ==================== 🐱 تعبيرات وجه قطو "ليو" واليدين تفاعلياً ====================
         const catFace = document.getElementById('cat-face-features');
         const catPaws = document.getElementById('cat-paws');
-        const footRight = document.getElementById('foot-right');
+        const interactiveCat = document.getElementById('interactive-cat');
 
         function setCatSmile() {
-            footRight.classList.remove('taping-foot');
+            interactiveCat.classList.remove('taping-foot');
             catFace.innerHTML = `
-                <circle cx="38" cy="43" r="2.2" fill="#6b4c35"/>
-                <circle cx="62" cy="43" r="2.2" fill="#6b4c35"/>
-                <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                <path d="M 46,52 Q 50,55 54,52" fill="none" stroke="#6b4c35" stroke-width="1.5" stroke-linecap="round"/>
-                <circle cx="34" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
-                <circle cx="66" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+                <circle cx="36" cy="42" r="3.5" fill="#222222"/>
+                <circle cx="64" cy="42" r="3.5" fill="#222222"/>
+                <circle cx="35" cy="40.5" r="1.2" fill="#ffffff"/>
+                <circle cx="63" cy="40.5" r="1.2" fill="#ffffff"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 45,51 Q 50,54 55,51" fill="none" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="26" y1="48" x2="16" y2="47" stroke="#222222" stroke-width="1"/>
+                <line x1="26" y1="51" x2="14" y2="52" stroke="#222222" stroke-width="1"/>
+                <line x1="26" y1="54" x2="17" y2="57" stroke="#222222" stroke-width="1"/>
+                <line x1="74" y1="48" x2="84" y2="47" stroke="#222222" stroke-width="1"/>
+                <line x1="74" y1="51" x2="86" y2="52" stroke="#222222" stroke-width="1"/>
+                <line x1="74" y1="54" x2="83" y2="57" stroke="#222222" stroke-width="1"/>
+                <circle cx="30" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+                <circle cx="70" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
             `;
             catPaws.innerHTML = `
-                <ellipse cx="32" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                <ellipse cx="68" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
+                <ellipse cx="30" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="70" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
             `;
         }
 
-        // حالة العصبية والطق بالرجل وتربيع اليدين 😡
+        // حركة ليو ماسك دفتر وقلم ويطق القلم براسه يفكر 📓✏️🤔
+        function setCatThinkingWithNotebook() {
+            interactiveCat.classList.remove('taping-foot');
+            // عيون مغلقة تفكر وحواجب مائلة بلطف
+            catFace.innerHTML = `
+                <path d="M 30,42 Q 35,39 40,42" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 60,42 Q 65,39 70,42" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 45,53 Q 50,51 55,53" fill="none" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="30" cy="48" r="4" fill="#fca8a1" opacity="0.5"/>
+                <circle cx="70" cy="48" r="4" fill="#fca8a1" opacity="0.5"/>
+            `;
+            // يد ماسكة دفتر صغير ملون، ويد ثانية ماسكة قلم تطقطق فيه على راسه بلطف!
+            catPaws.innerHTML = `
+                <!-- دفتر ملاحظات وردي في يده اليسرى -->
+                <g transform="translate(14, 65)">
+                    <rect x="0" y="0" width="18" height="22" rx="2" fill="#ffb74d" stroke="#f57c00" stroke-width="1"/>
+                    <line x1="4" y1="5" x2="14" y2="5" stroke="#ffffff" stroke-width="1.5"/>
+                    <line x1="4" y1="10" x2="14" y2="10" stroke="#ffffff" stroke-width="1.5"/>
+                    <line x1="4" y1="15" x2="11" y2="15" stroke="#ffffff" stroke-width="1.5"/>
+                </g>
+                <ellipse cx="26" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+
+                <!-- يد يمنى ماسكة قلم رصاص أصفر يطقطق على الجبهة -->
+                <g class="thinking-pen-animation">
+                    <!-- القلم -->
+                    <rect x="52" y="35" width="4" height="15" fill="#ffeb3b" transform="rotate(-35, 54, 42)"/>
+                    <polygon points="56,33 60,31 58,35" fill="#fbc4b6" transform="rotate(-35, 54, 42)"/>
+                    <ellipse cx="68" cy="45" rx="5.5" ry="4.5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                </g>
+            `;
+        }
+
+        // حركة حك الرأس الكيوت الفورية عند كتابة الحروف العربية 😅
+        function setCatScratching() {
+            interactiveCat.classList.remove('taping-foot');
+            catFace.innerHTML = `
+                <circle cx="36" cy="42" r="3" fill="#222222"/>
+                <circle cx="64" cy="42" r="3" fill="#222222"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 46,52 Q 50,50 54,52" fill="none" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="26" y1="48" x2="16" y2="47" stroke="#222222" stroke-width="1"/>
+                <line x1="26" y1="51" x2="14" y2="52" stroke="#222222" stroke-width="1"/>
+                <line x1="74" y1="48" x2="84" y2="47" stroke="#222222" stroke-width="1"/>
+                <line x1="74" y1="51" x2="86" y2="52" stroke="#222222" stroke-width="1"/>
+                <circle cx="30" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+                <circle cx="70" cy="48" r="4" fill="#fca8a1" opacity="0.6"/>
+            `;
+            catPaws.innerHTML = `
+                <ellipse cx="70" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="32" cy="30" rx="5" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" style="animation: scratchMotion 0.4s infinite alternate;"/>
+            `;
+        }
+
+        // وجه معصب 😡 يطق رجله ويربّع يدينه
         function setCatAngry() {
-            footRight.classList.add('taping-foot'); // يبدأ بطق رجله بالأرض
+            interactiveCat.classList.add('taping-foot');
             catFace.innerHTML = `
-                <!-- حواجب غاضبة وعيون دائرية حادة خفيفة -->
-                <circle cx="38" cy="44" r="2.5" fill="#6b4c35"/>
-                <circle cx="62" cy="44" r="2.5" fill="#6b4c35"/>
-                <path d="M 33,37 L 42,41" stroke="#6b4c35" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M 67,37 L 58,41" stroke="#6b4c35" stroke-width="2.2" stroke-linecap="round"/>
-                <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                <!-- فم مقلوب غاضب -->
-                <path d="M 46,54 Q 50,51 54,54" fill="none" stroke="#6b4c35" stroke-width="1.8" stroke-linecap="round"/>
-                <circle cx="32" cy="49" r="4.5" fill="#ff6666" opacity="0.6"/>
-                <circle cx="68" cy="49" r="4.5" fill="#ff6666" opacity="0.6"/>
+                <circle cx="36" cy="43" r="3.2" fill="#222222"/>
+                <circle cx="64" cy="43" r="3.2" fill="#222222"/>
+                <path d="M 30,36 L 40,40" stroke="#222222" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M 70,36 L 60,40" stroke="#222222" stroke-width="2.2" stroke-linecap="round"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 45,54 Q 50,50 55,54" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="30" cy="49" r="4.5" fill="#ff6666" opacity="0.6"/>
+                <circle cx="70" cy="49" r="4.5" fill="#ff6666" opacity="0.6"/>
             `;
-            // أيدي مربّعة بكيوت بالمنتصف
             catPaws.innerHTML = `
-                <path d="M 32,74 Q 50,78 68,74" fill="none" stroke="#f5e1c4" stroke-width="7" stroke-linecap="round"/>
-                <path d="M 32,74 Q 50,78 68,74" fill="none" stroke="#e3cca9" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M 28,72 Q 50,77 72,72" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+                <path d="M 28,72 Q 50,77 72,72" fill="none" stroke="#cccccc" stroke-width="1.5" stroke-linecap="round"/>
             `;
         }
 
-        // حالة النجاح الأسطورية: قلوب تلمع، يدين تدعي 🙏🏼، فم مفتوح فرحان
+        // نجاح الإجابة
         function setCatSuccess() {
-            footRight.classList.remove('taping-foot');
+            interactiveCat.classList.remove('taping-foot');
             catFace.innerHTML = `
-                <!-- عيون قلوب حمراء نابضة -->
                 <g fill="#ff3366">
-                    <path d="M 38,44 C 34,40 34,34 38,37 C 42,34 42,40 38,44" transform="scale(0.85) translate(6, 6)"/>
-                    <path d="M 62,44 C 58,40 58,34 62,37 C 66,34 66,40 62,44" transform="scale(0.85) translate(10, 6)"/>
+                    <path d="M 36,43 C 32,39 32,33 36,36 C 40,33 40,39 36,43" transform="scale(0.85) translate(4, 5)"/>
+                    <path d="M 64,43 C 60,39 60,33 64,36 C 68,33 68,39 64,43" transform="scale(0.85) translate(8, 5)"/>
                 </g>
-                <!-- فم مفتوح سعيد -->
-                <ellipse cx="50" cy="54" rx="4" ry="5" fill="#6b4c35"/>
-                <circle cx="32" cy="48" r="4.5" fill="#ff9999" opacity="0.8"/>
-                <circle cx="69" cy="48" r="4.5" fill="#ff9999" opacity="0.8"/>
+                <ellipse cx="50" cy="53" rx="4" ry="5.5" fill="#222222"/>
+                <circle cx="30" cy="48" r="4.5" fill="#ff9999" opacity="0.8"/>
+                <circle cx="70" cy="48" r="4.5" fill="#ff9999" opacity="0.8"/>
             `;
-            // يدين ممتنة ومضمومة 🙏🏼
             catPaws.innerHTML = `
-                <g fill="#f5e1c4">
-                    <path d="M 46,74 C 46,67 50,67 50,74" stroke="#e3cca9" stroke-width="0.8"/>
-                    <path d="M 54,74 C 54,67 50,67 50,74" stroke="#e3cca9" stroke-width="0.8"/>
+                <g fill="#ffffff">
+                    <path d="M 45,72 C 45,65 49,65 49,72" stroke="#cccccc" stroke-width="0.8"/>
+                    <path d="M 55,72 C 55,65 51,65 51,72" stroke="#cccccc" stroke-width="0.8"/>
                 </g>
             `;
         }
 
-        // عيون حزينة مبللة بالدموع 🥺
+        // عيون بريئة للمتوايق 🥺
         function setCatPleading() {
-            footRight.classList.remove('taping-foot');
+            interactiveCat.classList.remove('taping-foot');
             catFace.innerHTML = `
-                <circle cx="38" cy="43" r="3.5" fill="#4a3b32"/>
-                <circle cx="62" cy="43" r="3.5" fill="#4a3b32"/>
-                <!-- لمعة العين البريئة الكبيرة -->
-                <circle cx="39" cy="41.5" r="1.5" fill="#ffffff"/>
-                <circle cx="63" cy="41.5" r="1.5" fill="#ffffff"/>
-                <circle cx="37" cy="44.5" r="0.7" fill="#ffffff"/>
-                <circle cx="61" cy="44.5" r="0.7" fill="#ffffff"/>
-                <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                <path d="M 47,53 Q 50,51 53,53" fill="none" stroke="#6b4c35" stroke-width="1.5" stroke-linecap="round"/>
-                <circle cx="33" cy="49" r="4" fill="#fca8a1" opacity="0.5"/>
-                <circle cx="67" cy="49" r="4" fill="#fca8a1" opacity="0.5"/>
+                <circle cx="36" cy="42" r="4.5" fill="#222222"/>
+                <circle cx="64" cy="42" r="4.5" fill="#222222"/>
+                <circle cx="37.5" cy="40" r="2" fill="#ffffff"/>
+                <circle cx="65.5" cy="40" r="2" fill="#ffffff"/>
+                <circle cx="34.5" cy="44" r="0.9" fill="#ffffff"/>
+                <circle cx="62.5" cy="44" r="0.9" fill="#ffffff"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 46,52 Q 50,50 54,52" fill="none" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="30" cy="48" r="4.5" fill="#fca8a1" opacity="0.5"/>
+                <circle cx="70" cy="48" r="4.5" fill="#fca8a1" opacity="0.5"/>
             `;
-            // يدين تمسك طرف يسار الشاشة (تتأثر بالتمركز لاحقاً)
             catPaws.innerHTML = `
-                <ellipse cx="45" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                <ellipse cx="65" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
+                <ellipse cx="44" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="64" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
             `;
         }
 
-        // وجه حزين مكسور الخاطر ☹️
+        // وجه حزين ☹️
         function setCatSad() {
             catFace.innerHTML = `
-                <circle cx="38" cy="43" r="2.5" fill="#6b4c35"/>
-                <circle cx="62" cy="43" r="2.5" fill="#6b4c35"/>
-                <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                <!-- فم مقلوب حزين ☹️ -->
-                <path d="M 46,54 Q 50,50 54,54" fill="none" stroke="#6b4c35" stroke-width="1.8" stroke-linecap="round"/>
-                <circle cx="34" cy="49" r="3.5" fill="#fca8a1" opacity="0.4"/>
-                <circle cx="66" cy="49" r="3.5" fill="#fca8a1" opacity="0.4"/>
+                <circle cx="36" cy="42" r="3" fill="#222222"/>
+                <circle cx="64" cy="42" r="3" fill="#222222"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 45,54 Q 50,50 55,54" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="30" cy="49" r="4" fill="#fca8a1" opacity="0.4"/>
+                <circle cx="70" cy="49" r="4" fill="#fca8a1" opacity="0.4"/>
             `;
             catPaws.innerHTML = `
-                <ellipse cx="32" cy="78" rx="4" ry="3.5" fill="#f5e1c4"/>
-                <ellipse cx="68" cy="78" rx="4" ry="3.5" fill="#f5e1c4"/>
+                <ellipse cx="30" cy="76" rx="5.5" ry="4.5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="70" cy="76" rx="5.5" ry="4.5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
             `;
         }
 
-        // وجه يبكي بالدموع 😭
+        // وجه يبكي 😭
         function setCatCrying() {
             catFace.innerHTML = `
-                <path d="M 35,44 Q 38,42 41,44" fill="none" stroke="#6b4c35" stroke-width="2" stroke-linecap="round"/>
-                <path d="M 59,44 Q 62,42 65,44" fill="none" stroke="#6b4c35" stroke-width="2" stroke-linecap="round"/>
-                <polygon points="48,48 52,48 50,50" fill="#e89885"/>
-                <path d="M 45,55 Q 50,51 55,55" fill="none" stroke="#6b4c35" stroke-width="1.8" stroke-linecap="round"/>
-                <!-- شلال دموع أزرق متساقط -->
-                <path d="M 37,46 L 37,62" fill="none" stroke="#3399ff" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
-                <path d="M 63,46 L 63,62" fill="none" stroke="#3399ff" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+                <path d="M 33,43 Q 36,41 39,43" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 61,43 Q 64,41 67,43" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+                <polygon points="48,47 52,47 50,49" fill="#fbc4b6"/>
+                <path d="M 45,55 Q 50,51 55,55" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M 35,45 L 35,62" fill="none" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 65,45 L 65,62" fill="none" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round"/>
             `;
             catPaws.innerHTML = `
-                <ellipse cx="35" cy="65" rx="4.5" ry="4" fill="#f5e1c4"/>
-                <ellipse cx="65" cy="65" rx="4.5" ry="4" fill="#f5e1c4"/>
+                <ellipse cx="33" cy="65" rx="5.5" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="67" cy="65" rx="5.5" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
             `;
         }
 
-        // ==================== ⏱️ نظام المياو المتتابع والناعم وتلاشي بالثواني ====================
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes scratchMotion {
+                0% { transform: translate(0, 0); }
+                100% { transform: translate(-3px, -5px); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+
+        // ==================== ⏱️ نظام المياو الناعم والمنتظم ====================
         let meowActiveIndex = 0;
         let meowLoopInterval = null;
         const meow1 = document.getElementById('meow-text-1');
@@ -627,7 +775,6 @@
 
         function triggerMeowSequence() {
             if (meowLoopInterval) clearInterval(meowLoopInterval);
-            
             function run() {
                 if (meowActiveIndex === 0) {
                     meow1.style.opacity = "1";
@@ -635,7 +782,7 @@
                     setTimeout(() => {
                         meow1.style.opacity = "0";
                         meow1.style.transform = "translateY(-15px)";
-                    }, 2000); // تختفي تدريجياً خلال ثانيتين
+                    }, 2000);
                     meowActiveIndex = 1;
                 } else {
                     meow2.style.opacity = "1";
@@ -648,7 +795,7 @@
                 }
             }
             run();
-            meowLoopInterval = setInterval(run, 3500); // فارق زمني مريح ومدروس للتكرار
+            meowLoopInterval = setInterval(run, 3500);
         }
 
         function stopMeowSequence() {
@@ -657,12 +804,73 @@
             meow2.style.opacity = "0";
         }
 
-        // ==================== 🎮 مسار اللعبة الأساسي ====================
-        function goToQuestion() {
+
+        // ==================== 💬 حوارات البداية والتعريف باللغة الانجليزية 💬 ====================
+        
+        // الخطوة 1: ليو يطلع من تحت كبير وقريب وفوقه فقاعة "أنا قط لمى لمى واسمي ليو"
+        function introStep1() {
             document.getElementById('step-1').style.display = 'none';
-            document.getElementById('step-2').style.display = 'flex';
-            setCatSmile();
-            triggerMeowSequence();
+            
+            const catContainer = document.getElementById('interactive-cat');
+            catContainer.classList.add('intro-active'); // يكبر ويقترب القطو بالـ transition
+
+            setTimeout(() => {
+                setCatSmile();
+                typeWriterEffect("I am Lama's cat, and my name is Leo.", "speech-box", () => {
+                    document.getElementById('step-intro-chat1').style.display = 'flex';
+                });
+            }, 1000);
+        }
+
+        // الخطوة 2: يختفي التعريف وتتحول الفقاعة إلى "وهذه هدية مقدمة منها لميلادك!"
+        function introStep2() {
+            document.getElementById('step-intro-chat1').style.display = 'none';
+            document.getElementById('speech-box').style.display = 'none';
+
+            setTimeout(() => {
+                typeWriterEffect("And this is a gift from her for your birthday!", "speech-box", () => {
+                    document.getElementById('step-intro-chat2').style.display = 'flex';
+                });
+            }, 4000);
+        }
+
+        // الانتقال للسؤال الرئيسي: يبدأ يفكر ويمسك قلم ودفتر ويطقطق على راسه
+        function goToQuestion() {
+            document.getElementById('step-intro-chat2').style.display = 'none';
+            document.getElementById('speech-box').style.display = 'none';
+            
+            // تصغير القطو قليلاً ليرجع لوضعه الطبيعي ليتناسب مع شاشة السؤال
+            const catContainer = document.getElementById('interactive-cat');
+            catContainer.classList.remove('intro-active');
+            
+            setTimeout(() => {
+                document.getElementById('step-2').style.display = 'flex';
+                setCatThinkingWithNotebook(); // ليو يدخل وضعية التفكير وطقطقة القلم على الرأس 🤔📓🖋️
+                triggerMeowSequence();
+            }, 1000);
+        }
+
+
+        // ==================== 🎮 التحقق من اللغة فوري وحك الرأس ====================
+        function checkArabicInstant() {
+            const inputVal = document.getElementById('nickname-input').value;
+            const msgBox = document.getElementById('msg-box');
+            const arabicPattern = /[\u0600-\u06FF]/;
+
+            if (arabicPattern.test(inputVal)) {
+                stopMeowSequence();
+                setCatScratching(); // يحك رأسه فوراً 😅
+                msgBox.style.color = "#ffb74d";
+                msgBox.innerText = "English only please! 😅";
+                document.getElementById('check-btn').disabled = true;
+            } else {
+                setCatThinkingWithNotebook(); // يعود ليو لوضعية التفكير وطقطقة القلم
+                msgBox.innerText = "";
+                document.getElementById('check-btn').disabled = false;
+                if (inputVal !== "") {
+                    triggerMeowSequence();
+                }
+            }
         }
 
         function performCheck() {
@@ -671,91 +879,167 @@
             const msgBox = document.getElementById('msg-box');
 
             if (inputVal === "") {
-                setCatSmile();
+                setCatThinkingWithNotebook();
+                msgBox.style.color = "#ff9494";
                 msgBox.innerText = "Please write a nickname first!";
                 return;
             }
 
-            const arabicPattern = /[\u0600-\u06FF]/;
-            if (arabicPattern.test(inputVal)) {
-                setCatAngry();
-                msgBox.innerText = "Please use English only! 😅";
-                return;
-            }
-
             if (inputVal.toLowerCase() === "yosi") {
-                setCatSuccess();
+                setCatSuccess(); // قلوب ومضمومة الأيدي 🙏🏼 وفم مفتوح
                 msgBox.style.color = "#66ff99";
-                msgBox.innerText = "Correct! 🙏🏼❤️";
+                msgBox.innerText = "Correct!";
                 document.getElementById('nickname-input').blur();
                 
-                // الانتقال للتهنئة والطرطيع والبالونات
-                setTimeout(escapeCatAndStartCelebration, 1500);
+                setTimeout(startCelebration, 1500);
             } else {
-                setCatAngry();
+                setCatAngry(); // يعصب 😡 ويطق رجله بالأرض
                 msgBox.style.color = "#ff8080";
-                msgBox.innerText = "Wrong nickname! 😡 Try again.";
+                msgBox.innerText = "Wrong nickname! Try again.";
             }
         }
 
-        // هروب القط لبدء التهنئة الكبرى
-        function escapeCatAndStartCelebration() {
-            const catContainer = document.getElementById('interactive-cat');
-            const smoke = document.getElementById('escape-smoke');
 
-            smoke.classList.add('smoke-active');
-            catContainer.classList.add('cat-escape');
+        // ==================== 🎈 التهنئة الكبرى (البالونات والطراطيع معاً) ====================
+        let balloonsFinished = false;
+        let activeBalloons = 0;
+        let totalBalloonsCount = 14;
 
+        function startCelebration() {
+            document.getElementById('setup-panel').style.opacity = '0';
             setTimeout(() => {
-                document.getElementById('setup-panel').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('setup-panel').style.display = 'none';
-                    const mainCanvas = document.getElementById('main-canvas');
-                    mainCanvas.style.display = 'block';
-                    resizeCanvas();
-                    requestAnimationFrame(animate);
-                }, 800);
+                document.getElementById('setup-panel').style.display = 'none';
+                const mainCanvas = document.getElementById('main-canvas');
+                mainCanvas.style.display = 'block';
+                resizeCanvas();
+                
+                requestAnimationFrame(animate);
+                
+                generateFastBalloons();
+                startSynchronizedFireworks();
             }, 1000);
         }
 
-        // ==================== 💬 كتابة النص حرفاً بحرف (Typewriter) ====================
-        function typeWriterEffect(text, elementId, callback) {
-            const el = document.getElementById(elementId);
-            el.innerHTML = "";
-            el.style.display = "block";
-            let i = 0;
-            function write() {
-                if (i < text.length) {
-                    el.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(write, 65); // سرعة كتابة كيوت وانسيابية
-                } else if (callback) {
-                    callback();
-                }
+        function generateFastBalloons() {
+            const colors = [
+                { bg: 'rgba(255, 102, 179, 0.08)', border: 'rgba(255, 102, 179, 0.3)' },
+                { bg: 'rgba(0, 229, 255, 0.08)', border: 'rgba(0, 229, 255, 0.3)' },
+                { bg: 'rgba(255, 215, 0, 0.08)', border: 'rgba(255, 215, 0, 0.3)' }
+            ];
+
+            activeBalloons = totalBalloonsCount;
+
+            for (let i = 0; i < totalBalloonsCount; i++) {
+                const b = document.createElement('div');
+                b.className = 'balloon'; 
+                b.style.left = (Math.random() * 80 + 10) + 'vw';
+                b.style.animationDelay = (Math.random() * 1.5) + 's'; 
+                b.style.animationDuration = (Math.random() * 3 + 15) + 's'; 
+                
+                const theme = colors[Math.floor(Math.random() * colors.length)];
+                b.style.backgroundColor = theme.bg;
+                b.style.border = `1.5px solid ${theme.border}`;
+                
+                b.addEventListener('animationend', () => {
+                    b.remove();
+                    activeBalloons--;
+                    if (activeBalloons <= 0) {
+                        balloonsFinished = true;
+                    }
+                });
+                document.body.appendChild(b);
             }
-            write();
         }
 
-        // ==================== 🥺 ظهور القط المفاجئ (يتوايق) ====================
-        function peekCatIn() {
+        let fireworksInterval = null;
+        function startSynchronizedFireworks() {
+            const wDpr = canvas.width / (window.devicePixelRatio || 1);
+            const hDpr = canvas.height / (window.devicePixelRatio || 1);
+
+            fireworksInterval = setInterval(() => {
+                if (balloonsFinished) {
+                    clearInterval(fireworksInterval);
+                    triggerFinalTransition(); 
+                    return;
+                }
+                triggerExplosion(Math.random() * wDpr, Math.random() * hDpr * 0.5);
+            }, 1200);
+        }
+
+
+        // ==================== ✨ تلاشي الكلام وظهور لمعان القليتر ✨ ====================
+        function triggerFinalTransition() {
+            let fadeOutInterval = setInterval(() => {
+                if (textOpacity > 0) {
+                    textOpacity -= 0.04;
+                } else {
+                    clearInterval(fadeOutInterval);
+                    showCelebration = false;
+                    
+                    setTimeout(() => {
+                        const mainCanvas = document.getElementById('main-canvas');
+                        mainCanvas.style.opacity = '0'; 
+                        
+                        setTimeout(() => {
+                            mainCanvas.style.display = 'none';
+                            startScreenPushStage();
+                        }, 1500);
+                    }, 1000);
+                }
+            }, 30);
+        }
+
+
+        // ==================== 😖 مرحلة الدف البطولي للقطو (5 ثوانٍ) 😖 ====================
+        function startScreenPushStage() {
+            const pusherCat = document.getElementById('pusher-cat');
+            const contentSlider = document.getElementById('content-slider');
+
+            pusherCat.style.display = 'block';
+            
+            setTimeout(() => {
+                pusherCat.style.right = '0'; 
+                
+                setTimeout(() => {
+                    contentSlider.style.left = '-100vw'; 
+                    pusherCat.style.right = '100vw'; 
+                    
+                    setTimeout(() => {
+                        pusherCat.style.display = 'none';
+                        contentSlider.style.display = 'none'; 
+                        
+                        startPeekingStage();
+                    }, 5000);
+                }, 1000);
+            }, 100);
+        }
+
+
+        // ==================== 🥺 ظهور القطو بالتوايق من اليسار 🥺 ====================
+        function startPeekingStage() {
             const setupPanel = document.getElementById('setup-panel');
             const catContainer = document.getElementById('interactive-cat');
             
-            // إعادة التهيئة لوضعه في أقصى اليسار
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('apron').style.display = 'none';
+            
             catContainer.className = 'cat-container';
             catContainer.style.position = 'fixed';
-            catContainer.style.bottom = '10px';
-            catContainer.style.left = '-70px'; // يتوايق (نصف وجهه وجسده خارج الشاشة)
+            catContainer.style.bottom = '20px';
+            catContainer.style.left = '-70px'; 
             catContainer.style.transform = 'scale(1.2)';
             
-            setCatPleading(); // شكل العيون البريئة الالتماسية 🥺
+            setCatPleading(); 
             
             setupPanel.style.display = 'flex';
             setupPanel.style.opacity = '1';
 
-            // يظهر ببطء وسلاسة تامة
+            document.body.appendChild(setupPanel); 
+
             setTimeout(() => {
-                catContainer.style.left = '-35px'; // تقدم بطيء وثابت
+                catContainer.style.left = '-35px'; 
+                
                 setTimeout(() => {
                     typeWriterEffect("I made something for you..\nDo you want to see it?", "speech-box", () => {
                         document.getElementById('action-box').style.display = 'flex';
@@ -764,7 +1048,8 @@
             }, 500);
         }
 
-        // ==================== 🟢 مسار الموافقة نعم اريد رؤيته 🟢 ====================
+
+        // ==================== 🟢 مسار الموافقة الخيالي 🟢 ====================
         let candleCount = 3;
 
         function chooseYes() {
@@ -772,20 +1057,17 @@
             document.getElementById('speech-box').style.display = 'none';
             
             const catContainer = document.getElementById('interactive-cat');
-            // القط يرتدي مريلة الطبخ ويتقدم لمنتصف الشاشة ببطء وسلاسة
-            document.getElementById('apron').style.display = 'block';
+            document.getElementById('apron').style.display = 'block'; 
             setCatSmile();
             
-            catContainer.style.left = 'calc(50% - 80px)'; // التمركز بالمنتصف
-            catContainer.style.bottom = '160px'; // يصعد للأعلى ليفسح مجالاً للكعكة
+            catContainer.style.left = 'calc(50% - 90px)'; 
+            catContainer.style.bottom = '170px'; 
 
             setTimeout(() => {
-                // تظهر الكعكة البيضاء بالشموع الذهبية والنار
                 const cake = document.getElementById('cake-svg-container');
                 cake.style.display = 'block';
-                cake.style.left = 'calc(50% - 55px)';
+                cake.style.left = 'calc(50% - 60px)';
 
-                // بعد 5 ثوانٍ يظهر زر النفخ المهتز
                 setTimeout(() => {
                     document.getElementById('blow-btn').style.display = 'block';
                 }, 5000);
@@ -803,43 +1085,38 @@
             } else if (candleCount === 1) {
                 document.getElementById('flame-1').style.display = 'none';
                 candleCount--;
-                // انتهت الشموع بالكامل!
                 document.getElementById('blow-btn').style.display = 'none';
-                triggerGoldenGlow();
+                triggerPostBlowCelebration(); 
             }
         }
 
-        // الطرطيعات الشفافة ثم اللمعة الذهبية (قليتر)
-        function triggerGoldenGlow() {
-            // إخفاء الكعكة بسلاسة
+        function triggerPostBlowCelebration() {
             setTimeout(() => {
                 document.getElementById('cake-svg-container').style.opacity = '0';
                 
-                // تفعيل الطرطيعات واللمعات الشفافة الفاخرة على الكانفاس
-                balloonsFinished = false;
                 const mainCanvas = document.getElementById('main-canvas');
+                mainCanvas.style.opacity = '1';
                 mainCanvas.style.display = 'block';
                 resizeCanvas();
-                triggerExplosion((canvas.width / window.devicePixelRatio)/2, (canvas.height / window.devicePixelRatio)/2);
                 
-                // القطو يهرب لليمين ببطء وسلاسة
+                for (let i = 0; i < 40; i++) {
+                    particles.push(new Particle((canvas.width / window.devicePixelRatio) / 2, (canvas.height / window.devicePixelRatio) / 2));
+                }
+
                 const catContainer = document.getElementById('interactive-cat');
                 catContainer.style.left = '110vw';
                 
-                // بعد 3 ثوانٍ يعود ليقول كلمته الأخيرة اللطيفة ويعطي بوسة
                 setTimeout(() => {
                     mainCanvas.style.display = 'none';
                     document.getElementById('apron').style.display = 'none';
                     setCatSmile();
                     
-                    // يعود للمنتصف ويقترب أكثر
-                    catContainer.style.left = 'calc(50% - 80px)';
+                    catContainer.style.left = 'calc(50% - 90px)';
                     catContainer.style.bottom = '40px';
                     
                     setTimeout(() => {
-                        typeWriterEffect("This is all! I wish you a happy year, honey! 💖", "speech-box", () => {
-                            // حركة البوسة الكيوت
-                            sendKiss();
+                        typeWriterEffect("That's all! I wish you a happy year, honey! 💖", "speech-box", () => {
+                            sendKiss(); 
                         });
                     }, 1200);
                 }, 3000);
@@ -848,18 +1125,15 @@
         }
 
         function sendKiss() {
-            const catContainer = document.getElementById('interactive-cat');
-            // يرفع يده اليمين لفمه ثم يبعدها
             catPaws.innerHTML = `
-                <ellipse cx="32" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                <ellipse cx="50" cy="55" rx="4.5" ry="4" fill="#f5e1c4"/> <!-- اليد تلمس الفم -->
+                <ellipse cx="30" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                <ellipse cx="50" cy="54" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
             `;
             
             setTimeout(() => {
-                // يبعد يده ويخرج القلب
                 catPaws.innerHTML = `
-                    <ellipse cx="32" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
-                    <ellipse cx="68" cy="74" rx="4.5" ry="4" fill="#f5e1c4"/>
+                    <ellipse cx="30" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
+                    <ellipse cx="70" cy="72" rx="6" ry="5" fill="#ffffff" stroke="#cccccc" stroke-width="0.5"/>
                 `;
                 
                 const heart = document.getElementById('flying-heart');
@@ -870,23 +1144,22 @@
             }, 1000);
         }
 
-        // ==================== 🔴 مسار الرفض لا اريد 🔴 ====================
+
+        // ==================== 🔴 مسار الرفض الحزين 🔴 ====================
         function chooseNo() {
             document.getElementById('action-box').style.display = 'none';
             document.getElementById('speech-box').style.display = 'none';
             
-            setCatSad(); // وجه حزين ☹️
+            setCatSad(); 
 
             setTimeout(() => {
-                setCatCrying(); // يبدأ بالبكاء الشديد 😭
+                setCatCrying(); 
                 typeWriterEffect("Why? 😭", "speech-box", () => {
-                    // تبديل الأزرار بنعومة فائقة
                     const optYes = document.getElementById('opt-yes');
                     const optNo = document.getElementById('opt-no');
                     
                     optYes.innerText = "Okay, I will see it";
                     optYes.onclick = function() {
-                        // مسح الدموع والعودة لنعم
                         setCatSmile();
                         chooseYes();
                     };
@@ -906,45 +1179,12 @@
             document.getElementById('speech-box').style.display = 'none';
             setCatCrying();
             
-            // الشاشة تمتلئ بدموع القط المتصاعدة بنهر أزرق لطيف
             const flood = document.getElementById('tear-flood');
             flood.style.height = '100%';
         }
 
 
-        // --- 🎈 البالونات ومؤثرات الاحتفال ---
-        let balloonsFinished = false;
-        function generateBalloons() {
-            const colors = [
-                { bg: 'rgba(255, 102, 179, 0.05)', border: 'rgba(255, 102, 179, 0.18)', glow: 'rgba(255, 102, 179, 0.08)' },
-                { bg: 'rgba(0, 229, 255, 0.05)', border: 'rgba(0, 229, 255, 0.18)', glow: 'rgba(0, 229, 255, 0.08)' }
-            ];
-            const totalBalloons = 10;
-            let loadedBalloons = 0;
-
-            for (let i = 0; i < totalBalloons; i++) {
-                const b = document.createElement('div');
-                b.className = 'balloon'; 
-                b.style.left = (Math.random() * 80 + 10) + 'vw';
-                b.style.animationDelay = (Math.random() * 3) + 's'; 
-                b.style.animationDuration = (Math.random() * 4 + 11) + 's'; 
-                
-                const theme = colors[Math.floor(Math.random() * colors.length)];
-                b.style.backgroundColor = theme.bg;
-                b.style.border = `1.2px solid ${theme.border}`;
-                b.style.boxShadow = `0 0 10px ${theme.glow}`;
-                
-                b.addEventListener('animationend', () => {
-                    loadedBalloons++;
-                    if (loadedBalloons >= totalBalloons) {
-                        balloonsFinished = true;
-                    }
-                });
-                document.body.appendChild(b);
-            }
-        }
-
-        // --- 🎆 مفرقعات براقة ولمعة قليتر ذهبية وردية متساقطة ---
+        // ==================== 🎆 جزيئات القليتر اللامعة الفاخرة ====================
         const particles = [];
         const fireworkColors = ['#ffd700', '#ffb74d', '#ff66cc', '#ffffff', '#fff0fa'];
 
@@ -954,18 +1194,18 @@
                 this.y = y;
                 this.color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
                 this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * 1.5 + 0.4; 
-                this.gravity = 0.012;
+                this.speed = Math.random() * 2 + 0.5; 
+                this.gravity = 0.015;
                 this.opacity = 1;
-                this.decay = Math.random() * 0.004 + 0.003; 
-                this.radius = Math.random() * 1.8 + 0.6;
+                this.decay = Math.random() * 0.005 + 0.004; 
+                this.radius = Math.random() * 2 + 0.8;
                 this.sparklePhase = Math.random() * Math.PI * 2;
             }
             update() {
                 this.x += Math.cos(this.angle) * this.speed;
                 this.y += Math.sin(this.angle) * this.speed + this.gravity;
                 this.opacity -= this.decay;
-                this.sparklePhase += 0.1;
+                this.sparklePhase += 0.15;
             }
             draw() {
                 ctx.save();
@@ -980,16 +1220,16 @@
         }
 
         function triggerExplosion(x, y) {
-            for (let i = 0; i < 45; i++) {
+            for (let i = 0; i < 35; i++) {
                 particles.push(new Particle(x, y));
             }
         }
 
-        // --- ⏳ نظام التحريك الاحتفالي للقلوب ---
+
+        // ==================== ⏳ أنميشن القلوب والتهنئة الرئيسي ====================
         let startTime = null;
         let showCelebration = false;
         let textOpacity = 0;
-        let fireworkTimers = [];
 
         function animate(timestamp) {
             if (!startTime) startTime = timestamp;
@@ -1001,25 +1241,17 @@
 
             let p1 = 0, p2 = 0, p3 = 0;
 
-            if (elapsed < 4500) {
-                p1 = (elapsed / 4500) * 628;
-            } else {
-                p1 = 628;
-            }
+            if (elapsed < 4000) p1 = (elapsed / 4000) * 628;
+            else p1 = 628;
 
-            if (elapsed >= 4500 && elapsed < 9000) {
-                p2 = ((elapsed - 4500) / 4500) * 628;
-            } else if (elapsed >= 9000) {
-                p2 = 628;
-            }
+            if (elapsed >= 4000 && elapsed < 8000) p2 = ((elapsed - 4000) / 4000) * 628;
+            else if (elapsed >= 8000) p2 = 628;
 
-            if (elapsed >= 9000 && elapsed < 13500) {
-                p3 = ((elapsed - 9000) / 4500) * 628;
-            } else if (elapsed >= 13500) {
+            if (elapsed >= 8000 && elapsed < 12000) p3 = ((elapsed - 8000) / 4000) * 628;
+            else if (elapsed >= 12000) {
                 p3 = 628;
                 if (!showCelebration) {
                     showCelebration = true;
-                    triggerCelebrationEvents();
                 }
             }
 
@@ -1032,9 +1264,9 @@
                 ctx.save();
                 ctx.globalAlpha = textOpacity;
                 ctx.textAlign = "center";
-                ctx.font = "bold 26px Arial"; 
+                ctx.font = "bold 26px 'Arial Rounded MT Bold', sans-serif"; 
                 ctx.fillStyle = "#fff0fa";
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = "#ff66cc";
                 ctx.fillText("Happy Birthday To Yosi 🎉", wDpr / 2, hDpr / 2 - 180);
                 ctx.restore();
@@ -1052,41 +1284,23 @@
             requestAnimationFrame(animate);
         }
 
-        // إطلاق الاحتفالات ثم الاختفاء التام والانتقال لمفاجأة التوايق الكيوت 🥺
-        function triggerCelebrationEvents() {
-            const wDpr = canvas.width / (window.devicePixelRatio || 1);
-            const hDpr = canvas.height / (window.devicePixelRatio || 1);
 
-            generateBalloons();
-
-            function startContinuousFireworks() {
-                if (balloonsFinished) return;
-                triggerExplosion(wDpr * 0.25, hDpr * 0.26);
-                let t1 = setTimeout(() => {
-                    if (!balloonsFinished) triggerExplosion(wDpr * 0.75, hDpr * 0.22);
-                }, 1500);
-                fireworkTimers.push(t1);
-            }
-            startContinuousFireworks();
-
-            // انتهاء الحفلة بالكامل واختفاء الشاشة والانتقال للتوايق
-            const checkInterval = setInterval(() => {
-                if (balloonsFinished) {
-                    clearInterval(checkInterval);
-                    fireworkTimers.forEach(t => clearTimeout(t));
-                    
-                    // تلاشي تدريجي وسلس لكل عناصر الشاشة
-                    setTimeout(() => {
-                        const mainCanvas = document.getElementById('main-canvas');
-                        mainCanvas.style.opacity = '0';
-                        setTimeout(() => {
-                            mainCanvas.style.display = 'none';
-                            // بدء المفاجأة 🥺
-                            peekCatIn();
-                        }, 1000);
-                    }, 1500);
+        // ==================== 💬 كتابة النص حرفاً بحرف (Typewriter Effect) ====================
+        function typeWriterEffect(text, elementId, callback) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = "";
+            el.style.display = "block";
+            let i = 0;
+            function write() {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(write, 50);
+                } else if (callback) {
+                    callback();
                 }
-            }, 100);
+            }
+            write();
         }
 
     </script>
