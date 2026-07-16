@@ -6,30 +6,34 @@
 <title>Happy Birthday</title>
 
 <style>
+
 body{
     margin:0;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
-    background:#001a33;
+    background:linear-gradient(#12002b,#001a33);
     overflow:hidden;
 }
 
 canvas{
-    background:#001a33;
+    background:transparent;
 }
+
 </style>
+
 </head>
 
 <body>
 
 <canvas id="canvas" width="700" height="750"></canvas>
 
+
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
 
 function heartPoint(t){
@@ -40,18 +44,23 @@ function heartPoint(t){
 }
 
 
-const hearts = [
+
+const hearts=[
     {scale:8},
     {scale:12},
     {scale:16}
 ];
 
 
-let currentHeart = 0;
-let currentPoint = 0;
+let currentHeart=0;
+let currentPoint=0;
+
+let fireworks=[];
+let balloons=[];
 
 
-function drawHeart(scale, points){
+
+function drawHeart(scale,points){
 
     ctx.beginPath();
 
@@ -64,34 +73,139 @@ function drawHeart(scale, points){
         let y=canvas.height/2-p.y*scale;
 
 
-        if(i===0){
+        if(i===0)
             ctx.moveTo(x,y);
-        }else{
+        else
             ctx.lineTo(x,y);
-        }
+
     }
 
-
-    ctx.strokeStyle="#ff66b2";
-    ctx.lineWidth=3;
+    ctx.strokeStyle="#ff66cc";
+    ctx.lineWidth=4;
+    ctx.shadowBlur=15;
+    ctx.shadowColor="#ff66cc";
     ctx.stroke();
+
+    ctx.shadowBlur=0;
+}
+
+
+
+function createFirework(){
+
+    let x=Math.random()*canvas.width;
+    let y=Math.random()*300;
+
+    for(let i=0;i<40;i++){
+
+        fireworks.push({
+
+            x:x,
+            y:y,
+            dx:(Math.random()-0.5)*8,
+            dy:(Math.random()-0.5)*8,
+            life:60
+
+        });
+
+    }
+
+}
+
+
+
+function drawFireworks(){
+
+    fireworks.forEach((f,index)=>{
+
+        ctx.beginPath();
+
+        ctx.arc(f.x,f.y,3,0,Math.PI*2);
+
+        ctx.fillStyle="#ffd700";
+        ctx.fill();
+
+
+        f.x+=f.dx;
+        f.y+=f.dy;
+        f.life--;
+
+
+        if(f.life<=0)
+            fireworks.splice(index,1);
+
+    });
+
+}
+
+
+
+function createBalloons(){
+
+    for(let i=0;i<8;i++){
+
+        balloons.push({
+
+            x:Math.random()*700,
+            y:800,
+            size:20+Math.random()*20,
+            speed:1+Math.random()*2
+
+        });
+
+    }
+
+}
+
+
+function drawBalloons(){
+
+    balloons.forEach(b=>{
+
+        ctx.beginPath();
+
+        ctx.arc(
+            b.x,
+            b.y,
+            b.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle="#ff66b2";
+        ctx.fill();
+
+
+        b.y-=b.speed;
+
+
+    });
+
 }
 
 
 
 function animate(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
 
-    // القلوب المكتملة
     for(let i=0;i<currentHeart;i++){
-        drawHeart(hearts[i].scale,628);
+        drawHeart(
+            hearts[i].scale,
+            628
+        );
     }
 
 
-    // رسم القلب الحالي بالتدريج
-    if(currentHeart < hearts.length){
+
+    if(currentHeart<hearts.length){
+
 
         drawHeart(
             hearts[currentHeart].scale,
@@ -99,31 +213,49 @@ function animate(){
         );
 
 
-        currentPoint += 2;
+        currentPoint+=2;
 
 
-        if(currentPoint >= 628){
+        if(currentPoint>=628){
 
-            currentPoint = 0;
+            currentPoint=0;
             currentHeart++;
 
         }
 
+
     }else{
 
 
+        drawBalloons();
+        drawFireworks();
+
+
         ctx.textAlign="center";
-        ctx.fillStyle="#ffb3d1";
-        ctx.font="italic 22px Arial";
+
+        ctx.fillStyle="#fff0fa";
+
+        ctx.font="bold 35px Arial";
+
+        ctx.shadowBlur=20;
+        ctx.shadowColor="#ff66cc";
+
 
         ctx.fillText(
-            "Happy Birthday to yosi",
+            "🎂 Happy Birthday to yosi 🎂",
             canvas.width/2,
-            canvas.height/2+20
+            canvas.height/2+30
         );
 
 
-        return;
+        if(fireworks.length<150)
+            createFirework();
+
+
+        if(balloons.length===0)
+            createBalloons();
+
+
     }
 
 
@@ -132,7 +264,9 @@ function animate(){
 }
 
 
+
 animate();
+
 
 </script>
 
