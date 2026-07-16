@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday</title>
+
+<style>
+body{
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#001a33;
+    overflow:hidden;
+}
+
+canvas{
+    background:#001a33;
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas" width="700" height="750"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function heartPoint(t){
+    return {
+        x:16*Math.pow(Math.sin(t),3),
+        y:13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)
+    };
+}
+
+function drawHeart(scale,color){
+    ctx.beginPath();
+
+    for(let i=0;i<=628;i++){
+        let a=i/100;
+        let p=heartPoint(a);
+
+        let x=canvas.width/2+p.x*scale;
+        let y=canvas.height/2-p.y*scale;
+
+        if(i===0){
+            ctx.moveTo(x,y);
+        }else{
+            ctx.lineTo(x,y);
+        }
+    }
+
+    ctx.strokeStyle=color;
+    ctx.lineWidth=3;
+    ctx.stroke();
+}
+
+drawHeart(16,"#ff66b2");
+drawHeart(12,"#ff66b2");
+drawHeart(8,"#ff66b2");
+
+ctx.textAlign="center";
+ctx.fillStyle="#ffb3d1";
+ctx.font="italic 22px Arial";
+ctx.fillText("Happy Birthday to yosi", canvas.width/2, canvas.height/2+20);
+</script>
+
+</body>
+</html>
