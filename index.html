@@ -5,19 +5,17 @@
 <style>
     body { background-color: #fdfbf7; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
     
-    /* فقاعة الكلام: حجم خط أكبر ومرفوعة للأعلى */
     #speech { 
         background: white; border: 4px solid #78a890; padding: 30px; border-radius: 30px; 
-        margin-bottom: 80px; /* مسافة عن الرأس */
-        text-align: center; max-width: 600px; 
-        font-size: 32px; /* حجم خط أكبر */ 
-        font-weight: bold; color: #444; 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 5; display: none;
+        margin-bottom: 80px; text-align: center; max-width: 600px; font-size: 32px; 
+        font-weight: bold; color: #444; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 5; display: none;
     }
 
     #leo-container { transform: scale(1.8); z-index: 10; margin-bottom: 60px; display: none; }
     
-    /* زر Click me! */
+    /* رسم الدفتر والقلم (مخفي في البداية) */
+    #notebook-container { display: none; transform: scale(1.5); margin-bottom: 50px; }
+
     #start-btn { 
         padding: 20px 50px; border-radius: 40px; border: none; background: #78a890; 
         color: white; cursor: pointer; font-size: 30px; font-weight: bold;
@@ -30,11 +28,10 @@
         75% { transform: rotate(5deg); }
     }
 
-    /* زر Hello Leo: مرفوع للأعلى قليلاً (مكان الدائرة البيضاوية) */
     #hello-btn { 
         padding: 20px 40px; border-radius: 40px; border: none; background: #78a890; 
         color: white; cursor: pointer; font-size: 28px; font-weight: bold; 
-        display: none; position: fixed; bottom: 150px; /* مرفوع للأعلى */
+        display: none; position: fixed; bottom: 150px; 
     }
 </style>
 </head>
@@ -43,24 +40,25 @@
 <div id="speech"></div>
 
 <div id="leo-container">
-<svg id="leo" width="260" height="260" viewBox="0 0 260 260">
+<svg width="260" height="260" viewBox="0 0 260 260">
     <circle cx="130" cy="135" r="85" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M82 66 Q130 38 178 66 Q166 83 150 90 Q130 74 110 90 Q94 84 82 66 Z" fill="#c8c8c8"/>
     <path d="M68 72 L96 28 L118 82 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M81 70 L96 42 L110 73 Z" fill="#ffb8c8"/>
     <path d="M142 82 L164 28 L192 72 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M150 73 L164 42 L179 70 Z" fill="#ffb8c8"/>
-    <ellipse id="l-eye" cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-    <circle cx="96" cy="119" r="4" fill="white"/><circle cx="102" cy="128" r="1.8" fill="white"/>
-    <ellipse id="r-eye" cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-    <circle cx="156" cy="119" r="4" fill="white"/><circle cx="162" cy="128" r="1.8" fill="white"/>
-    <ellipse cx="78" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
-    <ellipse cx="182" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
-    <path d="M130 145 L122 154 L138 154 Z" fill="#ff8ca8"/>
-    <path id="mouth" d="M130 154 Q124 162 118 162 M130 154 Q136 162 142 162" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
-    <ellipse cx="72" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
-    <ellipse cx="188" cy="205" rx="22" ry="16" fill="#ffffff" stroke="#2b2b2b" stroke-width="4"/>
+    <ellipse cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/><circle cx="96" cy="119" r="4" fill="white"/><circle cx="102" cy="128" r="1.8" fill="white"/>
+    <ellipse cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/><circle cx="156" cy="119" r="4" fill="white"/><circle cx="162" cy="128" r="1.8" fill="white"/>
 </svg>
+</div>
+
+<!-- رسم الدفتر والقلم -->
+<div id="notebook-container">
+    <svg width="150" height="150" viewBox="0 0 150 150">
+        <rect x="30" y="20" width="90" height="110" rx="10" fill="#fff" stroke="#2b2b2b" stroke-width="4"/>
+        <line x1="45" y1="20" x2="45" y2="130" stroke="#2b2b2b" stroke-width="2"/>
+        <path d="M110 10 L130 30 L100 60 L80 40 Z" fill="#ffb8c8" stroke="#2b2b2b" stroke-width="3"/>
+    </svg>
 </div>
 
 <button id="start-btn" onclick="showLeo()">Click me!</button>
@@ -72,23 +70,25 @@
         document.getElementById('leo-container').style.display = 'block';
         const speech = document.getElementById('speech');
         speech.style.display = 'block';
-        
         let text = "Hello! I am Leo, Lama's cat.";
         let i = 0;
         function type() {
-            if (i < text.length) {
-                speech.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, 50);
-            } else {
-                document.getElementById('hello-btn').style.display = 'block';
-            }
+            if (i < text.length) { speech.innerHTML += text.charAt(i); i++; setTimeout(type, 50); }
+            else { document.getElementById('hello-btn').style.display = 'block'; }
         }
         type();
     }
 
     function nextScene() {
-        alert("Moving to the next part!");
+        document.getElementById('speech').style.display = 'none';
+        document.getElementById('hello-btn').style.display = 'none';
+        document.getElementById('leo-container').style.display = 'none';
+        
+        // إظهار الدفتر والقلم
+        document.getElementById('notebook-container').style.display = 'block';
+        const speech = document.getElementById('speech');
+        speech.style.display = 'block';
+        speech.innerHTML = "Time to write down our secrets!";
     }
 </script>
 </body>
