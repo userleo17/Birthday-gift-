@@ -44,7 +44,7 @@
             pointer-events: none;
         }
 
-        /* 🎈 البالونات البيضاوية الشفافة الفخمة والسريعة */
+        /* 🎈 البالونات البيضاوية الشفافة الفخمة (تظهر فوراً وتصعد ببطء) */
         .balloon {
             position: absolute;
             width: 42px;
@@ -52,7 +52,7 @@
             border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
             bottom: -100px;
             z-index: 2;
-            animation: floatUpFast 6s ease-in forwards; /* حركة صعود سريعة وحماسية تبدأ فور انتهاء القلوب */
+            animation: floatUpSlowly 14s linear forwards; /* صعود بطيء جداً وهادئ */
         }
 
         /* عصا البالونة الشفافة */
@@ -61,17 +61,17 @@
             position: absolute;
             width: 1.2px;
             height: 30px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             bottom: -30px;
             left: calc(50% - 0.6px);
         }
 
-        /* حركة صعود سريعة ورشيقة */
-        @keyframes floatUpFast {
+        /* حركة صعود هادئة وبطيئة جداً */
+        @keyframes floatUpSlowly {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            15% { opacity: 1; }
+            10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-125vh) rotate(15deg); opacity: 0; }
+            100% { transform: translateY(-125vh) rotate(10deg); opacity: 0; }
         }
     </style>
 </head>
@@ -86,7 +86,7 @@
         const canvas = document.getElementById('main-canvas');
         const ctx = canvas.getContext('2d');
 
-        // الحفاظ على دقة الرسم العالية (HD Retina Display) للأجهزة الذكية والكمبيوتر
+        // الحفاظ على دقة الرسم العالية للأجهزة الذكية والكمبيوتر
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
             const dpr = window.devicePixelRatio || 1;
@@ -127,37 +127,39 @@
             ctx.shadowBlur = 20;
             ctx.shadowColor = "#ff66cc";
             ctx.stroke();
-            ctx.shadowBlur = 0; // تنظيف الـ Shadow لتجنب التأثير على باقي الرسومات
+            ctx.shadowBlur = 0; // تنظيف الـ Shadow
         }
 
-        // --- 🎈 توليد وصعود البالونات البيضاوية الشفافة جداً بشكل سريع ---
+        // --- 🎈 توليد وصعود البالونات البيضاوية فوراً وببطء شديد ---
         function generateBalloons() {
             const colors = [
-                { bg: 'rgba(255, 102, 179, 0.08)', border: 'rgba(255, 102, 179, 0.25)', glow: 'rgba(255, 102, 179, 0.15)' },
-                { bg: 'rgba(0, 229, 255, 0.08)', border: 'rgba(0, 229, 255, 0.25)', glow: 'rgba(0, 229, 255, 0.15)' },
-                { bg: 'rgba(255, 215, 0, 0.08)', border: 'rgba(255, 215, 0, 0.25)', glow: 'rgba(255, 215, 0, 0.15)' },
-                { bg: 'rgba(255, 255, 255, 0.06)', border: 'rgba(255, 255, 255, 0.18)', glow: 'rgba(255, 255, 255, 0.06)' }
+                { bg: 'rgba(255, 102, 179, 0.05)', border: 'rgba(255, 102, 179, 0.18)', glow: 'rgba(255, 102, 179, 0.08)' },
+                { bg: 'rgba(0, 229, 255, 0.05)', border: 'rgba(0, 229, 255, 0.18)', glow: 'rgba(0, 229, 255, 0.08)' },
+                { bg: 'rgba(255, 215, 0, 0.05)', border: 'rgba(255, 215, 0, 0.18)', glow: 'rgba(255, 215, 0, 0.08)' },
+                { bg: 'rgba(255, 255, 255, 0.03)', border: 'rgba(255, 255, 255, 0.12)', glow: 'rgba(255, 255, 255, 0.03)' }
             ];
 
-            // نطلق 18 بالونة دفعة واحدة بشكل متسارع وجميل
+            // نطلق 18 بالونة دفعة واحدة بشكل منساب
             for (let i = 0; i < 18; i++) {
                 const b = document.createElement('div');
                 b.className = 'balloon'; 
                 b.style.left = Math.random() * 90 + 'vw';
-                // تباعد زمني بسيط للغاية في أجزاء من الثانية لتعطي موجة صعود كثيفة وممتعة فوراً
-                b.style.animationDelay = (Math.random() * 2) + 's'; 
-                b.style.animationDuration = (Math.random() * 2 + 4.5) + 's'; // سريعة ورشيقة (تصل للقمة خلال 4.5 إلى 6.5 ثانية)
+                
+                // تظهر فوراً (تأخير عشوائي شبه معدوم يبدأ من 0 إلى 0.4 ثانية فقط) لكي تولد كلها معاً فور انتهاء الرسم بالملي ثانية
+                b.style.animationDelay = (Math.random() * 0.4) + 's'; 
+                // صعود بطيء يستغرق من 12 إلى 16 ثانية لتتحرك بنعومة
+                b.style.animationDuration = (Math.random() * 4 + 12) + 's'; 
                 
                 const theme = colors[Math.floor(Math.random() * colors.length)];
                 b.style.backgroundColor = theme.bg;
                 b.style.border = `1.2px solid ${theme.border}`;
-                b.style.boxShadow = `0 0 12px ${theme.glow}`;
+                b.style.boxShadow = `0 0 10px ${theme.glow}`;
                 
                 document.body.appendChild(b);
             }
         }
 
-        // --- 🎆 نظام الألعاب النارية مدمج داخل الكانفاس ---
+        // --- 🎆 نظام الألعاب النارية البطيئة (الملكية الهادئة) مدمج داخل الكانفاس ---
         const particles = [];
         const fireworkColors = ['#ff66b3', '#ffd700', '#00e5ff', '#ffffff'];
         let explosions = 0;
@@ -168,10 +170,12 @@
                 this.y = y;
                 this.color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
                 this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * 4 + 1.8;
-                this.gravity = 0.04;
+                
+                // تم تقليل السرعة هنا لتبدأ الانفجارات بنعومة وبطء شديد
+                this.speed = Math.random() * 1.6 + 0.7; 
+                this.gravity = 0.02; // تقليل الجاذبية لتبدو الجزيئات عائمة وخفيفة
                 this.opacity = 1;
-                this.decay = Math.random() * 0.01 + 0.007;
+                this.decay = Math.random() * 0.007 + 0.004; // تقليل سرعة الاختفاء لتدوم أطول مع الحركة البطيئة
                 this.radius = Math.random() * 2.5 + 1;
             }
             update() {
@@ -193,7 +197,7 @@
         }
 
         function triggerExplosion(x, y) {
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 65; i++) {
                 particles.push(new Particle(x, y));
             }
         }
@@ -260,7 +264,7 @@
                 ctx.fillText(
                     "Happy Birthday To Yosi 🎉",
                     wDpr / 2,
-                    hDpr / 2 - 225 // الإحداثي الرأسي للنص قريب جداً من القلوب المرفوعة
+                    hDpr / 2 - 180 // تم تنزيل التهنئة لتقترب بشكل جميل من القلوب المرفوعة
                 );
                 ctx.restore();
             }
@@ -286,13 +290,13 @@
             const wDpr = canvas.width / (window.devicePixelRatio || 1);
             const hDpr = canvas.height / (window.devicePixelRatio || 1);
 
-            // 1. إطلاق البالونات البيضاوية الشفافة بشكل سريع وحماسي فوراً بالملي ثانية 🎈
+            // 1. إطلاق البالونات البيضاوية الشفافة فوراً بلحظتها لتصعد بنعومة وهدوء 🎈
             generateBalloons();
 
-            // 2. الانفجار الأول للألعاب النارية في الجانب الأيسر العلوي
+            // 2. الانفجار الأول البطيء والساحر للألعاب النارية في الجانب الأيسر العلوي
             triggerExplosion(wDpr * 0.25, hDpr * 0.26);
 
-            // 3. الانفجار الثاني للألعاب النارية في الجانب الأيمن العلوي بعد ثانية ونصف
+            // 3. الانفجار الثاني البطيء للألعاب النارية في الجانب الأيمن العلوي بعد ثانية ونصف
             setTimeout(() => {
                 triggerExplosion(wDpr * 0.75, hDpr * 0.22);
             }, 1500);
