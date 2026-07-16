@@ -19,7 +19,6 @@ body{
     overflow:hidden;
 }
 
-
 canvas{
     background:transparent;
 }
@@ -27,7 +26,6 @@ canvas{
 </style>
 
 </head>
-
 
 <body>
 
@@ -56,14 +54,11 @@ window.addEventListener("resize",resizeCanvas);
 function heartPoint(t){
 
     return {
-
         x:16*Math.pow(Math.sin(t),3),
-
         y:13*Math.cos(t)
         -5*Math.cos(2*t)
         -2*Math.cos(3*t)
         -Math.cos(4*t)
-
     };
 
 }
@@ -86,51 +81,40 @@ let balloons=[];
 let balloonsStarted=false;
 
 
+let birthdayStarted=false;
+let fireworkCount=0;
+let fireworkTimer=0;
+
+
 
 function drawHeart(scale,points){
 
-
     ctx.beginPath();
-
 
     for(let i=0;i<=points;i++){
 
-
         let a=i/100;
-
         let p=heartPoint(a);
 
-
         let x=canvas.width/2+p.x*scale;
-
         let y=canvas.height/2-p.y*scale+30;
 
 
-
-        if(i===0){
-
+        if(i===0)
             ctx.moveTo(x,y);
-
-        }else{
-
+        else
             ctx.lineTo(x,y);
-
-        }
 
     }
 
 
     ctx.strokeStyle="#ff66cc";
-
     ctx.lineWidth=4;
 
     ctx.shadowBlur=20;
-
     ctx.shadowColor="#ff66cc";
 
-
     ctx.stroke();
-
 
     ctx.shadowBlur=0;
 
@@ -139,36 +123,29 @@ function drawHeart(scale,points){
 
 
 
-// 🎆 Fireworks
+// 🎆 إنشاء طراطيع
 
 function createFirework(){
 
-
     let x=Math.random()*canvas.width;
-
     let y=Math.random()*canvas.height*0.35;
 
 
     for(let i=0;i<70;i++){
 
-
         let angle=Math.random()*Math.PI*2;
-
         let speed=Math.random()*6+2;
 
 
         fireworks.push({
 
             x:x,
-
             y:y,
 
             dx:Math.cos(angle)*speed,
-
             dy:Math.sin(angle)*speed,
 
             life:100,
-
             size:Math.random()*3+2
 
         });
@@ -179,15 +156,12 @@ function createFirework(){
 
 
 
-
 function drawFireworks(){
-
 
     fireworks.forEach((f,index)=>{
 
 
         ctx.beginPath();
-
 
         ctx.arc(
             f.x,
@@ -210,7 +184,6 @@ function drawFireworks(){
 
 
         f.x+=f.dx;
-
         f.y+=f.dy;
 
         f.dy+=0.05;
@@ -218,11 +191,8 @@ function drawFireworks(){
         f.life--;
 
 
-        if(f.life<=0){
-
+        if(f.life<=0)
             fireworks.splice(index,1);
-
-        }
 
 
     });
@@ -232,13 +202,12 @@ function drawFireworks(){
 
 
 
-// 🎈 Balloons
+
+// 🎈 البالونات
 
 function createBalloons(){
 
-
     for(let i=0;i<15;i++){
-
 
         balloons.push({
 
@@ -266,15 +235,12 @@ function createBalloons(){
 
 
 
-
 function drawBalloons(){
-
 
     balloons.forEach((b,index)=>{
 
 
         ctx.beginPath();
-
 
         ctx.arc(
             b.x,
@@ -287,20 +253,14 @@ function drawBalloons(){
 
         ctx.fillStyle=b.color;
 
-
         ctx.shadowBlur=15;
-
         ctx.shadowColor=b.color;
 
-
         ctx.fill();
-
 
         ctx.shadowBlur=0;
 
 
-
-        // خيط البالون
 
         ctx.beginPath();
 
@@ -316,7 +276,7 @@ function drawBalloons(){
         );
 
 
-        ctx.strokeStyle="#ffffff";
+        ctx.strokeStyle="#fff";
 
         ctx.stroke();
 
@@ -326,17 +286,13 @@ function drawBalloons(){
 
 
 
-        if(b.y<-50){
-
+        if(b.y<-50)
             balloons.splice(index,1);
-
-        }
 
 
     });
 
 }
-
 
 
 
@@ -354,8 +310,6 @@ function animate(){
 
 
 
-    // القلوب المكتملة
-
     for(let i=0;i<currentHeart;i++){
 
         drawHeart(
@@ -367,9 +321,6 @@ function animate(){
 
 
 
-
-
-    // رسم القلب الحالي
 
     if(currentHeart<hearts.length){
 
@@ -383,10 +334,10 @@ function animate(){
         currentPoint+=2;
 
 
+
         if(currentPoint>=628){
 
             currentPoint=0;
-
             currentHeart++;
 
         }
@@ -402,8 +353,6 @@ function animate(){
 
 
 
-        // 🎂 النص فوق القلب
-
         ctx.textAlign="center";
 
         ctx.font="bold 32px Arial";
@@ -411,7 +360,6 @@ function animate(){
         ctx.fillStyle="#fff0fa";
 
         ctx.shadowBlur=20;
-
         ctx.shadowColor="#ff66cc";
 
 
@@ -426,9 +374,33 @@ function animate(){
 
 
 
-        if(fireworks.length<250){
+
+        if(!birthdayStarted){
+
+            birthdayStarted=true;
 
             createFirework();
+
+            fireworkCount=1;
+
+        }
+
+
+
+        // الطلقة الثانية بعد وقت قصير
+
+        if(fireworkCount===1){
+
+            fireworkTimer++;
+
+
+            if(fireworkTimer>60){
+
+                createFirework();
+
+                fireworkCount=2;
+
+            }
 
         }
 
