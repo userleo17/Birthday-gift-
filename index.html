@@ -31,7 +31,6 @@ canvas{
 
 <canvas id="canvas"></canvas>
 
-
 <script>
 
 const canvas=document.getElementById("canvas");
@@ -39,10 +38,8 @@ const ctx=canvas.getContext("2d");
 
 
 function resizeCanvas(){
-
     canvas.width=window.innerWidth;
     canvas.height=window.innerHeight;
-
 }
 
 resizeCanvas();
@@ -78,8 +75,8 @@ let currentPoint=0;
 
 let fireworks=[];
 let balloons=[];
-let balloonsStarted=false;
 
+let balloonsStarted=false;
 
 let birthdayStarted=false;
 let fireworkCount=0;
@@ -87,17 +84,24 @@ let fireworkTimer=0;
 
 
 
+// 💗 رسم القلب الشفاف
+
 function drawHeart(scale,points){
 
     ctx.beginPath();
 
+
     for(let i=0;i<=points;i++){
 
         let a=i/100;
+
         let p=heartPoint(a);
 
+
         let x=canvas.width/2+p.x*scale;
+
         let y=canvas.height/2-p.y*scale+30;
+
 
 
         if(i===0)
@@ -108,32 +112,34 @@ function drawHeart(scale,points){
     }
 
 
-    ctx.strokeStyle="#ff66cc";
-    ctx.lineWidth=4;
+    ctx.strokeStyle="rgba(255,102,204,0.45)";
 
-    ctx.shadowBlur=20;
-    ctx.shadowColor="#ff66cc";
-
-    ctx.stroke();
+    ctx.lineWidth=3;
 
     ctx.shadowBlur=0;
+
+    ctx.stroke();
 
 }
 
 
 
 
-// 🎆 إنشاء طراطيع
+
+
+// 🎆 الألعاب النارية
 
 function createFirework(){
 
     let x=Math.random()*canvas.width;
+
     let y=Math.random()*canvas.height*0.35;
 
 
     for(let i=0;i<70;i++){
 
         let angle=Math.random()*Math.PI*2;
+
         let speed=Math.random()*6+2;
 
 
@@ -146,6 +152,7 @@ function createFirework(){
             dy:Math.sin(angle)*speed,
 
             life:100,
+
             size:Math.random()*3+2
 
         });
@@ -160,8 +167,8 @@ function drawFireworks(){
 
     fireworks.forEach((f,index)=>{
 
-
         ctx.beginPath();
+
 
         ctx.arc(
             f.x,
@@ -194,10 +201,10 @@ function drawFireworks(){
         if(f.life<=0)
             fireworks.splice(index,1);
 
-
     });
 
 }
+
 
 
 
@@ -242,6 +249,7 @@ function drawBalloons(){
 
         ctx.beginPath();
 
+
         ctx.arc(
             b.x,
             b.y,
@@ -253,14 +261,11 @@ function drawBalloons(){
 
         ctx.fillStyle=b.color;
 
-        ctx.shadowBlur=15;
-        ctx.shadowColor=b.color;
-
         ctx.fill();
 
-        ctx.shadowBlur=0;
 
 
+        // خيط البالون
 
         ctx.beginPath();
 
@@ -298,6 +303,7 @@ function drawBalloons(){
 
 
 
+
 function animate(){
 
 
@@ -310,6 +316,8 @@ function animate(){
 
 
 
+    // القلوب المكتملة
+
     for(let i=0;i<currentHeart;i++){
 
         drawHeart(
@@ -321,6 +329,9 @@ function animate(){
 
 
 
+
+
+    // رسم القلوب
 
     if(currentHeart<hearts.length){
 
@@ -338,9 +349,11 @@ function animate(){
         if(currentPoint>=628){
 
             currentPoint=0;
+
             currentHeart++;
 
         }
+
 
 
 
@@ -353,14 +366,13 @@ function animate(){
 
 
 
+        // 🎂 النص فوق القلب
+
         ctx.textAlign="center";
 
         ctx.font="bold 32px Arial";
 
         ctx.fillStyle="#fff0fa";
-
-        ctx.shadowBlur=20;
-        ctx.shadowColor="#ff66cc";
 
 
         ctx.fillText(
@@ -370,10 +382,10 @@ function animate(){
         );
 
 
-        ctx.shadowBlur=0;
 
 
 
+        // 🎆 طراطيع مرتين فقط
 
         if(!birthdayStarted){
 
@@ -386,8 +398,6 @@ function animate(){
         }
 
 
-
-        // الطلقة الثانية بعد وقت قصير
 
         if(fireworkCount===1){
 
@@ -403,6 +413,8 @@ function animate(){
             }
 
         }
+
+
 
 
 
