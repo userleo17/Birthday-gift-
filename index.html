@@ -4,18 +4,8 @@
 <meta charset="UTF-8">
 <style>
     body { background-color: #fdfbf7; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
-    
-    /* تكبير القط - أضفنا scale لتكبيره */
+    #speech { background: white; border: 4px solid #78a890; padding: 30px; border-radius: 30px; margin-bottom: 50px; display: none; text-align: center; max-width: 500px; font-size: 28px; font-weight: bold; color: #444; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     #leo-container { position: absolute; bottom: -400px; transition: bottom 0.8s; z-index: 10; transform: scale(1.8); }
-    
-    /* تكبير فقاعة الكلام والخط */
-    #speech { 
-        background: white; border: 4px solid #78a890; padding: 30px; border-radius: 30px; 
-        margin-bottom: 50px; display: none; text-align: center; max-width: 500px; 
-        font-size: 28px; font-weight: bold; color: #444; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    /* تكبير الزر */
     button { padding: 25px 60px; border-radius: 40px; border: none; background: #78a890; color: white; cursor: pointer; font-size: 30px; font-weight: bold; }
 </style>
 </head>
@@ -25,19 +15,22 @@
 
 <div id="leo-container">
 <svg id="leo" width="260" height="260" viewBox="0 0 260 260">
-    <!-- الرسم الخاص بك كما هو -->
+    <!-- الرأس والجسم أولاً -->
     <circle cx="130" cy="135" r="85" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
-    <ellipse id="l-eye" cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-    <circle cx="96" cy="119" r="4" fill="white"/>
-    <circle cx="102" cy="128" r="1.8" fill="white"/>
-    <ellipse id="r-eye" cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
-    <circle cx="156" cy="119" r="4" fill="white"/>
-    <circle cx="162" cy="128" r="1.8" fill="white"/>
+    <!-- بقعة الفرو الرصاصي (التي كانت تغطي الآذان) -->
+    <path d="M82 66 Q130 38 178 66 Q166 83 150 90 Q130 74 110 90 Q94 84 82 66 Z" fill="#c8c8c8"/>
+    
+    <!-- الآذان (نقلناها هنا لتكون فوق بقعة الفرو) -->
     <path d="M68 72 L96 28 L118 82 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M81 70 L96 42 L110 73 Z" fill="#ffb8c8"/>
     <path d="M142 82 L164 28 L192 72 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="5"/>
     <path d="M150 73 L164 42 L179 70 Z" fill="#ffb8c8"/>
-    <path d="M82 66 Q130 38 178 66 Q166 83 150 90 Q130 74 110 90 Q94 84 82 66 Z" fill="#c8c8c8"/>
+
+    <!-- باقي العناصر -->
+    <ellipse id="l-eye" cx="100" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
+    <circle cx="96" cy="119" r="4" fill="white"/><circle cx="102" cy="128" r="1.8" fill="white"/>
+    <ellipse id="r-eye" cx="160" cy="125" rx="14" ry="18" fill="#1f1f1f"/>
+    <circle cx="156" cy="119" r="4" fill="white"/><circle cx="162" cy="128" r="1.8" fill="white"/>
     <ellipse cx="78" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
     <ellipse cx="182" cy="155" rx="12" ry="8" fill="#ffb6c1" opacity="0.6"/>
     <path d="M130 145 L122 154 L138 154 Z" fill="#ff8ca8"/>
@@ -67,7 +60,7 @@
         document.getElementById('main-btn').style.display = 'none';
         const speech = document.getElementById('speech');
         speech.style.display = 'block';
-        let text = "Hello! I am Leo, Yosi's cat.";
+        let text = "Hello! I am Leo, Lama's cat.";
         let i = 0;
         function type() {
             if (i < text.length) {
