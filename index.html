@@ -131,6 +131,8 @@
         }
 
         // --- 🎈 توليد وصعود بالونات متوسطة الحجم متوزعة بشكل عشوائي فخم ---
+        let balloonsFinished = false;
+
         function generateBalloons() {
             const colors = [
                 { bg: 'rgba(255, 102, 179, 0.05)', border: 'rgba(255, 102, 179, 0.18)', glow: 'rgba(255, 102, 179, 0.08)' },
@@ -139,32 +141,40 @@
                 { bg: 'rgba(255, 255, 255, 0.03)', border: 'rgba(255, 255, 255, 0.12)', glow: 'rgba(255, 255, 255, 0.03)' }
             ];
 
-            // 14 بالونة: العدد المثالي للتوازن والمظهر المبهج المتناسق
-            for (let i = 0; i < 14; i++) {
+            const totalBalloons = 14;
+            let loadedBalloons = 0;
+
+            for (let i = 0; i < totalBalloons; i++) {
                 const b = document.createElement('div');
                 b.className = 'balloon'; 
                 
-                // توزيع عشوائي كامل على عرض الشاشة بأكملها
                 b.style.left = (Math.random() * 84 + 8) + 'vw';
+                const delay = Math.random() * 3.5;
+                const duration = Math.random() * 4 + 11;
                 
-                // تأخيرات عشوائية دقيقة لكي ترتفع البالونات تباعاً بشكل انسيابي غير مكرر
-                b.style.animationDelay = (Math.random() * 3.5) + 's'; 
-                
-                // تفاوت سرعات الصعود الهادئة لتعطي عمقاً بصرياً رائعاً
-                b.style.animationDuration = (Math.random() * 4 + 11) + 's'; 
+                b.style.animationDelay = delay + 's'; 
+                b.style.animationDuration = duration + 's'; 
                 
                 const theme = colors[Math.floor(Math.random() * colors.length)];
                 b.style.backgroundColor = theme.bg;
                 b.style.border = `1.2px solid ${theme.border}`;
                 b.style.boxShadow = `0 0 10px ${theme.glow}`;
                 
+                // مراقبة نهاية حركة كل بالونة لتحديد وقت انتهاء البالونات بالكامل بدقة
+                b.addEventListener('animationend', () => {
+                    loadedBalloons++;
+                    if (loadedBalloons >= totalBalloons) {
+                        balloonsFinished = true; // الإعلان عن انتهاء البالونات بالكامل
+                    }
+                });
+
                 document.body.appendChild(b);
             }
         }
 
-        // --- 🎆 نظام الألعاب النارية البطيئة (الملكية الهادئة) مدمج داخل الكانفاس ---
+        // --- 🎆 نظام الألعاب النارية اللامعة (Sparkling Sparkles) مدمج داخل الكانفاس ---
         const particles = [];
-        const fireworkColors = ['#ff66b3', '#ffd700', '#00e5ff', '#ffffff'];
+        const fireworkColors = ['#ffd700', '#ff66b3', '#00e5ff', '#ffffff', '#fff0fa'];
 
         class Particle {
             constructor(x, y) {
@@ -174,33 +184,42 @@
                 this.angle = Math.random() * Math.PI * 2;
                 
                 // سرعة انفجار بطيئة وناعمة
-                this.speed = Math.random() * 1.6 + 0.7; 
-                this.gravity = 0.02; // تقليل الجاذبية لتبدو الجزيئات عائمة وخفيفة
+                this.speed = Math.random() * 1.5 + 0.5; 
+                this.gravity = 0.015; // تقليل الجاذبية لتبدو الجزيئات عائمة وخفيفة
                 this.opacity = 1;
-                this.decay = Math.random() * 0.007 + 0.004; // تدوم أطول مع الحركة البطيئة
-                this.radius = Math.random() * 2.5 + 1;
+                this.decay = Math.random() * 0.004 + 0.003; // تدوم أطول لتستمر طويلاً
+                this.radius = Math.random() * 2 + 0.8;
+                
+                // متغيرات مخصصة لإنتاج تأثير اللمعان والبريق (Sparkle)
+                this.sparkleFreq = Math.random() * 0.15 + 0.05; 
+                this.sparklePhase = Math.random() * Math.PI * 2;
             }
             update() {
                 this.x += Math.cos(this.angle) * this.speed;
                 this.y += Math.sin(this.angle) * this.speed + this.gravity;
                 this.opacity -= this.decay;
+                this.sparklePhase += this.sparkleFreq;
             }
-            draw(wDpr) {
+            draw() {
                 ctx.save();
-                ctx.globalAlpha = this.opacity;
+                // حساب اللمعان والبريق العشوائي بدون نيون (وميض حاد وسريع مثل النجوم اللامعة)
+                const sparkle = (Math.sin(this.sparklePhase) * 0.5 + 0.5) * this.opacity;
+                ctx.globalAlpha = sparkle;
+                
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = this.color;
                 ctx.fill();
                 ctx.restore();
             }
         }
 
         function triggerExplosion(x, y) {
-            for (let i = 0; i < 65; i++) {
-                particles.push(new Particle(x, y));
+            // نطلق كميات مستمرة طالما أن البالونات لم تنتهِ بعد
+            if (!balloonsFinished) {
+                for (let i = 0; i < 40; i++) {
+                    particles.push(new Particle(x, y));
+                }
             }
         }
 
@@ -209,6 +228,7 @@
         const totalDrawingDuration = 16500; // 16.5 ثانية لرسم الـ 3 قلوب بالكامل بالتساوي
         let showCelebration = false;
         let textOpacity = 0;
+        let fireworkTimers = [];
 
         function animate(timestamp) {
             if (!startTime) startTime = timestamp;
@@ -252,13 +272,13 @@
             if (p2 > 0) drawHeart(8.0, p2);   // القلب الوسط
             if (p3 > 0) drawHeart(10.2, p3);  // القلب الكبير
 
-            // رسم نص التهنئة بمسافة قريبة جداً فوق القلب المرتفع
+            // رسم نص التهنئة بمسافة قريبة جداً فوق القلب المرتفع (تم تصغير الخط درجتين ليصبح 28px)
             if (showCelebration) {
                 if (textOpacity < 1) textOpacity += 0.02; // ظهور تدريجي ناعم ومبهر
                 ctx.save();
                 ctx.globalAlpha = textOpacity;
                 ctx.textAlign = "center";
-                ctx.font = "bold 30px Arial";
+                ctx.font = "bold 28px Arial"; // تم التصغير درجتين من 30px إلى 28px بدقة
                 ctx.fillStyle = "#fff0fa";
                 ctx.shadowBlur = 25;
                 ctx.shadowColor = "#ff66cc";
@@ -266,16 +286,16 @@
                 ctx.fillText(
                     "Happy Birthday To Yosi 🎉",
                     wDpr / 2,
-                    hDpr / 2 - 180 // التهنئة منزلة بشكل جميل ومنسق فوق القلوب المرفوعة مباشرة
+                    hDpr / 2 - 180 
                 );
                 ctx.restore();
             }
 
-            // تحديث ورسم الألعاب النارية
+            // تحديث ورسم الألعاب النارية (وتتوقف تماماً عن الإنشاء والرسم فور انتهاء البالونات)
             particles.forEach((p, idx) => {
-                if (p.opacity > 0) {
+                if (p.opacity > 0 && !balloonsFinished) {
                     p.update();
-                    p.draw(wDpr);
+                    p.draw();
                 } else {
                     particles.splice(idx, 1);
                 }
@@ -292,21 +312,46 @@
             const wDpr = canvas.width / (window.devicePixelRatio || 1);
             const hDpr = canvas.height / (window.devicePixelRatio || 1);
 
-            // 1. إطلاق البالونات (14 بالونة) فوراً وبشكل عشوائي فخم ومتباعد 🎈
+            // 1. إطلاق البالونات (14 بالونة) فوراً لتصعد بنعومة وهدوء 🎈
             generateBalloons();
 
-            // 2. الانفجار الأول (يسار): فور انتهاء الرسم مباشرة وببطء
-            triggerExplosion(wDpr * 0.25, hDpr * 0.26);
+            // دالة مساعدة لتكرار الإطلاقات اللامعة الهادئة طالما البالونات لم تنتهِ
+            function startContinuousFireworks() {
+                if (balloonsFinished) return;
 
-            // 3. الانفجار الثاني (يمين): بعد ثانية ونصف
-            setTimeout(() => {
-                triggerExplosion(wDpr * 0.75, hDpr * 0.22);
-            }, 1500);
+                // الانفجارات الثلاثة الأصلية المتتابعة (الدفعة الأولى)
+                triggerExplosion(wDpr * 0.25, hDpr * 0.26); // يسار
 
-            // 4. الانفجار الثالث (المنتصف الأعلى فوق التهنئة): بعد 3 ثوانٍ
-            setTimeout(() => {
-                triggerExplosion(wDpr * 0.5, hDpr * 0.15);
-            }, 3000);
+                let t1 = setTimeout(() => {
+                    triggerExplosion(wDpr * 0.75, hDpr * 0.22); // يمين
+                }, 1500);
+
+                let t2 = setTimeout(() => {
+                    triggerExplosion(wDpr * 0.5, hDpr * 0.15); // منتصف أعلى
+                }, 3000);
+
+                fireworkTimers.push(t1, t2);
+
+                // إعادة تكرار الدورة طالما البالونات لا زالت صاعدة وموجودة في الشاشة
+                let loopTimer = setTimeout(() => {
+                    startContinuousFireworks();
+                }, 4500);
+                
+                fireworkTimers.push(loopTimer);
+            }
+
+            // بدء تكرار إطلاق الطراطيع اللامعة
+            startContinuousFireworks();
+
+            // مراقبة انتهاء البالونات لإيقاف كل الموقتات وتطهير الشاشة فوراً
+            const checkInterval = setInterval(() => {
+                if (balloonsFinished) {
+                    clearInterval(checkInterval);
+                    // إلغاء أي انطلاق معلق للطراطيع
+                    fireworkTimers.forEach(t => clearTimeout(t));
+                    particles.length = 0; // تنظيف الكانفاس فوراً من بقايا الجسيمات تزامناً مع اختفاء آخر بالونة
+                }
+            }, 100);
         }
 
     </script>
