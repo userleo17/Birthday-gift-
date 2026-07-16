@@ -5,130 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday Yosi</title>
     <style>
-        /* 🌌 خلفية ليلية كحلية عميقة وفخمة */
+        /* 🌌 خلفية ليلية عميقة فخمة */
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* لدفع العناصر للأعلى */
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start; /* دفع العناصر للأعلى والمنتصف */
             background: radial-gradient(circle at center, #061124 0%, #020610 100%);
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
         }
 
-        /* حاوية التصميم المركزية للتحكم بالترتيب والأبعاد */
+        /* حاوية التصميم الرئيسية */
         .container {
             position: relative;
             width: 100%;
-            max-width: 480px;
+            height: 100%;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             z-index: 10;
-            padding-top: 5vh; /* لدفع العناصر للجزء العلوي من الشاشة */
+            padding-top: 5vh; /* تناسق مثالي مع جميع الشاشات */
             box-sizing: border-box;
         }
 
-        /* 🎂 عبارة التهنئة - فوق القلب مباشرة بمسافة قريبة جداً وبسيطة */
-        .birthday-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffffff;
-            text-align: center;
-            pointer-events: none;
-            z-index: 15;
-            opacity: 0; /* مخفية وتبدأ بالظهور فور انتهاء الرسم */
-            margin-bottom: 5px; /* مسافة قريبة جداً من القلب */
-            transition: opacity 1s ease-out;
-        }
-
-        /* تفعيل وهج النيون للتهنئة */
-        .birthday-text.show {
-            opacity: 1;
-            text-shadow: 
-                0 0 10px #ff66b3,
-                0 0 20px #ff3399,
-                0 0 35px #ff3399;
-        }
-
-        /* 💗 حاوية القلوب المتداخلة */
-        .hearts-wrapper {
-            position: relative;
-            width: 350px;
-            height: 350px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .hearts-svg {
+        /* 🎨 كانفاس الرسم الخاص بالقلوب والألعاب النارية والتهنئة */
+        #main-canvas {
             width: 100%;
             height: 100%;
-            position: absolute;
-            overflow: visible !important; /* لانتشار توهج النيون بدون أي قص */
+            max-height: 85vh;
+            display: block;
+            background: transparent;
+            pointer-events: none;
         }
 
-        /* ستايل مسار القلب المطابق تماماً للصورة بنسبة 100% */
-        .heart-path {
-            fill: none;
-            stroke: #ff66b3; 
-            stroke-width: 1.2px; /* نحافة فائقة وفخمة */
-            stroke-linecap: round;
-            vector-effect: non-scaling-stroke;
-            
-            /* توهج نيون طبيعي وناعم */
-            filter: drop-shadow(0 0 6px rgba(255, 102, 179, 0.9)) 
-                    drop-shadow(0 0 18px rgba(255, 51, 153, 0.6))
-                    drop-shadow(0 0 28px rgba(255, 51, 153, 0.3));
-            
-            /* لإحداث تأثير الرسم التدريجي البطيء جداً */
-            stroke-dasharray: 1500;
-            stroke-dashoffset: 1500;
-        }
-
-        /* ⏱️ تراتبية زمنية بطيئة جداً لرسم القلوب من الداخل للخارج (الإجمالي 16.5 ثانية) */
-        
-        /* 1. القلب الصغير الداخلي (يستغرق 5.5 ثوانٍ) */
-        .heart-inner {
-            transform-origin: 50px 53px;
-            transform: scale(0.55);
-            animation: drawVerySlow 5.5s linear 0.5s forwards;
-        }
-
-        /* 2. القلب الأوسط (يبدأ عند الثانية 6 ويستغرق 5.5 ثوانٍ) */
-        .heart-middle {
-            transform-origin: 50px 53px;
-            transform: scale(0.8);
-            animation: drawVerySlow 5.5s linear 6s forwards;
-        }
-
-        /* 3. القلب الكبير الخارجي (يبدأ عند الثانية 11.5 ويستغرق 5.5 ثوانٍ) */
-        .heart-outer {
-            transform-origin: 50px 53px;
-            transform: scale(1.05);
-            animation: drawVerySlow 5.5s linear 11.5s forwards;
-        }
-
-        @keyframes drawVerySlow {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        /* 🎈 البالونات البيضاوية الشفافة (تبدأ بالصعود ببطء شديد منذ بداية فتح الصفحة) */
+        /* 🎈 البالونات البيضاوية الشفافة الفخمة */
         .balloon {
             position: absolute;
-            width: 44px;  /* شكل بيضاوي مثالي */
-            height: 58px; 
+            width: 42px;
+            height: 56px;
             border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
             bottom: -100px;
             z-index: 2;
-            animation: floatUpSlowly 22s linear infinite; /* صعود هادئ وبطيء جداً متناسق مع الرسم */
+            animation: floatUpSlowly 22s linear infinite;
         }
 
         /* عصا البالونة الشفافة */
@@ -137,90 +61,90 @@
             position: absolute;
             width: 1.2px;
             height: 30px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             bottom: -30px;
             left: calc(50% - 0.6px);
         }
 
+        /* حركة صعود هادئة وبطيئة متزامنة */
         @keyframes floatUpSlowly {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
             100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
         }
-
-        /* 🎆 حاوية الألعاب النارية */
-        #canvas-fireworks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* 📱 متجاوب تماماً مع جميع الهواتف والأجهزة وشاشات الكمبيوتر */
-        @media (max-width: 600px) {
-            .birthday-text {
-                font-size: 1.5rem;
-            }
-            .hearts-wrapper {
-                width: 290px;
-                height: 290px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <!-- 🎆 كانفاس الألعاب النارية -->
-    <canvas id="canvas-fireworks"></canvas>
-
     <div class="container">
-        <!-- 🎂 عبارة التهنئة (تظهر بعد 17 ثانية فوق القلوب مباشرة) -->
-        <h1 id="bday-title" class="birthday-text">Happy Birthday to yosi 🎉</h1>
-
-        <!-- 💗 القلوب المتداخلة الثلاثة المطابقة تماماً للصورة -->
-        <div class="hearts-wrapper">
-            <svg class="hearts-svg" viewBox="0 0 100 100">
-                <!-- 
-                     إحداثيات القلب المعدلة بنسبة 100% لتطابق الصورة المرفقة:
-                     - يبدأ مسار الرسم من النقطة السفلية الحادة والمدببة (50, 88).
-                     - يتجه للأعلى ليرسم انحناءً دائرياً ممتلئاً وبارزاً لليسار.
-                     - يدخل في تجويف عميق وحاد بالمنتصف عند (50, 30).
-                     - يكمل الفص الأيمن الدائري المماثل والمنساب.
-                     - ينحدر بنعومة فائقة ليلتقي بالأسفل عند نفس النقطة الحادة.
-                -->
-                <!-- القلب الصغير -->
-                <path class="heart-path heart-inner" d="M 50,88 C 12,62 12,40 12,40 C 12,12 36,12 50,30 C 64,12 88,12 88,40 C 88,40 88,62 50,88 Z" />
-                
-                <!-- القلب الوسط -->
-                <path class="heart-path heart-middle" d="M 50,88 C 12,62 12,40 12,40 C 12,12 36,12 50,30 C 64,12 88,12 88,40 C 88,40 88,62 50,88 Z" />
-                
-                <!-- القلب الكبير -->
-                <path class="heart-path heart-outer" d="M 50,88 C 12,62 12,40 12,40 C 12,12 36,12 50,30 C 64,12 88,12 88,40 C 88,40 88,62 50,88 Z" />
-            </svg>
-        </div>
+        <!-- 🎨 كانفاس موحد للرسم لضمان الدقة العالية والتزامن -->
+        <canvas id="main-canvas"></canvas>
     </div>
 
     <script>
-        // --- 🎈 إنشاء وصعود البالونات البيضاوية الشفافة فوراً عند التحميل وبسرعة بطيئة ---
+        const canvas = document.getElementById('main-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // الحفاظ على دقة الرسم العالية (HD Retina Display) للأجهزة الذكية والكمبيوتر
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // 💗 دالة حساب إحداثيات نقاط القلب الخاصة بك
+        function heartPoint(t) {
+            return {
+                x: 16 * Math.pow(Math.sin(t), 3),
+                y: 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)
+            };
+        }
+
+        // 💗 دالة رسم القلب الخاصة بك مع تعديل طفيف لدعم الأنيميشن المخصص
+        function drawHeart(scale, points) {
+            ctx.beginPath();
+            for (let i = 0; i <= points; i++) {
+                let a = (i / 628) * Math.PI * 2; // لتوزيع الرسم بالتساوي على المحيط بالكامل (628 نقطة = 2pi)
+                let p = heartPoint(a);
+
+                // مركز القلوب في المنتصف الأعلى وبأبعاد متناسقة
+                let x = (canvas.width / (window.devicePixelRatio || 1)) / 2 + p.x * scale;
+                let y = (canvas.height / (window.devicePixelRatio || 1)) / 2 - p.y * scale + 50;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.strokeStyle = "#ff66cc";
+            ctx.lineWidth = 3.5;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "#ff66cc";
+            ctx.stroke();
+            ctx.shadowBlur = 0; // تنظيف الـ Shadow لتجنب التأثير على باقي الرسومات
+        }
+
+        // --- 🎈 توليد وصعود البالونات البيضاوية منذ البداية وببطء شديد ---
         function generateBalloons() {
             const colors = [
-                { bg: 'rgba(255, 102, 179, 0.06)', border: 'rgba(255, 102, 179, 0.2)', glow: 'rgba(255, 102, 179, 0.1)' }, // وردي
-                { bg: 'rgba(0, 229, 255, 0.06)', border: 'rgba(0, 229, 255, 0.2)', glow: 'rgba(0, 229, 255, 0.1)' },   // سماوي
-                { bg: 'rgba(255, 215, 0, 0.06)', border: 'rgba(255, 215, 0, 0.2)', glow: 'rgba(255, 215, 0, 0.1)' },     // أصفر
-                { bg: 'rgba(255, 255, 255, 0.04)', border: 'rgba(255, 255, 255, 0.12)', glow: 'rgba(255, 255, 255, 0.04)' } // أبيض
+                { bg: 'rgba(255, 102, 179, 0.05)', border: 'rgba(255, 102, 179, 0.18)', glow: 'rgba(255, 102, 179, 0.08)' },
+                { bg: 'rgba(0, 229, 255, 0.05)', border: 'rgba(0, 229, 255, 0.18)', glow: 'rgba(0, 229, 255, 0.08)' },
+                { bg: 'rgba(255, 215, 0, 0.05)', border: 'rgba(255, 215, 0, 0.18)', glow: 'rgba(255, 215, 0, 0.08)' },
+                { bg: 'rgba(255, 255, 255, 0.03)', border: 'rgba(255, 255, 255, 0.12)', glow: 'rgba(255, 255, 255, 0.03)' }
             ];
 
             for (let i = 0; i < 15; i++) {
                 const b = document.createElement('div');
                 b.className = 'balloon'; 
-                b.style.left = Math.random() * 85 + 'vw';
-                // تباعد زمني مستمر وتلقائي منذ بداية الصفحة لتبدو حركة طبيعية وبطيئة
-                b.style.animationDelay = (Math.random() * 12) + 's'; 
-                b.style.animationDuration = (Math.random() * 6 + 18) + 's'; // صعود هادئ يستغرق من 18 إلى 24 ثانية
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.animationDelay = (Math.random() * 14) + 's'; 
+                b.style.animationDuration = (Math.random() * 6 + 18) + 's'; // صعود انسيابي وبطيء جداً
                 
                 const theme = colors[Math.floor(Math.random() * colors.length)];
                 b.style.backgroundColor = theme.bg;
@@ -230,18 +154,9 @@
                 document.body.appendChild(b);
             }
         }
+        generateBalloons(); // تشغيل البالونات فوراً من الثانية صفر
 
-        // --- 🎆 نظام الألعاب النارية المتناسق ---
-        const canvas = document.getElementById('canvas-fireworks');
-        const ctx = canvas.getContext('2d');
-        
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
+        // --- 🎆 نظام الألعاب النارية مدمج داخل الكانفاس ---
         const particles = [];
         const fireworkColors = ['#ff66b3', '#ffd700', '#00e5ff', '#ffffff'];
         let explosions = 0;
@@ -252,18 +167,18 @@
                 this.y = y;
                 this.color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
                 this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * 4.5 + 2;
-                this.gravity = 0.05;
+                this.speed = Math.random() * 4 + 1.8;
+                this.gravity = 0.04;
                 this.opacity = 1;
                 this.decay = Math.random() * 0.01 + 0.007;
-                this.radius = Math.random() * 3 + 1;
+                this.radius = Math.random() * 2.5 + 1;
             }
             update() {
                 this.x += Math.cos(this.angle) * this.speed;
                 this.y += Math.sin(this.angle) * this.speed + this.gravity;
                 this.opacity -= this.decay;
             }
-            draw() {
+            draw(wDpr) {
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
                 ctx.beginPath();
@@ -277,51 +192,107 @@
         }
 
         function triggerExplosion(x, y) {
-            if (explosions >= 2) return;
-            explosions++;
-            for (let i = 0; i < 75; i++) {
+            for (let i = 0; i < 60; i++) {
                 particles.push(new Particle(x, y));
             }
         }
 
-        function anim() {
-            if (explosions >= 2 && particles.length === 0) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                return;
+        // --- ⏳ نظام التحريك والمؤقتات المتقاطعة (أنيميشن القلوب التدريجي) ---
+        let startTime = null;
+        const totalDrawingDuration = 16500; // 16.5 ثانية لرسم الـ 3 قلوب بالكامل بالتساوي
+        let showCelebration = false;
+        let textOpacity = 0;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            // تنظيف الكانفاس في كل إطار
+            const wDpr = canvas.width / (window.devicePixelRatio || 1);
+            const hDpr = canvas.height / (window.devicePixelRatio || 1);
+            ctx.clearRect(0, 0, wDpr, hDpr);
+
+            // تحديد حالة رسم كل قلب (العدد الأقصى للنقاط = 628 لعمل دورة كاملة 2pi)
+            let p1 = 0, p2 = 0, p3 = 0;
+
+            // 1. القلب الأول (الداخلي الصغير) - يرسم خلال أول 5.5 ثوانٍ
+            if (elapsed < 5500) {
+                p1 = (elapsed / 5500) * 628;
+            } else {
+                p1 = 628;
             }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 2. القلب الثاني (الأوسط) - يرسم من الثانية 5.5 إلى 11
+            if (elapsed >= 5500 && elapsed < 11000) {
+                p2 = ((elapsed - 5500) / 5500) * 628;
+            } else if (elapsed >= 11000) {
+                p2 = 628;
+            }
+
+            // 3. القلب الثالث (الخارجي الكبير) - يرسم من الثانية 11 إلى 16.5
+            if (elapsed >= 11000 && elapsed < 16500) {
+                p3 = ((elapsed - 11000) / 5500) * 628;
+            } else if (elapsed >= 16500) {
+                p3 = 628;
+                if (!showCelebration) {
+                    showCelebration = true;
+                    triggerCelebrationEvents();
+                }
+            }
+
+            // رسم القلوب بالترتيب والنسب الدقيقة جداً المتداخلة
+            if (p1 > 0) drawHeart(5.8, p1);   // القلب الصغير
+            if (p2 > 0) drawHeart(8.0, p2);   // القلب الوسط
+            if (p3 > 0) drawHeart(10.2, p3);  // القلب الكبير
+
+            // رسم نص التهنئة بمسافة قريبة جداً فوق القلب ومعدلة مع وهج النيون الخاص بك
+            if (showCelebration) {
+                if (textOpacity < 1) textOpacity += 0.02; // ظهور تدريجي ناعم ومبهر للعين
+                ctx.save();
+                ctx.globalAlpha = textOpacity;
+                ctx.textAlign = "center";
+                ctx.font = "bold 30px Arial";
+                ctx.fillStyle = "#fff0fa";
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = "#ff66cc";
+
+                ctx.fillText(
+                    "Happy Birthday to yosi 🎉",
+                    wDpr / 2,
+                    hDpr / 2 - 185 // فوق القلوب مباشرة وبمسافة قريبة ومتناسقة
+                );
+                ctx.restore();
+            }
+
+            // تحديث ورسم الألعاب النارية
             particles.forEach((p, idx) => {
                 if (p.opacity > 0) {
                     p.update();
-                    p.draw();
+                    p.draw(wDpr);
                 } else {
                     particles.splice(idx, 1);
                 }
             });
-            requestAnimationFrame(anim);
+
+            requestAnimationFrame(animate);
         }
 
-        // --- ⏳ التزامن والمؤقتات لضبط سير الأحداث ---
-        
-        // 1. تشغيل صعود البالونات فوراً من الثانية 0 وببطء
-        generateBalloons();
+        // تشغيل نظام التحريك عند تحميل الصفحة
+        requestAnimationFrame(animate);
 
-        // 2. عند الثانية 17 (فور اكتمال رسم القلوب الثلاثة بالكامل):
-        // تظهر التهنئة مباشرة فوق القلوب، تليها الألعاب النارية مرتين متتاليتين ومبهجتين.
-        setTimeout(() => {
-            // أ. إبراز التهنئة فجأة فوق القلب مباشرة
-            document.getElementById('bday-title').classList.add('show');
-            
-            // ب. إطلاق الانفجار الأول للألعاب النارية
-            triggerExplosion(window.innerWidth * 0.28, window.innerHeight * 0.35); 
-            
-            // جـ. إطلاق الانفجار الثاني للألعاب النارية بعد ثانية ونصف لإتمام العرض
+        // --- 🎇 أحداث الاحتفال فور انتهاء رسم القلوب بالكامل ---
+        function triggerCelebrationEvents() {
+            const wDpr = canvas.width / (window.devicePixelRatio || 1);
+            const hDpr = canvas.height / (window.devicePixelRatio || 1);
+
+            // الانفجار الأول للألعاب النارية في الجانب الأيسر العلوي
+            triggerExplosion(wDpr * 0.25, hDpr * 0.3);
+
+            // الانفجار الثاني للألعاب النارية في الجانب الأيمن العلوي بعد ثانية ونصف
             setTimeout(() => {
-                triggerExplosion(window.innerWidth * 0.72, window.innerHeight * 0.28);
+                triggerExplosion(wDpr * 0.75, hDpr * 0.26);
             }, 1500);
-            
-            anim();
-        }, 17000); // 17 ثانية بالضبط لضمان اكتمال الرسم البطيء للقلوب
+        }
 
     </script>
 </body>
