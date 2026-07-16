@@ -30,7 +30,7 @@
             align-items: center;
             justify-content: flex-start;
             z-index: 10;
-            padding-top: 3vh; /* تقليص الحشو العلوي لرفع العناصر للأعلى أكثر */
+            padding-top: 3vh; /* حشو علوي لرفع العناصر للأعلى */
             box-sizing: border-box;
         }
 
@@ -44,7 +44,7 @@
             pointer-events: none;
         }
 
-        /* 🎈 البالونات البيضاوية الشفافة الفخمة */
+        /* 🎈 البالونات البيضاوية الشفافة الفخمة والسريعة */
         .balloon {
             position: absolute;
             width: 42px;
@@ -52,7 +52,7 @@
             border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
             bottom: -100px;
             z-index: 2;
-            animation: floatUpSlowly 22s linear infinite;
+            animation: floatUpFast 6s ease-in forwards; /* حركة صعود سريعة وحماسية تبدأ فور انتهاء القلوب */
         }
 
         /* عصا البالونة الشفافة */
@@ -61,17 +61,17 @@
             position: absolute;
             width: 1.2px;
             height: 30px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             bottom: -30px;
             left: calc(50% - 0.6px);
         }
 
-        /* حركة صعود هادئة وبطيئة متزامنة */
-        @keyframes floatUpSlowly {
+        /* حركة صعود سريعة ورشيقة */
+        @keyframes floatUpFast {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
+            15% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
+            100% { transform: translateY(-125vh) rotate(15deg); opacity: 0; }
         }
     </style>
 </head>
@@ -105,14 +105,14 @@
             };
         }
 
-        // 💗 دالة رسم القلب مع رفع الإحداثيات للأعلى (تغيير قيمة الإزاحة الرأسية من 50 إلى 10)
+        // 💗 دالة رسم القلب مع رفع الإحداثيات للأعلى
         function drawHeart(scale, points) {
             ctx.beginPath();
             for (let i = 0; i <= points; i++) {
                 let a = (i / 628) * Math.PI * 2; // لتوزيع الرسم بالتساوي على المحيط بالكامل
                 let p = heartPoint(a);
 
-                // تم تغيير الإزاحة الرأسية إلى +10 لرفع القلوب للأعلى بشكل ملحوظ ومتناسق
+                // مركز القلوب مرفوع للأعلى (+10) بشكل متناسق وممتاز
                 let x = (canvas.width / (window.devicePixelRatio || 1)) / 2 + p.x * scale;
                 let y = (canvas.height / (window.devicePixelRatio || 1)) / 2 - p.y * scale + 10;
 
@@ -130,26 +130,28 @@
             ctx.shadowBlur = 0; // تنظيف الـ Shadow لتجنب التأثير على باقي الرسومات
         }
 
-        // --- 🎈 توليد وصعود البالونات البيضاوية الشفافة جداً ---
+        // --- 🎈 توليد وصعود البالونات البيضاوية الشفافة جداً بشكل سريع ---
         function generateBalloons() {
             const colors = [
-                { bg: 'rgba(255, 102, 179, 0.05)', border: 'rgba(255, 102, 179, 0.18)', glow: 'rgba(255, 102, 179, 0.08)' },
-                { bg: 'rgba(0, 229, 255, 0.05)', border: 'rgba(0, 229, 255, 0.18)', glow: 'rgba(0, 229, 255, 0.08)' },
-                { bg: 'rgba(255, 215, 0, 0.05)', border: 'rgba(255, 215, 0, 0.18)', glow: 'rgba(255, 215, 0, 0.08)' },
-                { bg: 'rgba(255, 255, 255, 0.03)', border: 'rgba(255, 255, 255, 0.12)', glow: 'rgba(255, 255, 255, 0.03)' }
+                { bg: 'rgba(255, 102, 179, 0.08)', border: 'rgba(255, 102, 179, 0.25)', glow: 'rgba(255, 102, 179, 0.15)' },
+                { bg: 'rgba(0, 229, 255, 0.08)', border: 'rgba(0, 229, 255, 0.25)', glow: 'rgba(0, 229, 255, 0.15)' },
+                { bg: 'rgba(255, 215, 0, 0.08)', border: 'rgba(255, 215, 0, 0.25)', glow: 'rgba(255, 215, 0, 0.15)' },
+                { bg: 'rgba(255, 255, 255, 0.06)', border: 'rgba(255, 255, 255, 0.18)', glow: 'rgba(255, 255, 255, 0.06)' }
             ];
 
-            for (let i = 0; i < 15; i++) {
+            // نطلق 18 بالونة دفعة واحدة بشكل متسارع وجميل
+            for (let i = 0; i < 18; i++) {
                 const b = document.createElement('div');
                 b.className = 'balloon'; 
                 b.style.left = Math.random() * 90 + 'vw';
-                b.style.animationDelay = (Math.random() * 8) + 's'; // تباعد زمني متناسق عند الانطلاق
-                b.style.animationDuration = (Math.random() * 6 + 18) + 's'; // صعود هادئ وبطيء جداً
+                // تباعد زمني بسيط للغاية في أجزاء من الثانية لتعطي موجة صعود كثيفة وممتعة فوراً
+                b.style.animationDelay = (Math.random() * 2) + 's'; 
+                b.style.animationDuration = (Math.random() * 2 + 4.5) + 's'; // سريعة ورشيقة (تصل للقمة خلال 4.5 إلى 6.5 ثانية)
                 
                 const theme = colors[Math.floor(Math.random() * colors.length)];
                 b.style.backgroundColor = theme.bg;
                 b.style.border = `1.2px solid ${theme.border}`;
-                b.style.boxShadow = `0 0 10px ${theme.glow}`;
+                b.style.boxShadow = `0 0 12px ${theme.glow}`;
                 
                 document.body.appendChild(b);
             }
@@ -258,7 +260,7 @@
                 ctx.fillText(
                     "Happy Birthday To Yosi 🎉",
                     wDpr / 2,
-                    hDpr / 2 - 225 // تم تعديل الإحداثي الرأسي للنص ليظل قريباً جداً من القلوب بعد رفعها
+                    hDpr / 2 - 225 // الإحداثي الرأسي للنص قريب جداً من القلوب المرفوعة
                 );
                 ctx.restore();
             }
@@ -279,12 +281,12 @@
         // تشغيل نظام التحريك عند تحميل الصفحة
         requestAnimationFrame(animate);
 
-        // --- 🎇 أحداث الاحتفال فور انتهاء رسم القلوب بالكامل ---
+        // --- 🎇 أحداث الاحتفال فور انتهاء رسم القلوب بالكامل (عند الثانية 16.5) ---
         function triggerCelebrationEvents() {
             const wDpr = canvas.width / (window.devicePixelRatio || 1);
             const hDpr = canvas.height / (window.devicePixelRatio || 1);
 
-            // 1. توليد وإطلاق البالونات البيضاوية الشفافة في هذه اللحظة بالذات وببطء
+            // 1. إطلاق البالونات البيضاوية الشفافة بشكل سريع وحماسي فوراً بالملي ثانية 🎈
             generateBalloons();
 
             // 2. الانفجار الأول للألعاب النارية في الجانب الأيسر العلوي
