@@ -35,7 +35,6 @@ canvas{
 <canvas id="canvas" width="700" height="750"></canvas>
 
 
-
 <script>
 
 
@@ -62,11 +61,9 @@ function heartPoint(t){
 
 
 const hearts=[
-
     {scale:8},
     {scale:12},
     {scale:16}
-
 ];
 
 
@@ -74,9 +71,9 @@ let currentHeart=0;
 let currentPoint=0;
 
 
-
 let fireworks=[];
 let balloons=[];
+let balloonsStarted=false;
 
 
 
@@ -94,13 +91,9 @@ function drawHeart(scale,points){
         let p=heartPoint(a);
 
 
+        let x=canvas.width/2+p.x*scale;
 
-        let x =
-        canvas.width/2 + p.x*scale;
-
-
-        let y =
-        canvas.height/2 - p.y*scale + 90;
+        let y=canvas.height/2-p.y*scale+90;
 
 
 
@@ -121,7 +114,6 @@ function drawHeart(scale,points){
 
     ctx.lineWidth=4;
 
-
     ctx.shadowBlur=20;
 
     ctx.shadowColor="#ff66cc";
@@ -132,11 +124,13 @@ function drawHeart(scale,points){
 
     ctx.shadowBlur=0;
 
-
 }
 
 
 
+
+
+// 🎆 الألعاب النارية
 
 
 function createFirework(){
@@ -154,7 +148,6 @@ function createFirework(){
         let angle=Math.random()*Math.PI*2;
 
         let speed=Math.random()*6+2;
-
 
 
         fireworks.push({
@@ -176,9 +169,7 @@ function createFirework(){
 
     }
 
-
 }
-
 
 
 
@@ -200,12 +191,11 @@ function drawFireworks(){
         );
 
 
-        ctx.fillStyle =
-        [
-        "#ff66b2",
-        "#ffd700",
-        "#00ffff",
-        "#ffffff"
+        ctx.fillStyle=[
+            "#ff66b2",
+            "#ffd700",
+            "#00ffff",
+            "#ffffff"
         ][Math.floor(Math.random()*4)];
 
 
@@ -214,12 +204,11 @@ function drawFireworks(){
 
 
 
-        f.x += f.dx;
+        f.x+=f.dx;
 
-        f.y += f.dy;
+        f.y+=f.dy;
 
-
-        f.dy +=0.05;
+        f.dy+=0.05;
 
 
         f.life--;
@@ -242,27 +231,38 @@ function drawFireworks(){
 
 
 
+// 🎈 البالونات
+
+
 function createBalloons(){
 
 
-    for(let i=0;i<10;i++){
+    for(let i=0;i<15;i++){
 
 
         balloons.push({
 
-            x:Math.random()*700,
+            x:Math.random()*canvas.width,
 
-            y:800,
+            y:canvas.height+Math.random()*200,
 
-            size:20+Math.random()*15,
+            size:25+Math.random()*15,
 
-            speed:1+Math.random()*2
+            speed:1+Math.random()*2,
+
+
+            color:[
+                "#ff66b2",
+                "#ffd700",
+                "#00ffff",
+                "#ff99ff",
+                "#ffffff"
+            ][Math.floor(Math.random()*5)]
 
         });
 
 
     }
-
 
 }
 
@@ -272,7 +272,7 @@ function createBalloons(){
 function drawBalloons(){
 
 
-    balloons.forEach(b=>{
+    balloons.forEach((b,index)=>{
 
 
         ctx.beginPath();
@@ -287,20 +287,58 @@ function drawBalloons(){
         );
 
 
-        ctx.fillStyle="#ff66b2";
+        ctx.fillStyle=b.color;
+
+        ctx.shadowBlur=15;
+
+        ctx.shadowColor=b.color;
 
 
         ctx.fill();
+
+
+        ctx.shadowBlur=0;
+
+
+
+        // خيط البالون
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            b.x,
+            b.y+b.size
+        );
+
+
+        ctx.lineTo(
+            b.x,
+            b.y+b.size+50
+        );
+
+
+        ctx.strokeStyle="#ffffff";
+
+        ctx.stroke();
 
 
 
         b.y-=b.speed;
 
 
+
+        if(b.y<-50){
+
+            balloons.splice(index,1);
+
+        }
+
+
     });
 
 
 }
+
 
 
 
@@ -316,6 +354,7 @@ function animate(){
         canvas.width,
         canvas.height
     );
+
 
 
 
@@ -336,40 +375,32 @@ function animate(){
 
     // رسم القلب الحالي
 
-    if(currentHeart < hearts.length){
 
+    if(currentHeart<hearts.length){
 
 
         drawHeart(
-
             hearts[currentHeart].scale,
-
             currentPoint
-
         );
-
 
 
         currentPoint+=2;
 
 
 
-
         if(currentPoint>=628){
-
 
             currentPoint=0;
 
             currentHeart++;
 
-
         }
 
 
 
-
-
     }else{
+
 
 
         drawBalloons();
@@ -378,30 +409,34 @@ function animate(){
 
 
 
+        // النص داخل القلب
+
 
         ctx.textAlign="center";
 
-
-        ctx.font="bold 35px Arial";
-
+        ctx.font="bold 28px Arial";
 
         ctx.fillStyle="#fff0fa";
 
 
-        ctx.shadowBlur=25;
+        ctx.shadowBlur=20;
 
         ctx.shadowColor="#ff66cc";
 
 
 
         ctx.fillText(
-
-            "🎂 Happy Birthday to yosi 🎂",
-
+            "Happy Birthday to",
             canvas.width/2,
+            canvas.height/2+70
+        );
 
-            canvas.height/2+250
 
+
+        ctx.fillText(
+            "yosi",
+            canvas.width/2,
+            canvas.height/2+110
         );
 
 
@@ -418,9 +453,11 @@ function animate(){
 
 
 
-        if(balloons.length===0){
+        if(!balloonsStarted){
 
             createBalloons();
+
+            balloonsStarted=true;
 
         }
 
@@ -429,10 +466,7 @@ function animate(){
 
 
 
-
-
     requestAnimationFrame(animate);
-
 
 
 }
@@ -442,10 +476,8 @@ function animate(){
 animate();
 
 
-
 </script>
 
 
 </body>
-
 </html>
