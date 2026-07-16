@@ -32,7 +32,7 @@ canvas{
 <body>
 
 
-<canvas id="canvas" width="700" height="750"></canvas>
+<canvas id="canvas"></canvas>
 
 
 <script>
@@ -40,6 +40,12 @@ canvas{
 
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
+
+
+// يخلي الرسم مناسب لكل الشاشات
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
 
 
@@ -60,10 +66,12 @@ function heartPoint(t){
 
 
 
+// حجم القلوب مناسب للجوال
+
 const hearts=[
+    {scale:5},
     {scale:8},
-    {scale:12},
-    {scale:16}
+    {scale:11}
 ];
 
 
@@ -74,6 +82,7 @@ let currentPoint=0;
 let fireworks=[];
 let balloons=[];
 let balloonsStarted=false;
+
 
 
 
@@ -91,9 +100,13 @@ function drawHeart(scale,points){
         let p=heartPoint(a);
 
 
-        let x=canvas.width/2+p.x*scale;
 
-        let y=canvas.height/2-p.y*scale+90;
+        let x =
+        canvas.width/2 + p.x*scale;
+
+
+        let y =
+        canvas.height/2 - p.y*scale;
 
 
 
@@ -107,12 +120,15 @@ function drawHeart(scale,points){
 
         }
 
+
     }
+
 
 
     ctx.strokeStyle="#ff66cc";
 
     ctx.lineWidth=4;
+
 
     ctx.shadowBlur=20;
 
@@ -123,6 +139,7 @@ function drawHeart(scale,points){
 
 
     ctx.shadowBlur=0;
+
 
 }
 
@@ -138,7 +155,7 @@ function createFirework(){
 
     let x=Math.random()*canvas.width;
 
-    let y=Math.random()*250+50;
+    let y=Math.random()*canvas.height*0.35;
 
 
 
@@ -148,6 +165,7 @@ function createFirework(){
         let angle=Math.random()*Math.PI*2;
 
         let speed=Math.random()*6+2;
+
 
 
         fireworks.push({
@@ -169,7 +187,9 @@ function createFirework(){
 
     }
 
+
 }
+
 
 
 
@@ -189,6 +209,7 @@ function drawFireworks(){
             0,
             Math.PI*2
         );
+
 
 
         ctx.fillStyle=[
@@ -231,6 +252,8 @@ function drawFireworks(){
 
 
 
+
+
 // 🎈 البالونات
 
 
@@ -264,7 +287,9 @@ function createBalloons(){
 
     }
 
+
 }
+
 
 
 
@@ -289,6 +314,7 @@ function drawBalloons(){
 
         ctx.fillStyle=b.color;
 
+
         ctx.shadowBlur=15;
 
         ctx.shadowColor=b.color;
@@ -298,6 +324,7 @@ function drawBalloons(){
 
 
         ctx.shadowBlur=0;
+
 
 
 
@@ -358,6 +385,7 @@ function animate(){
 
 
 
+
     // القلوب المكتملة
 
     for(let i=0;i<currentHeart;i++){
@@ -373,27 +401,36 @@ function animate(){
 
 
 
+
     // رسم القلب الحالي
 
 
     if(currentHeart<hearts.length){
 
 
+
         drawHeart(
+
             hearts[currentHeart].scale,
+
             currentPoint
+
         );
+
 
 
         currentPoint+=2;
 
 
 
+
         if(currentPoint>=628){
+
 
             currentPoint=0;
 
             currentHeart++;
+
 
         }
 
@@ -409,12 +446,16 @@ function animate(){
 
 
 
-        // النص داخل القلب
+
+
+        // الكتابة داخل القلب
 
 
         ctx.textAlign="center";
 
+
         ctx.font="bold 28px Arial";
+
 
         ctx.fillStyle="#fff0fa";
 
@@ -426,17 +467,25 @@ function animate(){
 
 
         ctx.fillText(
+
             "Happy Birthday to",
+
             canvas.width/2,
-            canvas.height/2+70
+
+            canvas.height/2+40
+
         );
 
 
 
         ctx.fillText(
+
             "yosi",
+
             canvas.width/2,
-            canvas.height/2+110
+
+            canvas.height/2+80
+
         );
 
 
@@ -445,11 +494,14 @@ function animate(){
 
 
 
+
+
         if(fireworks.length<250){
 
             createFirework();
 
         }
+
 
 
 
@@ -466,6 +518,8 @@ function animate(){
 
 
 
+
+
     requestAnimationFrame(animate);
 
 
@@ -474,6 +528,19 @@ function animate(){
 
 
 animate();
+
+
+
+// لو تغير حجم الشاشة يعيد ضبطها
+
+window.addEventListener("resize",()=>{
+
+    canvas.width=window.innerWidth;
+
+    canvas.height=window.innerHeight;
+
+});
+
 
 
 </script>
