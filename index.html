@@ -8,8 +8,8 @@
         body {
             margin: 0;
             overflow: hidden;
-            /* خلفية متدرجة: أسود من الأعلى إلى كحلي غامق في الأسفل */
-            background: linear-gradient(to top, #001133, #000000);
+            /* التدرج اللوني الجديد: أسود فوق، كحلي بالمنتصف، أسود تحت */
+            background: linear-gradient(to bottom, #000000 0%, #001845 50%, #000000 100%);
             color: white;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -164,7 +164,6 @@
         // ----------------- State & Engine -----------------
         let isAnimating = false;
         
-        // تصغير أحجام القلوب لتناسب الشاشة بالكامل
         const heartScales = [9, 6.5, 4];
         const heartPaths = [];
         const heartProgress = [0, 0, 0];
@@ -172,9 +171,8 @@
         let heartOpacity = 1;
         let drawHeartsActive = false;
         let fadeHeartsActive = false;
-        let msgTriggered = false; // لمنع تكرار الرسالة
+        let msgTriggered = false; 
 
-        // Particles Data
         let fireworks = [];
         let balloons = [];
         let glitters = [];
@@ -197,13 +195,14 @@
         function render() {
             ctx.clearRect(0, 0, cw, ch);
 
-            // 1. Draw Glitters
+            // 1. Draw Glitters (تعديل اللون للذهبي)
             glitters.forEach(g => {
                 g.alpha += g.alphaChange;
                 if (g.alpha <= 0.1 || g.alpha >= 0.8) g.alphaChange *= -1;
                 ctx.beginPath();
                 ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${g.alpha})`;
+                // اللون الذهبي اللامع
+                ctx.fillStyle = `rgba(255, 215, 0, ${g.alpha})`; 
                 ctx.fill();
             });
 
@@ -232,7 +231,6 @@
 
                 if (drawHeartsActive) {
                     if (currentHeartDraw < 3) {
-                        // تبطيء سرعة الرسم لتشبه الرسم اليدوي
                         heartProgress[currentHeartDraw] += 0.8; 
                         if (heartProgress[currentHeartDraw] >= heartPaths[currentHeartDraw].length) {
                             currentHeartDraw++;
@@ -245,10 +243,9 @@
 
                 if (fadeHeartsActive) {
                     if (heartOpacity > 0) {
-                        heartOpacity -= 0.01; // سرعة تلاشي القلب
+                        heartOpacity -= 0.01; 
                     } else {
                         heartOpacity = 0;
-                        // بعد أن يختفي القلب تماماً، ننتظر ثانيتين ثم نظهر الرسالة
                         if (!msgTriggered) {
                             msgTriggered = true;
                             setTimeout(() => {
@@ -256,7 +253,7 @@
                                 createGlitter();
                                 chatBubble.style.opacity = '1';
                                 startTypewriter();
-                            }, 2000); // 2000 ملي ثانية = ثانيتين
+                            }, 2000); 
                         }
                     }
                 }
@@ -362,21 +359,17 @@
         function triggerNextPhase() {
             neonText.classList.add('show-neon');
             
-            // إطلاق الألعاب النارية بشكل متكرر
             let fwInterval = setInterval(() => {
                 createFirework(cw * (0.2 + Math.random() * 0.6), ch * (0.2 + Math.random() * 0.4));
-            }, 600); // إطلاق كل 600 ملي ثانية
+            }, 600); 
 
-            // بدء صعود البالونات
             let balloonInterval = createBalloons();
 
-            // إيقاف الألعاب النارية والبالونات معاً بعد 4.5 ثواني
             setTimeout(() => {
                 clearInterval(fwInterval);
                 clearInterval(balloonInterval);
             }, 4500);
 
-            // انفجار النص وتلاشي القلوب
             setTimeout(() => {
                 neonText.classList.add('explode-text');
                 fadeHeartsActive = true;
@@ -394,7 +387,6 @@
                 if (i < finalMessage.length) {
                     chatBubble.innerHTML += finalMessage.charAt(i);
                     i++;
-                    // سرعة كتابة أبطأ من السابق (بين 60 و 120 ملي ثانية للحرف)
                     let speed = Math.random() * 60 + 60; 
                     setTimeout(type, speed);
                 }
