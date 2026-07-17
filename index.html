@@ -1,71 +1,77 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Yosi</title>
     <style>
-        body { margin: 0; background: #01040a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        #start-screen { position: absolute; z-index: 1000; cursor: pointer; padding: 20px 40px; background: #ff3366; border-radius: 50px; border: none; color: white; font-size: 1.2rem; }
-        canvas { position: absolute; top: 0; left: 0; }
-        #msg-container { position: absolute; top: 10%; width: 100%; text-align: center; font-size: 1.8rem; font-weight: bold; pointer-events: none; }
-        #bubble { position: absolute; background: white; color: #111; padding: 20px; border-radius: 20px; display: none; max-width: 80%; text-align: center; line-height: 1.6; box-shadow: 0 10px 30px rgba(255,255,255,0.1); font-size: 1.2rem; transform: scale(0); transition: transform 0.5s ease; }
+        body { margin: 0; background: #01040a; color: white; font-family: sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        #start-btn { padding: 20px 50px; font-size: 1.5rem; background: #ff3366; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px #ff3366; }
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+        #chat-bubble { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: white; color: #111; padding: 30px; border-radius: 25px; display: none; max-width: 80%; text-align: center; box-shadow: 0 0 30px rgba(255,255,255,0.2); font-size: 1.2rem; transition: transform 0.5s; }
     </style>
 </head>
 <body>
 
-<button id="start-screen">اضغط هنا لبدء الاحتفال</button>
-<div id="msg-container"></div>
-<div id="bubble"></div>
-<canvas id="canvas"></canvas>
+<button id="start-btn">Click Me</button>
+<div id="chat-bubble">
+    <div id="text"></div>
+    <canvas id="pixel-heart" width="60" height="60" style="display:none; margin: 20px auto;"></canvas>
+</div>
+<canvas id="main-canvas"></canvas>
 
 <script>
-    const canvas = document.getElementById('canvas');
+    const canvas = document.getElementById('main-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-    document.getElementById('start-screen').onclick = function() {
+    document.getElementById('start-btn').onclick = function() {
         this.style.display = 'none';
-        startEverything();
+        startShow();
     };
 
-    function startEverything() {
-        // 1. القلوب (رسم بسيط وسريع)
+    function startShow() {
+        // رسم قلب بسيط
         ctx.fillStyle = '#ff3366';
-        function drawHeart(x, y, s) {
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.bezierCurveTo(x-s, y-s, x-2*s, y+s, x, y+2*s);
-            ctx.bezierCurveTo(x+2*s, y+s, x+s, y-s, x, y);
-            ctx.fill();
-        }
-        drawHeart(canvas.width/2, canvas.height/2, 20);
+        ctx.beginPath();
+        ctx.arc(canvas.width/2 - 30, canvas.height/2, 40, Math.PI, 0);
+        ctx.arc(canvas.width/2 + 30, canvas.height/2, 40, Math.PI, 0);
+        ctx.lineTo(canvas.width/2, canvas.height/2 + 70);
+        ctx.fill();
 
-        // 2. التهنئة
-        let text = "Happy Birthday To Yosi 🎉";
-        let i = 0;
-        let interval = setInterval(() => {
-            document.getElementById('msg-container').innerText += text[i];
-            i++;
-            if(i >= text.length) clearInterval(interval);
-        }, 100);
+        // نص التهنئة
+        ctx.fillStyle = "white";
+        ctx.font = "bold 30px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Happy Birthday To Yosi 🎉", canvas.width/2, canvas.height/2 - 150);
 
-        // 3. فقاعة الدردشة بعد 5 ثواني
+        // بعد 4 ثواني تظهر الفقاعة
         setTimeout(() => {
-            document.getElementById('msg-container').style.display = 'none';
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            let bubble = document.getElementById('bubble');
-            bubble.style.display = 'block';
-            bubble.style.transform = 'scale(1)';
+            let bubble = document.getElementById('chat-bubble');
+            bubble.style.display = "block";
+            setTimeout(() => bubble.style.transform = "translate(-50%, -50%) scale(1)", 100);
             
-            let fullMsg = "Happy birthday to the person who makes every day brighter 🎉 … Thank you for being my safe place, my supporter, and the kindest person ever .. I hope this year brings you as much happiness as you bring into my life … I love you so much yosi ❤️!";
-            let charIndex = 0;
-            let typeInterval = setInterval(() => {
-                bubble.innerText += fullMsg[charIndex];
-                charIndex++;
-                if(charIndex >= fullMsg.length) clearInterval(typeInterval);
+            let msg = "Happy birthday to the person who makes every day brighter 🎉 … Thank you for being my safe place, my supporter, and the kindest person ever .. I hope this year brings you as much happiness as you bring into my life … I love you so much yosi ❤️!";
+            let t = 0;
+            let interval = setInterval(() => {
+                document.getElementById('text').innerText += msg[t++];
+                if(t >= msg.length) {
+                    clearInterval(interval);
+                    showPixel();
+                }
             }, 50);
-        }, 5000);
+        }, 4000);
+    }
+
+    function showPixel() {
+        let pCanvas = document.getElementById('pixel-heart');
+        pCanvas.style.display = "block";
+        let pCtx = pCanvas.getContext('2d');
+        pCtx.fillStyle = "#ff3366";
+        const grid = [[0,1,1,0,1,1,0],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[0,1,1,1,1,1,0],[0,0,1,1,1,0,0],[0,0,0,1,0,0,0]];
+        grid.forEach((row, r) => row.forEach((cell, c) => {
+            if(cell) pCtx.fillRect(c*8, r*8, 7, 7);
+        }));
     }
 </script>
 </body>
