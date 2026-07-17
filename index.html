@@ -8,7 +8,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            /* التدرج اللوني الجديد: أسود فوق، كحلي بالمنتصف، أسود تحت */
+            /* التدرج اللوني: أسود فوق، كحلي بالمنتصف، أسود تحت */
             background: linear-gradient(to bottom, #000000 0%, #001845 50%, #000000 100%);
             color: white;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -195,13 +195,12 @@
         function render() {
             ctx.clearRect(0, 0, cw, ch);
 
-            // 1. Draw Glitters (تعديل اللون للذهبي)
+            // 1. Draw Glitters (اللون الذهبي)
             glitters.forEach(g => {
                 g.alpha += g.alphaChange;
                 if (g.alpha <= 0.1 || g.alpha >= 0.8) g.alphaChange *= -1;
                 ctx.beginPath();
                 ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
-                // اللون الذهبي اللامع
                 ctx.fillStyle = `rgba(255, 215, 0, ${g.alpha})`; 
                 ctx.fill();
             });
@@ -215,7 +214,11 @@
                     if (heartProgress[i] > 0) {
                         ctx.beginPath();
                         ctx.moveTo(heartPaths[i][0].x, heartPaths[i][0].y);
-                        for (let j = 1; j < heartProgress[i]; j++) {
+                        
+                        // حل المشكلة: تحديد سقف لرسم النقاط حتى لا يتجاوز العدد الفعلي ويتعطل
+                        let limit = Math.min(Math.floor(heartProgress[i]), heartPaths[i].length - 1);
+                        
+                        for (let j = 1; j <= limit; j++) {
                             ctx.lineTo(heartPaths[i][j].x, heartPaths[i][j].y);
                         }
                         ctx.strokeStyle = `rgba(255, 77, 148, ${heartOpacity})`;
@@ -231,7 +234,7 @@
 
                 if (drawHeartsActive) {
                     if (currentHeartDraw < 3) {
-                        heartProgress[currentHeartDraw] += 0.8; 
+                        heartProgress[currentHeartDraw] += 0.8; // الرسم البطيء
                         if (heartProgress[currentHeartDraw] >= heartPaths[currentHeartDraw].length) {
                             currentHeartDraw++;
                         }
@@ -253,7 +256,7 @@
                                 createGlitter();
                                 chatBubble.style.opacity = '1';
                                 startTypewriter();
-                            }, 2000); 
+                            }, 2000); // الانتظار ثانيتين بعد اختفاء القلوب
                         }
                     }
                 }
@@ -340,7 +343,7 @@
                 glitters.push({
                     x: Math.random() * cw,
                     y: Math.random() * ch,
-                    r: Math.random() * 1.2 + 0.5,
+                    r: Math.random() * 1.5 + 0.5,
                     alpha: Math.random(),
                     alphaChange: 0.008 * (Math.random() > 0.5 ? 1 : -1)
                 });
