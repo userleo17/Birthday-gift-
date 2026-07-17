@@ -1,78 +1,403 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Yosi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Yosi</title>
     <style>
-        body { margin: 0; background: #01040a; color: white; font-family: sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        #start-btn { padding: 20px 50px; font-size: 1.5rem; background: #ff3366; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px #ff3366; }
-        canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
-        #chat-bubble { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: white; color: #111; padding: 30px; border-radius: 25px; display: none; max-width: 80%; text-align: center; box-shadow: 0 0 30px rgba(255,255,255,0.2); font-size: 1.2rem; transition: transform 0.5s; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            /* دعم كامل لارتفاع شاشات الآيفون المتغير في سفاري */
+            height: -webkit-fill-available; 
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .ui-layer {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        #startBtn {
+            pointer-events: auto;
+            padding: 15px 50px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background: transparent;
+            border: 2px solid #ff4d94;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff4d94, inset 0 0 15px #ff4d94;
+            text-shadow: 0 0 5px #ff4d94;
+            transition: all 0.3s ease;
+            -webkit-appearance: none; /* لمنع سفاري من تغيير شكل الزر الافتراضي */
+        }
+
+        #startBtn:hover {
+            background: #ff4d94;
+            box-shadow: 0 0 30px #ff4d94, inset 0 0 30px #ff4d94;
+            transform: scale(1.05);
+        }
+
+        #neonText {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            /* تعديل تأثير النيون ليكون خفيفاً وسريع الرندرة على معالجات أبل */
+            text-shadow: 0 0 10px #fff, 0 0 20px #ff0055, 0 0 30px #ff0055;
+            opacity: 0;
+            position: absolute;
+            top: 15%;
+            text-align: center;
+            transition: opacity 1s ease, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 1.5s ease;
+            -webkit-transition: opacity 1s ease, -webkit-transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), -webkit-filter 1.5s ease;
+            transform: scale(0.8);
+        }
+
+        .show-neon {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        .explode-text {
+            transform: scale(2) !important;
+            opacity: 0 !important;
+            filter: blur(15px) !important;
+            -webkit-filter: blur(15px) !important;
+        }
+
+        #chatBubble {
+            opacity: 0;
+            background: rgba(20, 20, 20, 0.75);
+            /* إضافة البادئة الخاصة بسفاري لدعم تأثير الزجاج الضبابي */
+            -webkit-backdrop-filter: blur(12px); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 25px 30px;
+            border-radius: 20px;
+            max-width: 90%;
+            width: 550px;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: opacity 2s ease;
+            white-space: pre-wrap;
+            pointer-events: auto;
+            direction: ltr;
+            box-sizing: border-box;
+        }
+
+        /* لضمان تناسب الخط مع شاشات الجوال */
+        @media (max-width: 600px) {
+            #neonText { font-size: 1.8rem; }
+            #chatBubble { font-size: 15px; padding: 20px; }
+            #startBtn { padding: 12px 40px; font-size: 20px; }
+        }
+
+        #chatBubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: rgba(20, 20, 20, 0.75) transparent transparent transparent;
+        }
     </style>
 </head>
 <body>
 
-<button id="start-btn">Click Me</button>
-<div id="chat-bubble">
-    <div id="text"></div>
-    <canvas id="pixel-heart" width="60" height="60" style="display:none; margin: 20px auto;"></canvas>
-</div>
-<canvas id="main-canvas"></canvas>
+    <canvas id="canvas"></canvas>
 
-<script>
-    const canvas = document.getElementById('main-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    <div class="ui-layer">
+        <button id="startBtn">Click Me</button>
+        <div id="neonText">Happy Birthday To Yosi 🎉</div>
+        <div id="chatBubble"></div>
+    </div>
 
-    document.getElementById('start-btn').onclick = function() {
-        this.style.display = 'none';
-        startShow();
-    };
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const neonText = document.getElementById('neonText');
+        const chatBubble = document.getElementById('chatBubble');
 
-    function startShow() {
-        // رسم قلب بسيط
-        ctx.fillStyle = '#ff3366';
-        ctx.beginPath();
-        ctx.arc(canvas.width/2 - 30, canvas.height/2, 40, Math.PI, 0);
-        ctx.arc(canvas.width/2 + 30, canvas.height/2, 40, Math.PI, 0);
-        ctx.lineTo(canvas.width/2, canvas.height/2 + 70);
-        ctx.fill();
+        let cw, ch;
+        function resize() {
+            // حل مشكلة تمدد الـ Canvas بشكل خاطئ على سفاري الجوال
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+        resize();
 
-        // نص التهنئة
-        ctx.fillStyle = "white";
-        ctx.font = "bold 30px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("Happy Birthday To Yosi 🎉", canvas.width/2, canvas.height/2 - 150);
+        // ----------------- State & Engine -----------------
+        let isAnimating = false;
+        
+        // Hearts Data
+        const heartScales = [15, 11, 7];
+        const heartPaths = [];
+        const heartProgress = [0, 0, 0];
+        let currentHeartDraw = 0;
+        let heartOpacity = 1;
+        let drawHeartsActive = false;
+        let fadeHeartsActive = false;
 
-        // بعد 4 ثواني تظهر الفقاعة
-        setTimeout(() => {
-            let bubble = document.getElementById('chat-bubble');
-            bubble.style.display = "block";
-            setTimeout(() => bubble.style.transform = "translate(-50%, -50%) scale(1)", 100);
-            
-            let msg = "Happy birthday to the person who makes every day brighter 🎉 … Thank you for being my safe place, my supporter, and the kindest person ever .. I hope this year brings you as much happiness as you bring into my life … I love you so much yosi ❤️!";
-            let t = 0;
-            let interval = setInterval(() => {
-                document.getElementById('text').innerText += msg[t++];
-                if(t >= msg.length) {
-                    clearInterval(interval);
-                    showPixel();
+        // Particles Data
+        let fireworks = [];
+        let balloons = [];
+        let glitters = [];
+
+        // دالة توليد نقاط القلوب بالمعادلة الرياضية الدقيقة
+        function getHeartPoint(t, scale) {
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            return { x: x * scale, y: y * scale };
+        }
+
+        for (let s of heartScales) {
+            let pts = [];
+            for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.05) {
+                pts.push(getHeartPoint(t, s));
+            }
+            heartPaths.push(pts);
+        }
+
+        // ----------------- Animation Loop -----------------
+        function render() {
+            ctx.clearRect(0, 0, cw, ch);
+
+            // 1. Draw Glitters (تأثير اللمعة الخفيفة بالخلفية)
+            glitters.forEach(g => {
+                g.alpha += g.alphaChange;
+                if (g.alpha <= 0.1 || g.alpha >= 0.8) g.alphaChange *= -1;
+                ctx.beginPath();
+                ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${g.alpha})`;
+                ctx.fill();
+            });
+
+            // 2. Draw Hearts
+            if (drawHeartsActive || heartOpacity > 0) {
+                ctx.save();
+                // لتوسيط القلوب تماماً مع مراعاة أحجام الشاشات المختلفة
+                ctx.translate(cw / 2, ch / 2 + 20); 
+                
+                for (let i = 0; i < 3; i++) {
+                    if (heartProgress[i] > 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(heartPaths[i][0].x, heartPaths[i][0].y);
+                        for (let j = 1; j < heartProgress[i]; j++) {
+                            ctx.lineTo(heartPaths[i][j].x, heartPaths[i][j].y);
+                        }
+                        ctx.strokeStyle = `rgba(255, 77, 148, ${heartOpacity})`;
+                        ctx.lineWidth = 3.5;
+                        ctx.lineCap = "round";
+                        ctx.lineJoin = "round";
+                        // تأثير توهج القلوب
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = "#ff4d94";
+                        ctx.stroke();
+                    }
                 }
-            }, 50);
-        }, 4000);
-    }
+                ctx.restore();
 
-    function showPixel() {
-        let pCanvas = document.getElementById('pixel-heart');
-        pCanvas.style.display = "block";
-        let pCtx = pCanvas.getContext('2d');
-        pCtx.fillStyle = "#ff3366";
-        const grid = [[0,1,1,0,1,1,0],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1],[0,1,1,1,1,1,0],[0,0,1,1,1,0,0],[0,0,0,1,0,0,0]];
-        grid.forEach((row, r) => row.forEach((cell, c) => {
-            if(cell) pCtx.fillRect(c*8, r*8, 7, 7);
-        }));
-    }
-</script>
+                if (drawHeartsActive) {
+                    if (currentHeartDraw < 3) {
+                        heartProgress[currentHeartDraw] += 2; // سرعة تحرك خط الرسم
+                        if (heartProgress[currentHeartDraw] >= heartPaths[currentHeartDraw].length) {
+                            currentHeartDraw++;
+                        }
+                    } else {
+                        drawHeartsActive = false; 
+                        triggerNextPhase();
+                    }
+                }
+
+                if (fadeHeartsActive && heartOpacity > 0) {
+                    heartOpacity -= 0.007; // تلاشي تدريجي وناعم
+                }
+            }
+
+            // 3. Draw Fireworks
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                let p = fireworks[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.06; // الجاذبية
+                p.alpha -= 0.015;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                ctx.fill();
+
+                if (p.alpha <= 0) fireworks.splice(i, 1);
+            }
+
+            // 4. Draw Balloons (تم استبدال دالة الـ ellipse بدالة متوافقة 100% مع كافة إصدارات سفاري)
+            for (let i = balloons.length - 1; i >= 0; i--) {
+                let b = balloons[i];
+                b.y -= b.speed;
+                
+                ctx.save();
+                ctx.translate(b.x, b.y);
+                ctx.scale(1, 1.25); // لجعل البالون بيضاوي الشكل
+                ctx.beginPath();
+                ctx.arc(0, 0, b.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha})`;
+                ctx.fill();
+                ctx.restore();
+                
+                // رسم خيط البالون
+                ctx.beginPath();
+                ctx.moveTo(b.x, b.y + b.r * 1.25);
+                ctx.lineTo(b.x, b.y + b.r * 2.5);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${b.alpha * 0.4})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                if (b.y < -100) balloons.splice(i, 1);
+            }
+
+            if (isAnimating) requestAnimationFrame(render);
+        }
+
+        // ----------------- Helper Functions -----------------
+
+        function createFirework(x, y) {
+            const colors = ['255, 77, 148', '255, 204, 0', '0, 255, 255', '255, 255, 255'];
+            for (let i = 0; i < 70; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let speed = Math.random() * 5 + 2;
+                fireworks.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    r: Math.random() * 2 + 1,
+                    alpha: 1,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+        }
+
+        function createBalloons() {
+            let interval = setInterval(() => {
+                balloons.push({
+                    x: Math.random() * cw,
+                    y: ch + 50,
+                    r: Math.random() * 12 + 12,
+                    speed: Math.random() * 1.5 + 1,
+                    alpha: Math.random() * 0.08 + 0.03 // شفافة جداً ومريحة للعين
+                });
+            }, 120);
+
+            setTimeout(() => {
+                clearInterval(interval);
+            }, 4500);
+        }
+
+        function createGlitter() {
+            for (let i = 0; i < 100; i++) {
+                glitters.push({
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    r: Math.random() * 1.2 + 0.5,
+                    alpha: Math.random(),
+                    alphaChange: 0.008 * (Math.random() > 0.5 ? 1 : -1)
+                });
+            }
+        }
+
+        // ----------------- Main Timeline -----------------
+        
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            isAnimating = true;
+            drawHeartsActive = true;
+            render();
+        });
+
+        function triggerNextPhase() {
+            // ظهور عبارة التهنئة
+            neonText.classList.add('show-neon');
+            
+            // إطلاق ألعاب نارية مرتين فقط بالتناوب
+            setTimeout(() => createFirework(cw * 0.35, ch * 0.3), 100);
+            setTimeout(() => createFirework(cw * 0.65, ch * 0.35), 800);
+
+            // صعود البالونات الشفافة بالتزامن
+            createBalloons();
+
+            // انفجار النص وتلاشي القلوب بعد انتهاء المؤثرات البصرية
+            setTimeout(() => {
+                neonText.classList.add('explode-text');
+                fadeHeartsActive = true;
+            }, 5000);
+
+            // ظهور لمعة الخلفية وفقاعة الدردشة وبدء الآلة الكاتبة
+            setTimeout(() => {
+                neonText.style.display = 'none'; 
+                createGlitter();
+                chatBubble.style.opacity = '1';
+                startTypewriter();
+            }, 7000);
+        }
+
+        // ----------------- Typewriter Effect -----------------
+        const finalMessage = "Happy birthday to the person who makes every day brighter 🎉 ...\n\nThank you for being my safe place, my supporter, and the kindest person ever ..\n\nI hope this year brings you as much happiness as you bring into my \nlife ... I love you much yosi ❤️!";
+        
+        function startTypewriter() {
+            let i = 0;
+            chatBubble.innerHTML = '';
+            
+            function type() {
+                if (i < finalMessage.length) {
+                    chatBubble.innerHTML += finalMessage.charAt(i);
+                    i++;
+                    // سرعة كتابة تحاكي الآلة الكاتبة الحقيقية
+                    let speed = Math.random() * 30 + 35; 
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+    </script>
 </body>
 </html>
