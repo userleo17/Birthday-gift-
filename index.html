@@ -1,434 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>For Yosi</title>
-<style>
-* {
-box-sizing: border-box;
--webkit-tap-highlight-color: transparent;
-}
-body, html {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-background: radial-gradient(circle at center, #0a1128 0%, #01040a 100%);
-overflow: hidden;
-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-color: white;
-position: fixed;
-}
-#scene-container {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-transition: opacity 2s ease-in-out;
-z-index: 10;
-}
-#main-canvas {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: 1;
-pointer-events: none;
-}
-#title-container {
-position: absolute;
-top: 12%;
-left: 50%;
-transform: translateX(-50%);
-text-align: center;
-font-size: 2.5rem;
-font-weight: bold;
-text-shadow: 0 0 15px rgba(255, 51, 102, 0.8), 0 0 30px rgba(255, 51, 102, 0.4);
-white-space: nowrap;
-z-index: 5;
-letter-spacing: 1px;
-width: 100%;
-}
-.cursor::after {
-content: '';
-display: inline-block;
-width: 3px;
-height: 1em;
-background-color: white;
-vertical-align: text-bottom;
-margin-left: 6px;
-animation: blink 0.8s step-end infinite;
-}
-.cursor-hidden::after {
-display: none !important;
-}
-@keyframes blink {
-0%, 100% { opacity: 1; }
-50% { opacity: 0; }
-}
-.balloon {
-position: absolute;
-width: 40px;
-height: 55px;
-border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
-bottom: -100px;
-z-index: 2;
-opacity: 0;
-will-change: transform, opacity;
-}
-.balloon::after {
-content: "";
-position: absolute;
-width: 1.5px;
-height: 40px;
-background: rgba(255, 255, 255, 0.3);
-bottom: -40px;
-left: calc(50% - 0.75px);
-}
-@keyframes floatUpSafely {
-0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-10% { opacity: 0.95; }
-85% { opacity: 0.95; }
-100% { transform: translateY(-130vh) rotate(15deg); opacity: 0; }
-}
-#flash-overlay {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(255, 240, 245, 0);
-z-index: 50;
-pointer-events: none;
-transition: background-color 0.5s ease-out;
-}
-.flash-active {
-background-color: rgba(255, 240, 245, 1) !important;
-}
-.flash-fade {
-transition: background-color 2s ease-in-out !important;
-background-color: rgba(255, 240, 245, 0) !important;
-}
-#chat-wrapper {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 100;
-pointer-events: none;
-}
-#chat-bubble {
-background: #ffffff;
-color: #111111;
-padding: 20px 25px;
-border-radius: 20px;
-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
-font-size: 1.2rem;
-font-weight: 500;
-line-height: 1.6;
-max-width: 85%;
-display: inline-flex;
-flex-direction: column;
-align-items: center;
-text-align: center;
-opacity: 0;
-visibility: hidden;
-transition: opacity 1s ease-in-out;
-}
-#chat-text-container {
-display: inline-block;
-white-space: pre-wrap;
-word-wrap: break-word;
-}
-#chat-text {
-display: inline;
-}
-#chat-cursor {
-display: inline-block;
-width: 2.5px;
-height: 1.1em;
-background-color: #ff3366;
-vertical-align: text-bottom;
-margin-left: 4px;
-animation: blink 0.8s step-end infinite;
-}
-#pixel-heart-canvas {
-margin-top: 15px;
-display: none;
-width: 45px;
-height: 45px;
-}
-@media (max-width: 768px) {
-#title-container {
-font-size: 1.6rem;
-top: 10%;
-}
-#chat-bubble {
-font-size: 1.05rem;
-padding: 18px 22px;
-border-radius: 18px;
-}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Yosi</title>
+    <style>
+        body { margin: 0; background: #01040a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        #start-screen { position: absolute; z-index: 1000; cursor: pointer; padding: 20px 40px; background: #ff3366; border-radius: 50px; border: none; color: white; font-size: 1.2rem; }
+        canvas { position: absolute; top: 0; left: 0; }
+        #msg-container { position: absolute; top: 10%; width: 100%; text-align: center; font-size: 1.8rem; font-weight: bold; pointer-events: none; }
+        #bubble { position: absolute; background: white; color: #111; padding: 20px; border-radius: 20px; display: none; max-width: 80%; text-align: center; line-height: 1.6; box-shadow: 0 10px 30px rgba(255,255,255,0.1); font-size: 1.2rem; transform: scale(0); transition: transform 0.5s ease; }
+    </style>
 </head>
 <body>
-<div id="scene-container">
-<canvas id="main-canvas"></canvas>
-<div id="title-container"></div>
-</div>
-<div id="flash-overlay"></div>
-<div id="chat-wrapper">
-<div id="chat-bubble">
-<div id="chat-text-container"><span id="chat-text"></span><span id="chat-cursor"></span></div>
-<canvas id="pixel-heart-canvas" width="45" height="45"></canvas>
-</div>
-</div>
+
+<button id="start-screen">اضغط هنا لبدء الاحتفال</button>
+<div id="msg-container"></div>
+<div id="bubble"></div>
+<canvas id="canvas"></canvas>
+
 <script>
-const canvas = document.getElementById('main-canvas');
-const ctx = canvas.getContext('2d');
-const sceneContainer = document.getElementById('scene-container');
-const titleContainer = document.getElementById('title-container');
-let w, h;
-function resizeCanvas() {
-w = window.innerWidth;
-h = window.innerHeight;
-const dpr = window.devicePixelRatio || 1;
-canvas.width = w * dpr;
-canvas.height = h * dpr;
-ctx.scale(dpr, dpr);
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-function getHeartPoint(t, scale) {
-const x = 16 * Math.pow(Math.sin(t), 3);
-const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-return { x: x * scale, y: y * scale };
-}
-function drawHeart(progress, scale) {
-ctx.beginPath();
-ctx.lineWidth = 3;
-ctx.strokeStyle = '#ff3366';
-ctx.shadowBlur = 15;
-ctx.shadowColor = '#ff3366';
-const cx = w / 2;
-const cy = h / 2;
-for (let t = 0; t <= progress; t += 0.05) {
-const pt = getHeartPoint(t, scale);
-if (t === 0) ctx.moveTo(cx + pt.x, cy + pt.y);
-else ctx.lineTo(cx + pt.x, cy + pt.y);
-}
-ctx.stroke();
-ctx.shadowBlur = 0;
-}
-let stage = 'HEARTS';
-let heartStep1 = 0, heartStep2 = 0, heartStep3 = 0;
-const scaleBase = Math.min(w, h) * 0.009;
-const s1 = scaleBase * 0.8;
-const s2 = scaleBase * 1.25;
-const s3 = scaleBase * 1.7;
-const particles = [];
-let balloonsSpawned = false;
-let fadeOutStarted = false;
-class Particle {
-constructor(x, y) {
-this.x = x;
-this.y = y;
-const colors = ['#ffd700', '#ff66b3', '#00e5ff', '#ffffff'];
-this.color = colors[Math.floor(Math.random() * colors.length)];
-this.angle = Math.random() * Math.PI * 2;
-this.speed = Math.random() * 2.5 + 1;
-this.friction = 0.95;
-this.gravity = 0.015;
-this.alpha = 1;
-this.decay = Math.random() * 0.015 + 0.008;
-}
-update() {
-this.speed *= this.friction;
-this.x += Math.cos(this.angle) * this.speed;
-this.y += Math.sin(this.angle) * this.speed + this.gravity;
-this.alpha -= this.decay;
-}
-draw(ctx) {
-if (this.alpha <= 0) return;
-ctx.save();
-ctx.globalAlpha = this.alpha;
-ctx.beginPath();
-ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-ctx.fillStyle = this.color;
-ctx.shadowBlur = 6;
-ctx.shadowColor = this.color;
-ctx.fill();
-ctx.restore();
-}
-}
-function createExplosion(x, y) {
-for (let i = 0; i < 40; i++) particles.push(new Particle(x, y));
-}
-function launchBalloons() {
-balloonsSpawned = true;
-const colors = [
-{ bg: 'rgba(255, 51, 102, 0.15)', border: 'rgba(255, 51, 102, 0.5)' },
-{ bg: 'rgba(0, 229, 255, 0.15)', border: 'rgba(0, 229, 255, 0.5)' },
-{ bg: 'rgba(255, 215, 0, 0.15)', border: 'rgba(255, 215, 0, 0.5)' },
-{ bg: 'rgba(255, 255, 255, 0.1)', border: 'rgba(255, 255, 255, 0.4)' }
-];
-const total = 14;
-for (let i = 0; i < total; i++) {
-const b = document.createElement('div');
-b.className = 'balloon';
-b.style.left = (Math.random() * 80 + 10) + 'vw';
-const delay = Math.random() * 2;
-const duration = Math.random() * 3 + 9;
-b.style.animation = floatUpSafely ${duration}s linear ${delay}s forwards;
-const c = colors[Math.floor(Math.random() * colors.length)];
-b.style.background = c.bg;
-b.style.border = 1px solid ${c.border};
-b.style.boxShadow = 0 0 10px ${c.bg};
-sceneContainer.appendChild(b);
-}
-setTimeout(() => {
-if (!fadeOutStarted) {
-stage = 'FADE';
-startFadeOut();
-}
-}, 13000);
-}
-let fireworkTimer = 0;
-function loop() {
-ctx.clearRect(0, 0, w, h);
-if (stage === 'HEARTS' || stage === 'TITLE' || stage === 'CELEBRATE' || stage === 'FADE') {
-if (heartStep1 > 0) drawHeart(Math.min(heartStep1, Math.PI * 2), s1);
-if (heartStep2 > 0) drawHeart(Math.min(heartStep2, Math.PI * 2), s2);
-if (heartStep3 > 0) drawHeart(Math.min(heartStep3, Math.PI * 2), s3);
-if (stage === 'HEARTS') {
-if (heartStep1 < Math.PI * 2) heartStep1 += 0.05;
-else if (heartStep2 < Math.PI * 2) heartStep2 += 0.05;
-else if (heartStep3 < Math.PI * 2) heartStep3 += 0.05;
-else {
-stage = 'TITLE';
-setTimeout(typeTitle, 400);
-}
-}
-}
-if (stage === 'CELEBRATE' || stage === 'FADE') {
-if (Math.random() < 0.025 && fireworkTimer <= 0 && stage !== 'FADE') {
-createExplosion(Math.random() * w * 0.8 + w * 0.1, Math.random() * h * 0.6 + h * 0.1);
-fireworkTimer = 25;
-}
-fireworkTimer--;
-for (let i = particles.length - 1; i >= 0; i--) {
-particles[i].update();
-particles[i].draw(ctx);
-if (particles[i].alpha <= 0) particles.splice(i, 1);
-}
-}
-if (stage !== 'STOP') {
-requestAnimationFrame(loop);
-}
-}
-const titleText = Array.from("Happy Birthday To Yosi 🎉");
-let titleIndex = 0;
-function typeTitle() {
-titleContainer.classList.add('cursor');
-function typeChar() {
-if (titleIndex < titleText.length) {
-titleContainer.innerText += titleText[titleIndex];
-titleIndex++;
-setTimeout(typeChar, 90 + Math.random() * 40);
-} else {
-setTimeout(() => {
-titleContainer.classList.remove('cursor');
-titleContainer.classList.add('cursor-hidden');
-stage = 'CELEBRATE';
-launchBalloons();
-}, 1000);
-}
-}
-typeChar();
-}
-function startFadeOut() {
-if (fadeOutStarted) return;
-fadeOutStarted = true;
-sceneContainer.style.opacity = '0';
-setTimeout(triggerFlash, 2100);
-}
-function triggerFlash() {
-stage = 'STOP';
-sceneContainer.style.display = 'none';
-const flash = document.getElementById('flash-overlay');
-flash.classList.add('flash-active');
-setTimeout(() => {
-flash.classList.remove('flash-active');
-flash.classList.add('flash-fade');
-setTimeout(startChat, 600);
-}, 400);
-}
-const finalMessage = "Happy birthday to the person who makes every day brighter 🎉 … Thank you for being my safe place, my supporter, and the kindest person ever ..\n\nI hope this year brings you as much happiness as you bring into my life … I love you so much yosi ❤️!";
-const chatChars = Array.from(finalMessage);
-let chatIndex = 0;
-function startChat() {
-const bubble = document.getElementById('chat-bubble');
-const chatTextEl = document.getElementById('chat-text');
-const chatCursor = document.getElementById('chat-cursor');
-bubble.style.visibility = 'visible';
-bubble.style.opacity = '1';
-function typeChatChar() {
-if (chatIndex < chatChars.length) {
-const char = chatChars[chatIndex];
-if (char === '\n') {
-chatTextEl.appendChild(document.createElement('br'));
-} else {
-chatTextEl.appendChild(document.createTextNode(char));
-}
-chatIndex++;
-setTimeout(typeChatChar, 40 + Math.random() * 30);
-} else {
-chatCursor.style.display = 'none';
-setTimeout(showPixelHeart, 700);
-}
-}
-setTimeout(typeChatChar, 800);
-}
-function showPixelHeart() {
-const pCanvas = document.getElementById('pixel-heart-canvas');
-const pCtx = pCanvas.getContext('2d');
-pCanvas.style.display = 'block';
-const grid = [
-[0,1,1,0,1,1,0],
-[1,1,1,1,1,1,1],
-[1,1,1,1,1,1,1],
-[0,1,1,1,1,1,0],
-[0,0,1,1,1,0,0],
-[0,0,0,1,0,0,0]
-];
-let pulse = 0;
-function animatePixel() {
-pCtx.clearRect(0, 0, 45, 45);
-let scale = 1 + Math.sin(pulse) * 0.12;
-pCtx.save();
-pCtx.translate(22.5, 22.5);
-pCtx.scale(scale, scale);
-pCtx.translate(-15.75, -13.5);
-pCtx.fillStyle = '#ff3366';
-for (let r = 0; r < 6; r++) {
-for (let c = 0; c < 7; c++) {
-if (grid[r][c]) pCtx.fillRect(c * 4.5, r * 4.5, 4.8, 4.8);
-}
-}
-pCtx.restore();
-pulse += 0.08;
-requestAnimationFrame(animatePixel);
-}
-animatePixel();
-}
-requestAnimationFrame(loop);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+    document.getElementById('start-screen').onclick = function() {
+        this.style.display = 'none';
+        startEverything();
+    };
+
+    function startEverything() {
+        // 1. القلوب (رسم بسيط وسريع)
+        ctx.fillStyle = '#ff3366';
+        function drawHeart(x, y, s) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.bezierCurveTo(x-s, y-s, x-2*s, y+s, x, y+2*s);
+            ctx.bezierCurveTo(x+2*s, y+s, x+s, y-s, x, y);
+            ctx.fill();
+        }
+        drawHeart(canvas.width/2, canvas.height/2, 20);
+
+        // 2. التهنئة
+        let text = "Happy Birthday To Yosi 🎉";
+        let i = 0;
+        let interval = setInterval(() => {
+            document.getElementById('msg-container').innerText += text[i];
+            i++;
+            if(i >= text.length) clearInterval(interval);
+        }, 100);
+
+        // 3. فقاعة الدردشة بعد 5 ثواني
+        setTimeout(() => {
+            document.getElementById('msg-container').style.display = 'none';
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            let bubble = document.getElementById('bubble');
+            bubble.style.display = 'block';
+            bubble.style.transform = 'scale(1)';
+            
+            let fullMsg = "Happy birthday to the person who makes every day brighter 🎉 … Thank you for being my safe place, my supporter, and the kindest person ever .. I hope this year brings you as much happiness as you bring into my life … I love you so much yosi ❤️!";
+            let charIndex = 0;
+            let typeInterval = setInterval(() => {
+                bubble.innerText += fullMsg[charIndex];
+                charIndex++;
+                if(charIndex >= fullMsg.length) clearInterval(typeInterval);
+            }, 50);
+        }, 5000);
+    }
 </script>
 </body>
 </html>
