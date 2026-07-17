@@ -8,14 +8,14 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: #0a0a0a;
+            /* خلفية متدرجة: أسود من الأعلى إلى كحلي غامق في الأسفل */
+            background: linear-gradient(to top, #001133, #000000);
             color: white;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* دعم كامل لارتفاع شاشات الآيفون المتغير في سفاري */
             height: -webkit-fill-available; 
         }
 
@@ -60,7 +60,7 @@
             box-shadow: 0 0 15px #ff4d94, inset 0 0 15px #ff4d94;
             text-shadow: 0 0 5px #ff4d94;
             transition: all 0.3s ease;
-            -webkit-appearance: none; /* لمنع سفاري من تغيير شكل الزر الافتراضي */
+            -webkit-appearance: none;
         }
 
         #startBtn:hover {
@@ -73,7 +73,6 @@
             font-size: 2.5rem;
             font-weight: bold;
             color: #fff;
-            /* تعديل تأثير النيون ليكون خفيفاً وسريع الرندرة على معالجات أبل */
             text-shadow: 0 0 10px #fff, 0 0 20px #ff0055, 0 0 30px #ff0055;
             opacity: 0;
             position: absolute;
@@ -99,7 +98,6 @@
         #chatBubble {
             opacity: 0;
             background: rgba(20, 20, 20, 0.75);
-            /* إضافة البادئة الخاصة بسفاري لدعم تأثير الزجاج الضبابي */
             -webkit-backdrop-filter: blur(12px); 
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -119,7 +117,6 @@
             box-sizing: border-box;
         }
 
-        /* لضمان تناسب الخط مع شاشات الجوال */
         @media (max-width: 600px) {
             #neonText { font-size: 1.8rem; }
             #chatBubble { font-size: 15px; padding: 20px; }
@@ -157,7 +154,6 @@
 
         let cw, ch;
         function resize() {
-            // حل مشكلة تمدد الـ Canvas بشكل خاطئ على سفاري الجوال
             cw = canvas.width = window.innerWidth;
             ch = canvas.height = window.innerHeight;
         }
@@ -168,21 +164,21 @@
         // ----------------- State & Engine -----------------
         let isAnimating = false;
         
-        // Hearts Data
-        const heartScales = [15, 11, 7];
+        // تصغير أحجام القلوب لتناسب الشاشة بالكامل
+        const heartScales = [9, 6.5, 4];
         const heartPaths = [];
         const heartProgress = [0, 0, 0];
         let currentHeartDraw = 0;
         let heartOpacity = 1;
         let drawHeartsActive = false;
         let fadeHeartsActive = false;
+        let msgTriggered = false; // لمنع تكرار الرسالة
 
         // Particles Data
         let fireworks = [];
         let balloons = [];
         let glitters = [];
 
-        // دالة توليد نقاط القلوب بالمعادلة الرياضية الدقيقة
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
@@ -201,7 +197,7 @@
         function render() {
             ctx.clearRect(0, 0, cw, ch);
 
-            // 1. Draw Glitters (تأثير اللمعة الخفيفة بالخلفية)
+            // 1. Draw Glitters
             glitters.forEach(g => {
                 g.alpha += g.alphaChange;
                 if (g.alpha <= 0.1 || g.alpha >= 0.8) g.alphaChange *= -1;
@@ -214,8 +210,7 @@
             // 2. Draw Hearts
             if (drawHeartsActive || heartOpacity > 0) {
                 ctx.save();
-                // لتوسيط القلوب تماماً مع مراعاة أحجام الشاشات المختلفة
-                ctx.translate(cw / 2, ch / 2 + 20); 
+                ctx.translate(cw / 2, ch / 2 + 10); 
                 
                 for (let i = 0; i < 3; i++) {
                     if (heartProgress[i] > 0) {
@@ -228,7 +223,6 @@
                         ctx.lineWidth = 3.5;
                         ctx.lineCap = "round";
                         ctx.lineJoin = "round";
-                        // تأثير توهج القلوب
                         ctx.shadowBlur = 15;
                         ctx.shadowColor = "#ff4d94";
                         ctx.stroke();
@@ -238,7 +232,8 @@
 
                 if (drawHeartsActive) {
                     if (currentHeartDraw < 3) {
-                        heartProgress[currentHeartDraw] += 2; // سرعة تحرك خط الرسم
+                        // تبطيء سرعة الرسم لتشبه الرسم اليدوي
+                        heartProgress[currentHeartDraw] += 0.8; 
                         if (heartProgress[currentHeartDraw] >= heartPaths[currentHeartDraw].length) {
                             currentHeartDraw++;
                         }
@@ -248,8 +243,22 @@
                     }
                 }
 
-                if (fadeHeartsActive && heartOpacity > 0) {
-                    heartOpacity -= 0.007; // تلاشي تدريجي وناعم
+                if (fadeHeartsActive) {
+                    if (heartOpacity > 0) {
+                        heartOpacity -= 0.01; // سرعة تلاشي القلب
+                    } else {
+                        heartOpacity = 0;
+                        // بعد أن يختفي القلب تماماً، ننتظر ثانيتين ثم نظهر الرسالة
+                        if (!msgTriggered) {
+                            msgTriggered = true;
+                            setTimeout(() => {
+                                neonText.style.display = 'none'; 
+                                createGlitter();
+                                chatBubble.style.opacity = '1';
+                                startTypewriter();
+                            }, 2000); // 2000 ملي ثانية = ثانيتين
+                        }
+                    }
                 }
             }
 
@@ -258,7 +267,7 @@
                 let p = fireworks[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.06; // الجاذبية
+                p.vy += 0.06;
                 p.alpha -= 0.015;
                 
                 ctx.beginPath();
@@ -269,21 +278,20 @@
                 if (p.alpha <= 0) fireworks.splice(i, 1);
             }
 
-            // 4. Draw Balloons (تم استبدال دالة الـ ellipse بدالة متوافقة 100% مع كافة إصدارات سفاري)
+            // 4. Draw Balloons
             for (let i = balloons.length - 1; i >= 0; i--) {
                 let b = balloons[i];
                 b.y -= b.speed;
                 
                 ctx.save();
                 ctx.translate(b.x, b.y);
-                ctx.scale(1, 1.25); // لجعل البالون بيضاوي الشكل
+                ctx.scale(1, 1.25);
                 ctx.beginPath();
                 ctx.arc(0, 0, b.r, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha})`;
                 ctx.fill();
                 ctx.restore();
                 
-                // رسم خيط البالون
                 ctx.beginPath();
                 ctx.moveTo(b.x, b.y + b.r * 1.25);
                 ctx.lineTo(b.x, b.y + b.r * 2.5);
@@ -323,13 +331,11 @@
                     y: ch + 50,
                     r: Math.random() * 12 + 12,
                     speed: Math.random() * 1.5 + 1,
-                    alpha: Math.random() * 0.08 + 0.03 // شفافة جداً ومريحة للعين
+                    alpha: Math.random() * 0.08 + 0.03
                 });
             }, 120);
 
-            setTimeout(() => {
-                clearInterval(interval);
-            }, 4500);
+            return interval;
         }
 
         function createGlitter() {
@@ -354,29 +360,27 @@
         });
 
         function triggerNextPhase() {
-            // ظهور عبارة التهنئة
             neonText.classList.add('show-neon');
             
-            // إطلاق ألعاب نارية مرتين فقط بالتناوب
-            setTimeout(() => createFirework(cw * 0.35, ch * 0.3), 100);
-            setTimeout(() => createFirework(cw * 0.65, ch * 0.35), 800);
+            // إطلاق الألعاب النارية بشكل متكرر
+            let fwInterval = setInterval(() => {
+                createFirework(cw * (0.2 + Math.random() * 0.6), ch * (0.2 + Math.random() * 0.4));
+            }, 600); // إطلاق كل 600 ملي ثانية
 
-            // صعود البالونات الشفافة بالتزامن
-            createBalloons();
+            // بدء صعود البالونات
+            let balloonInterval = createBalloons();
 
-            // انفجار النص وتلاشي القلوب بعد انتهاء المؤثرات البصرية
+            // إيقاف الألعاب النارية والبالونات معاً بعد 4.5 ثواني
+            setTimeout(() => {
+                clearInterval(fwInterval);
+                clearInterval(balloonInterval);
+            }, 4500);
+
+            // انفجار النص وتلاشي القلوب
             setTimeout(() => {
                 neonText.classList.add('explode-text');
                 fadeHeartsActive = true;
-            }, 5000);
-
-            // ظهور لمعة الخلفية وفقاعة الدردشة وبدء الآلة الكاتبة
-            setTimeout(() => {
-                neonText.style.display = 'none'; 
-                createGlitter();
-                chatBubble.style.opacity = '1';
-                startTypewriter();
-            }, 7000);
+            }, 5500);
         }
 
         // ----------------- Typewriter Effect -----------------
@@ -390,8 +394,8 @@
                 if (i < finalMessage.length) {
                     chatBubble.innerHTML += finalMessage.charAt(i);
                     i++;
-                    // سرعة كتابة تحاكي الآلة الكاتبة الحقيقية
-                    let speed = Math.random() * 30 + 35; 
+                    // سرعة كتابة أبطأ من السابق (بين 60 و 120 ملي ثانية للحرف)
+                    let speed = Math.random() * 60 + 60; 
                     setTimeout(type, speed);
                 }
             }
